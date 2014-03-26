@@ -1,0 +1,23 @@
+These notes for GtkRadiant 1.6
+
+This gamepack requires patching GtkRadiant! Run this before compiling the source:
+
+    cd GtkRadiant
+    patch -p1 < GtkRadiant.patch
+
+Run scons (this will automatically checkout this repo into your GtkRadiant/install): TODO:
+
+    scons
+
+Copy *unvanquished_\*.pk3* into *~/.unvanquished/pkg/* for entity models appear:
+
+    # there you can have different path or version of .pk3
+    cp /usr/share/games/unvanquished/pkg/unvanquished_0.25.0.pk3 ~/.unvanquished/pkg/
+
+Run radiant. There will be setup game dialog. Choose Unvanquished and point it's gamedir to *~/.unvanquished/*.
+
+Use mapselect.sh script to switch currently editing map:
+
+    cd ~/.unvanquished/pkg/
+    chmod +x mapselect.sh
+    ./mapselect newmap
