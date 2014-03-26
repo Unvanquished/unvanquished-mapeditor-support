@@ -24,6 +24,7 @@ dont_place_dummy_flag = True
 
 import yaml
 import re
+import sys
 
 bad_token_re = re.compile(r'[}{)(\':\s]', re.M)
 
@@ -94,8 +95,9 @@ def print_entity(e):
     print('*/')
     print()
 
+filename = sys.argv[1]
 
-with open('entities.yaml', 'r') as f:
+with open(filename, 'r') as f:
     text = f.read()
     elist = yaml.load(text)
     print(starting_text)
