@@ -9,13 +9,28 @@
   - UNUSED2: ''
   - NOGRIDLIGHT: Do not affect the lightgrid (dynamic entity lighting).
   props:
-    _color: weighted RGB value of light color (default white - 1.0 1.0 1.0).
-    _light OR light: overrides the default 300 intensity.
     _sun: Set this key to 1 on a spotlight to make an infinite sun light.
     fade: Fades light attenuation. Only affects linear lights.
     radius: overrides the default 64 unit radius of a spotlight at the target point.
     scale: Scales light attentation, from SOF2/JK2. Scales the "light" value.
     target: Lights pointed at a target will be spotlights.
+    origin: or light_origin 3-float position # OK
+    light: or _light intensity (default: 300) # OK
+    # todo: source/engine/renderer/tr_bsp.cpp:5700
+    light_center: '' # todo:
+    _color: weighted RGB value of light color (default white - 1.0 1.0 1.0). # todo:
+    light_radius: '' # todo:
+    light_target: '' # todo:
+    light_right: '' # todo:
+    light_up: '' # todo:
+    light_start: '' # todo:
+    light_end: '' # todo:
+    light_scale: '' # todo:
+    texture: '' # todo:
+    rotation: or light_rotation # todo:
+    noshadows: only possible value 1 # todo:
+    noradiosity: only possible value 1 # todo:
+    parallel: only possible value 1 # todo:
   desc: Non-displayed point light source. The -pointscale and -scale arguments to
     Q3Map2 affect the brightness of these lights. The -skyscale argument affects brightness
     of entity sun lights.
@@ -1458,7 +1473,6 @@
       brush density.
     _celshader: 'Sets the cel shader used for this geometry. Note: omit the "textures/"
       prefix. Overridable in entities.'
-    _color: RGB value for ambient light color (default is 0 0 0).
     _cs OR _castshadows: Allows per-entity control over shadow casting. Defaults to
       0 on entities, 1 on world. 0 = no shadow casting. 1 = cast shadows on world.
       > 1 = cast shadows on entities with _rs (or _receiveshadows) with the corresponding
@@ -1488,33 +1502,42 @@
       shadows ONLY from corresponding keyed entities.
     _shader OR shader: 'Path to the metashader used to assign textures to the terrain
       entity. Note: Omit the "textures/" prefix.'
-    alienBuildPoints: The maximum amount of sentience available to the overmind. Defaults
-      to 1000.
-    alienMaxStage: The highest stage the aliens are allowed to use [0/1/2]. Defaults
-      to 2.
-    alienStage2Threshold: The number of kills the aliens must aquire to advance to
-      stage 2. Defaults to 50.
-    alienStage3Threshold: The number of kills the aliens must aquire to advance to
-      stage 3. Defaults to 100.
-    disabledBuildables: A comma delimited list of buildables to disable for this map.
-    disabledClasses: A comma delimited list of alien classes to disable for this map.
-    disabledEquipment: A comma delimited list of human weapons or upgrades to disable
-      for this map.
-    gravity: 'gravity of level (default is normal gravity: 800).'
     gridsize: granularity of the lightgrid created by q3map. Value is three integers
       separated by spaces, representing number of units between grid points in X Y
       Z. Default gridsize value is 128 128 256. Use larger powers of 2 to reduce BSP
       size and compile time on very large maps.
-    humanBuildPoints: The maximum amount of power the humans can use. Defaults to
-      1000.
-    humanMaxStage: The highest stage the humans are allowed to use [0/1/2]. Defaults
-      to 2.
-    humanStage2Threshold: The number of kills the humans must aquire to advance to
-      stage 2. Defaults to 50.
-    humanStage3Threshold: The number of kills the humans must aquire to advance to
-      stage 3. Defaults to 100.
-    message: text to print at user logon. Used for name of level.
-    music: path/name of looping .wav file used for level's music (eg. music/sonic5.wav). # OK
+    message: shown above loading bar # OK
+    music: path/name of looping .wav or .ogg file used for level's music (eg. music/sonic5.wav) # OK
+    # bug: music doesn't loop, plays only once
+    colorGrade: or gradingTexture - path of color grading effect (eg. gfx/cgrading/red-only) # OK
+    reverbIntensity: float 0.0 .. 2.0 # OK
+    reverbEffect: none|generic # todo: there can be more names, but I didn't found any
+    # testReverb command works on these values
+    # bug: causes game to crash CM_ClipHandleToModel: bad handle -1
+    gravity: gravity of level, default 800 # OK
+    humanBuildPoints: The maximum amount of power the humans can use. # bug: exist in code, but unused
+    humanRepeaterBuildPoints: maximum amount of power the humans can use around each repeater # bug: exist in code, but unused
+    alienBuildPoints: The maximum amount of sentience available to the overmind. # bug: exist in code, but unused
+    disabledEquipment: A comma delimited list of human weapons or upgrades to disable
+      for this map. (rifle,psaw,shotgun,lgun,mdriver,chaingun,flamer,prifle,lcannon,
+      larmour,marmour,bsuit,radar,battpack,jetpack,gren,firebomb) # OK
+    disabledClasses: A comma delimited list of alien classes to disable for this map.
+      (builder,builderupg,level0,level1,level2,level2upg,level3,level3upg,level4) # OK
+    # bug: disable classes works, but shows warnings
+    disabledBuildables: A comma delimited list of buildables to disable for this map.
+      (eggpod,overmind,barricade,acid_tube,trapper,booster,hive,leech,telenode,mgturret,
+      tesla,arm,medistat,drill,reactor,repeater) # OK
+    # bug: disable buildables works, but shows warnings
+    _color: or ambientColor RGB value for ambient light color (default is 0 0 0). # todo: no visible effect
+    fogColor: RGB (3 floats) # todo: no visible effect
+    fogDensity: float # todo: no visible effect
+    vertexremapshader: '' # todo:
+    remapshader: '' # todo:
+    gridsize: '' # todo:
+    deluxeMapping: only possible value is 1 # todo:
+    mapOverBrightBits: '' # todo:
+    _q3map2_cmdline: '' # todo:
+    hdrRGBE: '' # todo:
   desc: Only used for the world.
   specials: {}
 
