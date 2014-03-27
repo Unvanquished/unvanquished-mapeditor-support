@@ -15,7 +15,7 @@
     scale: Scales light attentation, from SOF2/JK2. Scales the "light" value.
     target: Lights pointed at a target will be spotlights.
     origin: or light_origin 3-float position # OK
-    light: or _light intensity (default: 300) # OK
+    light: 'or _light intensity (default: 300)' # OK
     # todo: source/engine/renderer/tr_bsp.cpp:5700
     light_center: '' # todo:
     _color: weighted RGB value of light color (default white - 1.0 1.0 1.0). # todo:
@@ -61,8 +61,8 @@
 - name: func_bobbing
   color: 007fcc
   flags:
-  - X_AXIS: entity will bob along the X axis.
-  - Y_AXIS: entity will bob along the Y axis.
+  - X_AXIS: entity will bob along the X axis. (overrides Y_AXIS) # OK
+  - Y_AXIS: entity will bob along the Y axis. (if both not set - it will Z axis.) # OK
   props:
     _celshader: 'Sets the cel shader used for this geometry. Note: omit the "textures/"
       prefix.'
@@ -136,23 +136,25 @@
     _shader OR shader: 'Path to the metashader used to assign textures to the terrain
       entity. Note: Omit the "textures/" prefix.'
     _targetname: Used to attach a misc_model entity to this entity.
-    angle: determines the direction in which the button will move (up = -1, down =
-      -2).
     color: constantLight color of .md3 model included with entity. Has no effect on
       the entity's brushes (default 1 1 1).
     health: (default 0) if set to any non-zero value, the button must take damage
       (any amount) to activate.
     light: constantLight radius of .md3 model included with entity. Has no effect
       on the entity's brushes (default 0).
-    lip: lip remaining at end of move (default 4 units).
     model2: 'path/name of model to include (eg: models/mapobjects/pipe/pipe02.md3).'
     origin: alternate method of setting XYZ origin of .md3 model included with entity
       (See Notes).
     sound1to2: the sound played when the door, platform or button moves from state
       1 to state 2.
-    speed: speed of button's displacement (default 40).
-    target: all entities with a matching targetname will be triggered.
+    target: All entities with a matching targetname will be triggered. If not set
+      button will not appear. # OK
     wait: number of seconds button stays pressed (default 1, -1 = return immediately).
+    speed: &brush_speed Determines how fast the brush moves.
+    lip: &brush_lip When 0, brush displacement = brush's size in direction of movement.
+      Positive lip value discreases displacement, leaving lip remaining at the end of move.
+    angle: &brush_angle 'Determines moving direction of brush (0..360 - around Z axis:
+      0=+x, 90=+y, 180=-x, 270=-y; special values: up = -1, down = -2).'
   desc: 'When a button is touched by a player, it moves in the direction set by the
     "angle" key, triggers all its targets, stays pressed by an amount of time set
     by the "wait" key, then returns to it''s original position where it can be operated
@@ -162,17 +164,18 @@
     When using the model2 key, the origin point of the model will correspond to the
     origin point defined by either the origin brush or the origin coordinate value.
 
-
     Target this entity with a misc_model to have the model attached to the entity
     (set the model''s "target" key to the same value as this entity''s "targetname").'
   specials: {}
 - name: func_door
   color: 007fcc
   flags:
-  - START_OPEN: the door will spawn in the open state and operate in reverse.
+  - START_OPEN: The door will spawn in the open state and operate in reverse. # OK
   - '-': ''
-  - CRUSHER: door will not reverse direction when blocked and will keep damaging player
-      until he dies or gets out of the way.
+  - CRUSHER: Door will not reverse direction when blocked and will keep damaging player
+      or building until it dies or gets out of the way. # OK
+    # bug: when CRUSHER is off, door blocked, goes back for 1 frame, then goes forward
+    # again, etc, crushing everything while player in triggering zone
   props:
     _celshader: 'Sets the cel shader used for this geometry. Note: omit the "textures/"
       prefix.'
@@ -193,16 +196,10 @@
     _shader OR shader: 'Path to the metashader used to assign textures to the terrain
       entity. Note: Omit the "textures/" prefix.'
     _targetname: Used to attach a misc_model entity to this entity.
-    angle: determines the opening direction of door (up = -1, down = -2).
     color: constantLight color of .md3 model included with entity. Has no effect on
       the entity's brushes (default 1 1 1).
-    dmg: damage to inflict on player when he blocks operation of door (default 4).
-      Door will reverse direction when blocked unless CRUSHER spawnflag is set.
-    health: (default 0) if set to any non-zero value, the door must take damage (any
-      amount) to activate.
     light: constantLight radius of .md3 model included with entity. Has no effect
       on the entity's brushes (default 0).
-    lip: lip remaining at end of move (default 8)
     model2: 'path/name of model to include (eg: models/mapobjects/pipe/pipe02.md3).'
     origin: alternate method of setting XYZ origin of .md3 model included with entity
       (See Notes).
@@ -212,13 +209,47 @@
       to state 1.
     soundPos1: the sound played when the door or platform reaches state 1.
     soundPos2: the sound played when the door or platform reaches state 2.
-    speed: determines how fast the door moves (default 100).
-    targetname: if set, a func_button or trigger is required to activate the door.
+    targetname: If set, a func_button or trigger is required to activate the door.
+      Overrides activation by damage. # OK
     team: assign the same team name to multiple doors that should operate together
       (see Notes).
-    wait: number of seconds before door returns (default 2, -1 = return immediately)
+    speed: *brush_speed # OK
+    lip: *brush_lip # OK
+    angle: *brush_angle # OK
+    wait: 'Number of seconds before brush returns. Default 2. 0 acts as default,
+      use here eg. 0.1 for very small delay. -1 = return immediately: don''t use
+      that, it makes annoying sound cascade (opens/closes every frame)' # OK
+      # bug: bad -1 value
+      # bug: confising 0
+    range: Door triggering range. # OK
+    dmg: Damage to inflict on player when he blocks operation of door.
+      Door will reverse direction when blocked unless CRUSHER spawnflag is set. # OK
+    health: &brush_health If set to any non-zero value, the brush must take damage (any
+      amount) to activate. # OK
+  propreplace:
+    speed: &Rdoor {brush: door}
+    lip: *Rdoor
+    angle: *Rdoor
+    health: *Rdoor
+  proptypes:
+    health: bool
+    dmg: int
+    range: int
+    lip: float
+    targetname: string
+    origin: vec3_float
+    angle: float
+    speed: float
+  propdefaults:
+    health: false
+    range: 72
+    lip: 8
+    speed: 400
+    dmg: 2
+  boolvalues:
+    health: [0, 1]
   desc: 'Normal sliding door entity. By default, the door will activate when player
-    walks close to it or when damage is inflicted to it.
+    walks close (range) to it or when damage is inflicted (health) to it.
 
     Unlike in Quake 2, doors that touch are NOT automatically teamed. If you want
     doors to operate together, you have to team them manually by assigning the same
@@ -226,7 +257,6 @@
     to using an origin brush. When using the model2 key, the origin point of the model
     will correspond to the origin point defined by either the origin brush or the
     origin coordinate value.
-
 
     Target this entity with a misc_model to have the model attached to the entity
     (set the model''s "target" key to the same value as this entity''s "targetname").'
