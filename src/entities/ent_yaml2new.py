@@ -139,6 +139,15 @@ def _validate_string(v):
 def _validate_float(v):
     return type(v) in (int, float)
 
+def _validate_vec2_float(v):
+    return len(v) == 2 and all(_validate_float(x) for x in v)
+
+def _validate_vec3_float(v):
+    return len(v) == 3 and all(_validate_float(x) for x in v)
+
+def _validate_vec4_float(v):
+    return len(v) == 3 and all(_validate_float(x) for x in v)
+
 
 def validate_entity(e, dt):
     r = []
@@ -170,32 +179,53 @@ def validate_entity(e, dt):
     # validate types of default values
     unknown_types = set()
     etypes = e.get('proptypes', {})
-    for k in propdefaults & mergedtypes:
-        t = etypes[k] if k in etypes else dt[k]
+    for field in propdefaults & mergedtypes:
+        ftype = etypes[field] if field in etypes else dt[field]
+        if ' ' in ftype:
+            ftype, _ = ftype.split(' ', 1)
 
         # proptypes must not duplicate deftypes
-        if k in etypes and k in dt and t == dt[k]:
-            r.append('Property type {}:{} duplicates entry from deftypes'.format(k, t))
+        if field in etypes and field in dt and ftype == dt[field]:
+            r.append('Property type {}:{} duplicates entry from deftypes'.format(field, ftype))
 
-        func_name = '_validate_{}'.format(t)
+        func_name = '_validate_{}'.format(ftype)
         if func_name not in globals():
-            unknown_types.add(t)
+            unknown_types.add(ftype)
         else:
-            v = e['propdefaults'][k]
-            if type(v) == bool and k in boolvalues:
+            v = e['propdefaults'][field]
+            if type(v) == bool and field in boolvalues:
                 if type(e['boolvalues']) != list or len(e['boolvalues']) != 2:
-                    r.append('Invalid bool list of prop {}'.format(k))
+                    r.append('Invalid bool list of prop {}'.format(field))
                 else:
                     for bv in e['boolvalues']:
                         if not globals()[func_name](bv):
-                            r.append('Invalid bool value {} of prop {}, must be of type {}'.format(bv, k, t))
+                            r.append('Invalid bool value {} of prop {}, must be of type {}'.format(bv, field, ftype))
             elif not globals()[func_name](v):
-                r.append('Invalid default value of {}: {}, must be of type {}'.format(k, v, t))
+                r.append('Invalid default value of {}: {}, must be of type {}'.format(field, v, ftype))
 
     if unknown_types:
         r.append('Types ({}) are unknown: {}'.format(len(unknown_types), unknown_types))
 
     return r
+
+
+# ==============================================================================
+# coverage
+
+
+def entity_type_coverage(e, dt):
+    props = set(e['props'].keys())
+    proptypes = set(e.get('proptypes', {}).keys())
+    propdefaults = set(e.get('propdefaults', {}).keys())
+
+    t = proptypes | (props & set(dt.keys()))
+
+    if len(t) < len(props):
+        print('{}%: {}'.format(len(t) * 100 // len(props), e['name']))
+
+
+# ==============================================================================
+# main
 
 
 def create_parser():
@@ -204,6 +234,7 @@ def create_parser():
     group = parser.add_mutually_exclusive_group()
     group.add_argument('--validate', action='store_true', help='Make validation of yaml contents')
     group.add_argument('--generate', action='store_true', help='Print final entities file')
+    group.add_argument('--coverage', action='store_true', help='Analyse fullfillness of data')
     return parser
 
 def load_main_file(name):
@@ -248,6 +279,11 @@ if args.validate:
         print(w)
     if not warns:
         print('No warinings! File is OK.')
+    else:
+        exit(1)
+elif args.coverage:
+    for e in elist:
+        entity_type_coverage(e, deftypes)
 elif args.generate:
     print(starting_text)
     for e in elist:
