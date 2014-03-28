@@ -149,6 +149,12 @@ def _validate_vec4_float(v):
     return len(v) == 3 and all(_validate_float(x) for x in v)
 
 
+def canonize_type(t):
+    if ' ' in t:
+        t, _ = t.split(' ', 1)
+    return t
+
+
 def validate_entity(e, dt):
     r = []
     props = set(e['props'].keys())
@@ -176,28 +182,28 @@ def validate_entity(e, dt):
     if x:
         r.append('Properties ({}) in defaults are not exist in types: {}'.format(len(x), x))
 
-    # validate types of default values
-    unknown_types = set()
     etypes = e.get('proptypes', {})
-    for field in propdefaults & mergedtypes:
-        ftype = etypes[field] if field in etypes else dt[field]
-        if ' ' in ftype:
-            ftype, _ = ftype.split(' ', 1)
 
-        # proptypes must not duplicate deftypes
-        if field in etypes and field in dt and ftype == dt[field]:
+    # validate type duplicates
+    for field, ftype in etypes.items():
+        ftype = canonize_type(ftype)
+        if field in dt and ftype == canonize_type(dt[field]):
             r.append('Property type {}:{} duplicates entry from deftypes'.format(field, ftype))
 
+    # validate types of default values
+    unknown_types = set()
+    for field in propdefaults & mergedtypes:
+        ftype = canonize_type(etypes[field] if field in etypes else dt[field])
         func_name = '_validate_{}'.format(ftype)
         if func_name not in globals():
             unknown_types.add(ftype)
         else:
             v = e['propdefaults'][field]
             if type(v) == bool and field in boolvalues:
-                if type(e['boolvalues']) != list or len(e['boolvalues']) != 2:
+                if type(e['boolvalues'][field]) != list or len(e['boolvalues'][field]) != 2:
                     r.append('Invalid bool list of prop {}'.format(field))
                 else:
-                    for bv in e['boolvalues']:
+                    for bv in e['boolvalues'][field]:
                         if not globals()[func_name](bv):
                             r.append('Invalid bool value {} of prop {}, must be of type {}'.format(bv, field, ftype))
             elif not globals()[func_name](v):

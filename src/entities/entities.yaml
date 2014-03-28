@@ -232,14 +232,8 @@
     angle: *Rdoor
     health: *Rdoor
   proptypes:
-    health: bool
-    dmg: int
     range: int
     lip: float
-    targetname: string
-    origin: vec3_float
-    angle: float
-    speed: float
   propdefaults:
     health: false
     range: 72

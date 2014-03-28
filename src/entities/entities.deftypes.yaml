@@ -14,34 +14,34 @@ message: string
 model: string
 model2: string
 name: string
-noise: F_SOUNDINDEX
-onAct: F_CALLTARGET
-onDie: F_CALLTARGET
-onDisable: F_CALLTARGET
-onEnable: F_CALLTARGET
-onFree: F_CALLTARGET
-onReach: F_CALLTARGET
-onReset: F_CALLTARGET
-onSpawn: F_CALLTARGET
-onTouch: F_CALLTARGET
-onUse: F_CALLTARGET
+noise: string (sound)
+#onAct: F_CALLTARGET
+#onDie: F_CALLTARGET
+#onDisable: F_CALLTARGET
+#onEnable: F_CALLTARGET
+#onFree: F_CALLTARGET
+#onReach: F_CALLTARGET
+#onReset: F_CALLTARGET
+#onSpawn: F_CALLTARGET
+#onTouch: F_CALLTARGET
+#onUse: F_CALLTARGET
 origin: vec3_float
 period: *time
 radius: vec3_float
 random: float
 replacement: string
 shader: string
-sound1to2: F_SOUNDINDEX
-sound2to1: F_SOUNDINDEX
-soundPos1: F_SOUNDINDEX
-soundPos2: F_SOUNDINDEX
+sound1to2: string (sound)
+sound2to1: string (sound)
+soundPos1: string (sound)
+soundPos2: string (sound)
 spawnflags: int
 speed: float
 stage: int
-target: F_TARGET
-target2: F_TARGET
-target3: F_TARGET
-target4: F_TARGET
+target: string (target)
+target2: string (target)
+target3: string (target)
+target4: string (target)
 targetname: string
 targetname2: string
 targetShaderName: string
