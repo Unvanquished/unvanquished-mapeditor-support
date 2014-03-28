@@ -150,13 +150,42 @@ def _validate_vec4_float(v):
 
 
 def canonize_type(t):
+    t = str(t)
     if ' ' in t:
         t, _ = t.split(' ', 1)
     return t
 
 
+def val_fields_exist(e):
+    if d:
+        re
+    return all(
+        'name' in e,
+        'props' in e
+    )
+
+required_fields = {'name', 'color', 'flags', 'props', 'desc', 'specials'}
+required_fields2 = required_fields | {'size_min', 'size_max'}
+all_fields = required_fields2 | {'propreplace', 'proptypes', 'propdefaults', 'boolvalues'}
+
 def validate_entity(e, dt):
     r = []
+
+    d = required_fields - e.keys()
+    if d:
+        r.append('No required fields: {}'.format(d))
+        return r
+    if 'size_min' in e or 'size_max' in e:
+        d = required_fields2 - e.keys()
+        if d:
+            r.append('No required fields: {}'.format(d))
+            return r
+    d = e.keys() - all_fields
+    if d:
+        r.append('Unknown fields: {}'.format(d))
+        return r
+
+
     props = set(e['props'].keys())
     propreplace = set(e.get('propreplace', {}).keys())
     proptypes = set(e.get('proptypes', {}).keys())
@@ -184,30 +213,35 @@ def validate_entity(e, dt):
 
     etypes = e.get('proptypes', {})
 
-    # validate type duplicates
+    # validate types
+    unknown_types = set()
     for field, ftype in etypes.items():
         ftype = canonize_type(ftype)
+        # unknown
+        func_name = '_validate_{}'.format(ftype)
+        if func_name not in globals():
+            unknown_types.add(ftype)
+            r.append('Property type {}:{} is unknown'.format(field, ftype))
+        # duplicates
         if field in dt and ftype == canonize_type(dt[field]):
             r.append('Property type {}:{} duplicates entry from deftypes'.format(field, ftype))
 
     # validate types of default values
-    unknown_types = set()
     for field in propdefaults & mergedtypes:
         ftype = canonize_type(etypes[field] if field in etypes else dt[field])
+        if ftype in unknown_types:
+            continue
         func_name = '_validate_{}'.format(ftype)
-        if func_name not in globals():
-            unknown_types.add(ftype)
-        else:
-            v = e['propdefaults'][field]
-            if type(v) == bool and field in boolvalues:
-                if type(e['boolvalues'][field]) != list or len(e['boolvalues'][field]) != 2:
-                    r.append('Invalid bool list of prop {}'.format(field))
-                else:
-                    for bv in e['boolvalues'][field]:
-                        if not globals()[func_name](bv):
-                            r.append('Invalid bool value {} of prop {}, must be of type {}'.format(bv, field, ftype))
-            elif not globals()[func_name](v):
-                r.append('Invalid default value of {}: {}, must be of type {}'.format(field, v, ftype))
+        v = e['propdefaults'][field]
+        if type(v) == bool and field in boolvalues:
+            if type(e['boolvalues'][field]) != list or len(e['boolvalues'][field]) != 2:
+                r.append('Invalid bool list of prop {}'.format(field))
+            else:
+                for bv in e['boolvalues'][field]:
+                    if not globals()[func_name](bv):
+                        r.append('Invalid bool value {} of prop {}, must be of type {}'.format(bv, field, ftype))
+        elif not globals()[func_name](v):
+            r.append('Invalid default value of {}: {}, must be of type {}'.format(field, v, ftype))
 
     if unknown_types:
         r.append('Types ({}) are unknown: {}'.format(len(unknown_types), unknown_types))
@@ -281,11 +315,13 @@ if args.validate:
         w = ['{}: {}'.format(e['name'], line) for line in w]
         warns.extend(w)
 
-    for w in warns:
-        print(w)
     if not warns:
         print('No warinings! File is OK.')
     else:
+        for w in warns:
+            print(w)
+        print('==================')
+        print('Warning count: {}'.format(len(warns)))
         exit(1)
 elif args.coverage:
     for e in elist:

@@ -5,18 +5,13 @@
   flags:
   - LINEAR: Use a linear falloff. Default is inverse distance squared (more realistic).
   - NOANGLE: Ignore angle attenuation.
-  - UNUSED1: ''
-  - UNUSED2: ''
+  - DARKLIGHT: ''
+  - DARKLIGHT: ''
   - NOGRIDLIGHT: Do not affect the lightgrid (dynamic entity lighting).
   props:
-    _sun: Set this key to 1 on a spotlight to make an infinite sun light.
-    fade: Fades light attenuation. Only affects linear lights.
     radius: overrides the default 64 unit radius of a spotlight at the target point.
-    scale: Scales light attentation, from SOF2/JK2. Scales the "light" value.
-    target: Lights pointed at a target will be spotlights.
     # todo: source/engine/renderer/tr_bsp.cpp:5700
     light_center: '' # todo:
-    _color: weighted RGB value of light color (default white - 1.0 1.0 1.0). # todo:
     light_radius: '' # todo:
     light_target: '' # todo:
     light_right: '' # todo:
@@ -29,11 +24,37 @@
     noshadows: only possible value 1 # todo:
     noradiosity: only possible value 1 # todo:
     parallel: only possible value 1 # todo:
+    # from q3map2
+    style: '0 .. 255'
+    scale: Scales light attentation, from SOF2/JK2. Scales the "light" value.
+    _sun: Set this key to 1 on a spotlight to make an infinite sun light.
+    fade: Fades light attenuation. Only affects linear lights.
+    target: Lights pointed at a target will be spotlights.
+    _filterradius: filter radius
+    _deviance: sample deviance
+    _samples: n samples
     # OK:
-    origin: or light_origin Position.
-    light: 'or _light Intensity.'
+    origin: Position.
+    light: Intensity.
+    _color: Weighted RGB value of light color.
+  proptypes:
+    light: float
+    _color: vec3_float
+    fade: float
+    style: int
+    scale: float
+    _filterradius: float
+    _deviance: float
+    _samples: int
   propdefaults:
     light: 300
+    _color: [1, 1, 1]
+    fade: 1
+    style: 0
+    scale: 1
+    _filterradius: 0
+    _deviance: 0
+    _samples: 1
   desc: Non-displayed point light source. The -pointscale and -scale arguments to
     Q3Map2 affect the brightness of these lights. The -skyscale argument affects brightness
     of entity sun lights.
@@ -141,13 +162,10 @@
     _targetname: Used to attach a misc_model entity to this entity.
     color: constantLight color of .md3 model included with entity. Has no effect on
       the entity's brushes (default 1 1 1).
-    health: (default 0) if set to any non-zero value, the button must take damage
-      (any amount) to activate.
     light: constantLight radius of .md3 model included with entity. Has no effect
       on the entity's brushes (default 0).
     model2: 'path/name of model to include (eg: models/mapobjects/pipe/pipe02.md3).'
-    origin: alternate method of setting XYZ origin of .md3 model included with entity
-      (See Notes).
+    origin: ''
     sound1to2: the sound played when the door, platform or button moves from state
       1 to state 2.
     # OK:
@@ -159,6 +177,8 @@
       Positive lip value discreases displacement, leaving lip remaining at the end of move.
     angle: &brush_angle 'Determines moving direction of brush (0..360 - around Z axis:
       0=+x, 90=+y, 180=-x, 270=-y; special values: up = -1, down = -2).'
+    health: &brush_health If set to any non-zero value, the brush must take damage (any
+      amount) to activate.
   propreplace:
     speed: &Rbutt {brush: button}
     lip: *Rbutt
@@ -169,6 +189,9 @@
     lip: float
   propdefaults:
     lip: 4
+    health: false
+  boolvalues:
+    health: [0, 1]
   desc: 'When a button is touched by a player, it moves in the direction set by the
     "angle" key, triggers all its targets, stays pressed by an amount of time set
     by the "wait" key, then returns to it''s original position where it can be operated
@@ -180,6 +203,26 @@
 
     Target this entity with a misc_model to have the model attached to the entity
     (set the model''s "target" key to the same value as this entity''s "targetname").'
+  specials: {}
+- name: func_destructable
+  flags: []
+  color: 007fcc
+  props:
+    model: '' # todo:
+    origin: '' # todo:
+    angles: '' # todo:
+    # OK:
+    health: Amount of damage needed to destroy this.
+    damage: Splash damage. # todo: additionally check, dmg or damage
+    radius: Splash radius.
+  proptypes:
+    damage: int
+    radius: int
+  propdefaults:
+    damage: 0
+    radius: 0
+    health: 100
+  desc: 'Destructable object.'
   specials: {}
 - name: func_door
   color: 007fcc
@@ -223,8 +266,6 @@
       to state 1.
     soundPos1: the sound played when the door or platform reaches state 1.
     soundPos2: the sound played when the door or platform reaches state 2.
-    team: assign the same team name to multiple doors that should operate together
-      (see Notes).
     # OK:
     targetname: If set, a func_button or trigger is required to activate the door.
       Overrides activation by damage.
@@ -237,8 +278,8 @@
     range: Door triggering range.
     dmg: Damage to inflict on player when he blocks operation of door.
       Door will reverse direction when blocked unless CRUSHER spawnflag is set.
-    health: &brush_health If set to any non-zero value, the brush must take damage (any
-      amount) to activate.
+    health: *brush_health
+    team: Assign the same team name to multiple doors that should operate together.
   propreplace:
     speed: &Rdoor {brush: door}
     lip: *Rdoor
@@ -396,6 +437,12 @@
     will be the point around which it is rotated. It will rotate around the Z axis
     by default.  You can check either the X_AXIS or Y_AXIS box to change that.'
   specials: {}
+- name: func_dynamic
+  color: 007fcc
+  flags: []
+  props: {}
+  desc: ''
+  specials: {}
 - name: func_group
   color: 007fcc
   flags: []
@@ -439,18 +486,6 @@
   color: 007fcc
   flags: []
   props:
-    ? You need to have an origin brush as part of this entity. The center of that
-      brush will be the point through which the rotation axis passes. Setting the
-      origin key is simply an alternate method to using an origin brush. Pendulum
-      will rotate along the X axis by default. Very crude operation
-    : 'pendulum cannot rotate along Z axis, the speed of swing (frequency) is not
-      adjustable. When using the model2 key, the origin point of the model will correspond
-      to the origin point defined by either the origin brush or the origin coordinate
-      value.
-
-
-      Target this entity with a misc_model to have the model attached to the entity
-      (set the model''s "target" key to the same value as this entity''s "targetname").'
     _celshader: 'Sets the cel shader used for this geometry. Note: omit the "textures/"
       prefix.'
     _cs OR _castshadows: Allows per-entity control over shadow casting. Defaults to
@@ -477,14 +512,34 @@
       on the entity's brushes (default 0).
     model2: 'path/name of model to include (eg: models/mapobjects/jets/jets01.md3).'
     noise: path/name of .wav file to play. Use looping sounds only (eg. sound/world/drone6.wav).
-    origin: alternate method of setting XYZ origin of entity's rotation axis and .md3
-      model included with entity (default "0 0 0" - See Notes).
+    speed: angle of swing arc in either direction from initial position (default 30).
+    # found:
     phase: sets the start offset of the swinging cycle. Values must be 0 < phase <
       1. Any integer phase value is the same as no offset (default 0).
-    speed: angle of swing arc in either direction from initial position (default 30).
-  desc: Solid entity that describes a pendulum back and forth rotation movement. Rotates
+    dmg: ''
+    origin: alternate method of setting XYZ origin of entity's rotation axis and .md3
+      model included with entity (default "0 0 0" - See Notes).
+    angles: ''
+  proptypes:
+    phase: float
+  propdefaults:
+    phase: 0
+    dmg: 2
+  desc: 'Solid entity that describes a pendulum back and forth rotation movement. Rotates
     on the X axis by default. Pendulum frequency is a physical constant based on the
     length of the beam and gravity. Blocking the pendulum instantly kills a player.
+
+    You need to have an origin brush as part of this entity. The center of that
+    brush will be the point through which the rotation axis passes. Setting the
+    origin key is simply an alternate method to using an origin brush. Pendulum
+    will rotate along the X axis by default. Very crude operation
+    pendulum cannot rotate along Z axis, the speed of swing (frequency) is not
+    adjustable. When using the model2 key, the origin point of the model will correspond
+    to the origin point defined by either the origin brush or the origin coordinate
+    value.
+
+    Target this entity with a misc_model to have the model attached to the entity
+    (set the model''s "target" key to the same value as this entity''s "targetname").'
   specials: {}
 - name: func_plat
   color: 007fcc
@@ -611,6 +666,16 @@
     Target this entity with a misc_model to have the model attached to the entity
     (set the model''s "target" key to the same value as this entity''s "targetname").'
   specials: {}
+- name: func_spawn # todo:
+  color: '007fcc'
+  flags:
+  - INITIALLY_LINKED: ''
+  - DONT_KILL_BRUSH_MODEL_ON_ACT: ''
+  props:
+    angles: ''
+    model: ''
+  desc: ''
+  specials: {}
 - name: func_static
   color: 007fcc
   flags: []
@@ -660,21 +725,20 @@
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
   flags:
-  - START_ON: timer will start on in the game and continuously fire its targets.
+  - START_ON: Timer will start on in the game and continuously fire its targets. # OK
   props:
-    ? When the random key is set, its value is used to calculate a minimum and a maximum
-      delay. The final time delay will be a random value anywhere between the minimum
-      and maximum values
-    : (min delay = wait - random) (max delay = wait + random).
-    random: random time variance in seconds added or subtracted from "wait" delay
-      (default 0 - see Notes).
-    target: this points to the entities to trigger.
-    targetname: a func_button or trigger that points to this will toggle the timer
+    # OK:
+    wait: Delay in seconds between each triggering of its targets.
+    target: This points to the entities to trigger.
+    targetname: A func_button or trigger that points to this will toggle the timer
       on/off when activated.
-    wait: delay in seconds between each triggering of its targets (default 1).
-  desc: Time delay trigger that will continuously fire its targets after a preset
+  desc: 'Time delay trigger that will continuously fire its targets after a preset
     time delay. The time delay can also be randomized. When triggered, the timer will
     toggle on/off.
+
+    When the random key is set, its value is used to calculate a minimum and a maximum
+    delay. The final time delay will be a random value anywhere between the minimum
+    and maximum values (min delay = wait - random) (max delay = wait + random).'
   specials: {}
 - name: func_train
   color: 007fcc
@@ -1031,13 +1095,14 @@
   desc: Location marker used for team chats. The closest target_location in sight
     is used for the location. If none is in sight, the closest in distance is used.
   specials: {}
-- name: target_position
+- name: target_position # todo: game advices to use pos_target instead
   color: 007f00
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
   flags: []
   props:
-    targetname: the entity that requires an aiming direction points to this.
+    # OK:
+    targetname: Name of this position.
   desc: 'Aiming target for entities like light, misc_portal_camera and trigger_push
     (jump pads) in particular.
 
@@ -1577,12 +1642,12 @@
       # bug: disable buildables works, but shows warnings
     colorGrade: or gradingTexture - Path of color grading effect (eg. gfx/cgrading/red-only)
   proptypes:
-    message: string
     music: string
     disabledEquipment: string
     disabledClasses: string
     disabledBuildables: string
     colorGrade: string
+    gravity: float
   propdefaults:
     gravity: 800
   desc: Only used for the world.
