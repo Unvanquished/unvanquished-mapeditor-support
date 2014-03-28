@@ -14,8 +14,6 @@
     radius: overrides the default 64 unit radius of a spotlight at the target point.
     scale: Scales light attentation, from SOF2/JK2. Scales the "light" value.
     target: Lights pointed at a target will be spotlights.
-    origin: or light_origin 3-float position # OK
-    light: 'or _light intensity (default: 300)' # OK
     # todo: source/engine/renderer/tr_bsp.cpp:5700
     light_center: '' # todo:
     _color: weighted RGB value of light color (default white - 1.0 1.0 1.0). # todo:
@@ -31,6 +29,11 @@
     noshadows: only possible value 1 # todo:
     noradiosity: only possible value 1 # todo:
     parallel: only possible value 1 # todo:
+    # OK:
+    origin: or light_origin Position.
+    light: 'or _light Intensity.'
+  propdefaults:
+    light: 300
   desc: Non-displayed point light source. The -pointscale and -scale arguments to
     Q3Map2 affect the brightness of these lights. The -skyscale argument affects brightness
     of entity sun lights.
@@ -61,8 +64,8 @@
 - name: func_bobbing
   color: 007fcc
   flags:
-  - X_AXIS: entity will bob along the X axis. (overrides Y_AXIS) # OK
-  - Y_AXIS: entity will bob along the Y axis. (if both not set - it will Z axis.) # OK
+  - X_AXIS: entity will bob along the X axis. (overrides Y_AXIS)
+  - Y_AXIS: entity will bob along the Y axis. (if both not set - it will Z axis.)
   props:
     _celshader: 'Sets the cel shader used for this geometry. Note: omit the "textures/"
       prefix.'
@@ -147,14 +150,25 @@
       (See Notes).
     sound1to2: the sound played when the door, platform or button moves from state
       1 to state 2.
+    # OK:
     target: All entities with a matching targetname will be triggered. If not set
-      button will not appear. # OK
-    wait: number of seconds button stays pressed (default 1, -1 = return immediately).
+      button will not appear.
+    wait: &brush_wait Number of seconds before brush returns. -1 = return immediately.
     speed: &brush_speed Determines how fast the brush moves.
     lip: &brush_lip When 0, brush displacement = brush's size in direction of movement.
       Positive lip value discreases displacement, leaving lip remaining at the end of move.
     angle: &brush_angle 'Determines moving direction of brush (0..360 - around Z axis:
       0=+x, 90=+y, 180=-x, 270=-y; special values: up = -1, down = -2).'
+  propreplace:
+    speed: &Rbutt {brush: button}
+    lip: *Rbutt
+    angle: *Rbutt
+    health: *Rbutt
+    wait: {'before brush returns': 'button stays pressed'}
+  proptypes:
+    lip: float
+  propdefaults:
+    lip: 4
   desc: 'When a button is touched by a player, it moves in the direction set by the
     "angle" key, triggers all its targets, stays pressed by an amount of time set
     by the "wait" key, then returns to it''s original position where it can be operated
@@ -169,11 +183,11 @@
   specials: {}
 - name: func_door
   color: 007fcc
-  flags:
-  - START_OPEN: The door will spawn in the open state and operate in reverse. # OK
+  flags: # ALL OK
+  - START_OPEN: The door will spawn in the open state and operate in reverse.
   - '-': ''
   - CRUSHER: Door will not reverse direction when blocked and will keep damaging player
-      or building until it dies or gets out of the way. # OK
+      or building until it dies or gets out of the way.
     # bug: when CRUSHER is off, door blocked, goes back for 1 frame, then goes forward
     # again, etc, crushing everything while player in triggering zone
   props:
@@ -209,23 +223,22 @@
       to state 1.
     soundPos1: the sound played when the door or platform reaches state 1.
     soundPos2: the sound played when the door or platform reaches state 2.
-    targetname: If set, a func_button or trigger is required to activate the door.
-      Overrides activation by damage. # OK
     team: assign the same team name to multiple doors that should operate together
       (see Notes).
-    speed: *brush_speed # OK
-    lip: *brush_lip # OK
-    angle: *brush_angle # OK
-    wait: 'Number of seconds before brush returns. Default 2. 0 acts as default,
-      use here eg. 0.1 for very small delay. -1 = return immediately: don''t use
-      that, it makes annoying sound cascade (opens/closes every frame)' # OK
-      # bug: bad -1 value
-      # bug: confising 0
-    range: Door triggering range. # OK
+    # OK:
+    targetname: If set, a func_button or trigger is required to activate the door.
+      Overrides activation by damage.
+    speed: *brush_speed
+    lip: *brush_lip
+    angle: *brush_angle
+    wait: *brush_wait
+      # bug: bad -1 value, it makes annoying sound cascade (opens/closes every frame)
+      # bug: confusing 0 (stands for default value)
+    range: Door triggering range.
     dmg: Damage to inflict on player when he blocks operation of door.
-      Door will reverse direction when blocked unless CRUSHER spawnflag is set. # OK
+      Door will reverse direction when blocked unless CRUSHER spawnflag is set.
     health: &brush_health If set to any non-zero value, the brush must take damage (any
-      amount) to activate. # OK
+      amount) to activate.
   propreplace:
     speed: &Rdoor {brush: door}
     lip: *Rdoor
@@ -1530,28 +1543,13 @@
       separated by spaces, representing number of units between grid points in X Y
       Z. Default gridsize value is 128 128 256. Use larger powers of 2 to reduce BSP
       size and compile time on very large maps.
-    message: shown above loading bar # OK
-    music: path/name of looping .wav or .ogg file used for level's music (eg. music/sonic5.wav) # OK
-    # bug: music doesn't loop, plays only once
-    colorGrade: or gradingTexture - path of color grading effect (eg. gfx/cgrading/red-only) # OK
     reverbIntensity: float 0.0 .. 2.0 # OK
     reverbEffect: none|generic # todo: there can be more names, but I didn't found any
     # testReverb command works on these values
     # bug: causes game to crash CM_ClipHandleToModel: bad handle -1
-    gravity: gravity of level, default 800 # OK
     humanBuildPoints: The maximum amount of power the humans can use. # bug: exist in code, but unused
     humanRepeaterBuildPoints: maximum amount of power the humans can use around each repeater # bug: exist in code, but unused
     alienBuildPoints: The maximum amount of sentience available to the overmind. # bug: exist in code, but unused
-    disabledEquipment: A comma delimited list of human weapons or upgrades to disable
-      for this map. (rifle,psaw,shotgun,lgun,mdriver,chaingun,flamer,prifle,lcannon,
-      larmour,marmour,bsuit,radar,battpack,jetpack,gren,firebomb) # OK
-    disabledClasses: A comma delimited list of alien classes to disable for this map.
-      (builder,builderupg,level0,level1,level2,level2upg,level3,level3upg,level4) # OK
-    # bug: disable classes works, but shows warnings
-    disabledBuildables: A comma delimited list of buildables to disable for this map.
-      (eggpod,overmind,barricade,acid_tube,trapper,booster,hive,leech,telenode,mgturret,
-      tesla,arm,medistat,drill,reactor,repeater) # OK
-    # bug: disable buildables works, but shows warnings
     _color: or ambientColor RGB value for ambient light color (default is 0 0 0). # todo: no visible effect
     fogColor: RGB (3 floats) # todo: no visible effect
     fogDensity: float # todo: no visible effect
@@ -1562,6 +1560,53 @@
     mapOverBrightBits: '' # todo:
     _q3map2_cmdline: '' # todo:
     hdrRGBE: '' # todo:
+    # OK:
+    message: Shown above loading bar.
+    music: Path/name of looping .wav or .ogg file used for level's music (eg. music/sonic5.wav)
+      # bug: music doesn't loop, plays only once
+    gravity: Gravity of level.
+    disabledEquipment: A comma delimited list of human weapons or upgrades to disable
+      for this map. (rifle,psaw,shotgun,lgun,mdriver,chaingun,flamer,prifle,lcannon,
+      larmour,marmour,bsuit,radar,battpack,jetpack,gren,firebomb)
+    disabledClasses: A comma delimited list of alien classes to disable for this map.
+      (builder,builderupg,level0,level1,level2,level2upg,level3,level3upg,level4)
+      # bug: disable classes works, but shows warnings
+    disabledBuildables: A comma delimited list of buildables to disable for this map.
+      (eggpod,overmind,barricade,acid_tube,trapper,booster,hive,leech,telenode,mgturret,
+      tesla,arm,medistat,drill,reactor,repeater)
+      # bug: disable buildables works, but shows warnings
+    colorGrade: or gradingTexture - Path of color grading effect (eg. gfx/cgrading/red-only)
+  proptypes:
+    message: string
+    music: string
+    disabledEquipment: string
+    disabledClasses: string
+    disabledBuildables: string
+    colorGrade: string
+  propdefaults:
+    gravity: 800
   desc: Only used for the world.
   specials: {}
-
+#- name: ctrl_limited
+  #color: '000000'
+  #flags: []
+  #props: {}
+  #desc: ''
+  #specials: {}
+#- name: ctrl_relay
+  #color: '000000'
+  #flags:
+  #- HUMANS: Can be activated by human.
+  #- ALIENS: Can be activated by alien.
+  #- RANDOM: 'G_FireEntityRandomly( self, activator );'
+  #props:
+    #wait: ''
+    #delay: Old, replaced with wait.
+  #desc: ''
+  #specials: {}
+#env_afx_ammo"
+#env_afx_gravity"
+#env_afx_heal"
+#env_afx_hurt"
+#env_afx_push"
+#env_afx_teleport"
