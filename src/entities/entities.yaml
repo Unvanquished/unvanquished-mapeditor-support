@@ -3,13 +3,12 @@
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
   flags:
-  - LINEAR: Use a linear falloff. Default is inverse distance squared (more realistic).
+  - LINEAR: Use a linear falloff. Default is inverse distance squared (more realistic). # OK
   - NOANGLE: Ignore angle attenuation.
   - DARKLIGHT: ''
   - DARKLIGHT: ''
   - NOGRIDLIGHT: Do not affect the lightgrid (dynamic entity lighting).
   props:
-    radius: overrides the default 64 unit radius of a spotlight at the target point.
     # todo: source/engine/renderer/tr_bsp.cpp:5700
     light_center: '' # todo:
     light_radius: '' # todo:
@@ -25,18 +24,19 @@
     noradiosity: only possible value 1 # todo:
     parallel: only possible value 1 # todo:
     # from q3map2
-    style: '0 .. 255'
-    scale: Scales light attentation, from SOF2/JK2. Scales the "light" value.
     _sun: Set this key to 1 on a spotlight to make an infinite sun light.
-    fade: Fades light attenuation. Only affects linear lights.
-    target: Lights pointed at a target will be spotlights.
-    _filterradius: filter radius
-    _deviance: sample deviance
-    _samples: n samples
+    _samples: '' # look in q3
+    _deviance: ''
+    style: If not default, makes wave noise shader causing whole map to blink. Values variate blink function.
     # OK:
     origin: Position.
     light: Intensity.
     _color: Weighted RGB value of light color.
+    _filterradius: No attenuation within _filterradius sphere.
+    target: Lights pointed at a target will be spotlights.
+    radius: overrides the default 64 unit Radius of a spotlight at the target point.
+    scale: 'Scales intensity, from SOF2/JK2. Eg. light=300, scale=0.2 will result in light=60'
+    fade: Linear (only linear) light attenuation coefficient, less value - far the light goes.
   proptypes:
     light: float
     _color: vec3_float
@@ -46,6 +46,7 @@
     _filterradius: float
     _deviance: float
     _samples: int
+    radius: float
   propdefaults:
     light: 300
     _color: [1, 1, 1]
@@ -55,6 +56,7 @@
     _filterradius: 0
     _deviance: 0
     _samples: 1
+    radius: 64
   desc: Non-displayed point light source. The -pointscale and -scale arguments to
     Q3Map2 affect the brightness of these lights. The -skyscale argument affects brightness
     of entity sun lights.
@@ -1625,6 +1627,7 @@
     mapOverBrightBits: '' # todo:
     _q3map2_cmdline: '' # todo:
     hdrRGBE: '' # todo:
+    enabledust: '' # from shader manual
     # OK:
     message: Shown above loading bar.
     music: Path/name of looping .wav or .ogg file used for level's music (eg. music/sonic5.wav)
