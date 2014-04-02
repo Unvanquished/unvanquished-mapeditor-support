@@ -1,6 +1,6 @@
 #!/bin/sh
 
-ROOT="../netradiant"
+ROOT="../netradiant/gamepack"
 
 mkdir -p "${ROOT}/unvanquished.game/pkg"
 install -m644 game.xlink "${ROOT}/unvanquished.game/"
