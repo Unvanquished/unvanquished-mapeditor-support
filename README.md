@@ -3,10 +3,12 @@ mapeditor-support
 
 Unvanquished support files for map editors.
 
+**These packages are work in progress and may not yet work!**
+
 Using the support files
 -----------------------
 
-Pick the directory corresponding to your editor and merge the file hierarchy into its installation. You might need to adjust pathes inside the configuration files depending on your operating system and Unvanquished installation.
+Pick the directory corresponding to your editor and merge the file hierarchy inside the `gamepack` subdirectory into its installation. Further install instructions are given in a seperate per-editor readme file.
 
 Packages
 --------
@@ -18,4 +20,4 @@ Packages are available for
 Contributing
 ------------
 
-The `src` directory contains common files, source files and export scripts that populate the eidtor specific directories. Files that aren't editor-specific should be maintained there. Ideally we will be able to auto-generate the entire contents of the editor directories eventually.
+The `src` directory contains common files, source files and export scripts that populate the editor specific directories. Files that aren't editor-specific should be maintained there. Ideally we will be able to auto-generate the entire contents of the editor directories eventually.
