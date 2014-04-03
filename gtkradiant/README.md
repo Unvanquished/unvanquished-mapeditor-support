@@ -15,8 +15,8 @@ List of available games hardcoded, so you will need patching.
 
 1. Apply `GtkRadiant.patch`.
 
-	cd GtkRadiant
-	patch -p1 < GtkRadiant.patch
+        cd GtkRadiant
+        patch -p1 < GtkRadiant.patch
 
 2. Compile radiant as usual. This will automatically take the rest of Unvanquished gamepack from repository.
 
