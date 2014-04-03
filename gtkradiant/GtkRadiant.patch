@@ -1,7 +1,115 @@
+From 2a4eac6b23e39dc3f414db26235a5f1c0196ffa2 Mon Sep 17 00:00:00 2001
+From: neumond <knifeslaughter@gmail.com>
+Date: Sun, 23 Mar 2014 02:06:03 +0400
+Subject: [PATCH 1/3] Unvanquished appears in menu
+
+---
+ radiant/preferences.cpp | 24 ++++++++++++++++++++++++
+ radiant/preferences.h   |  3 +++
+ 2 files changed, 27 insertions(+)
+
+diff --git a/radiant/preferences.cpp b/radiant/preferences.cpp
+index 288448b..9be5e4e 100644
+--- a/radiant/preferences.cpp
++++ b/radiant/preferences.cpp
+@@ -3417,6 +3417,9 @@ void CGameInstall::BuildDialog() {
+ 		case GAME_WOLF:
+ 			gtk_combo_box_append_text( GTK_COMBO_BOX( game_select_combo ), _( "Return To Castle Wolfenstein" ) );
+ 			break;
++		case GAME_UNVANQUISHED:
++			gtk_combo_box_append_text( GTK_COMBO_BOX( game_select_combo ), _( "Unvanquished" ) );
++			break;
+ 		}
+ 		iGame++;
+ 	}
+@@ -3563,6 +3566,10 @@ void CGameInstall::Run() {
+ 		gamePack = WOLF_PACK;
+ 		gameFilePath += WOLF_GAME;
+ 		break;
++	case GAME_UNVANQUISHED:
++		gamePack = UNVANQUISHED_PACK;
++		gameFilePath += UNVANQUISHED_GAME;
++		break;
+ 	default:
+ 		Error( "Invalid game selected: %d", m_availGames[ m_nComboSelect ] );
+ 	}
+@@ -3741,6 +3748,20 @@ void CGameInstall::Run() {
+ 		}
+ 		break;
+ 	}
++	case GAME_UNVANQUISHED: {
++		fprintf( fg, "  prefix=\".unvanquished\"\n" );
++		fprintf( fg, "  basegame=\"pkg\"\n" );
++
++		// Hardcoded fix for "missing" shaderlist in gamepack
++		Str dest = m_strEngine.GetBuffer();
++		dest += "/pkg/scripts/shaderlist.txt";
++		if( CheckFile( dest.GetBuffer() ) != PATH_FILE ) {
++			Str source = gameInstallPath.GetBuffer();
++			source += "pkg/scripts/default_shaderlist.txt";
++			radCopyFile( source.GetBuffer(), dest.GetBuffer() );
++		}
++		break;
++	}
+ 	}
+ 	fprintf( fg, "/>\n" );
+ 	fclose( fg );
+@@ -3802,6 +3823,9 @@ void CGameInstall::ScanGames() {
+ 		if ( stricmp( dirname, WOLF_PACK ) == 0) {
+ 			m_availGames[ iGame++ ] = GAME_WOLF;
+ 		}
++		if ( stricmp( dirname, UNVANQUISHED_PACK ) == 0) {
++			m_availGames[ iGame++ ] = GAME_UNVANQUISHED;
++		}
+ 	}
+ 	Sys_Printf( "No installable games found in: %s\n",
+ 				pakPaths.GetBuffer() );
+diff --git a/radiant/preferences.h b/radiant/preferences.h
+index 79b4318..e1c6ac2 100644
+--- a/radiant/preferences.h
++++ b/radiant/preferences.h
+@@ -216,6 +216,7 @@ void Dump();
+ #define QL_GAME "ql.game"
+ #define STVEF_GAME "stvef.game"
+ #define WOLF_GAME "wolf.game"
++#define UNVANQUISHED_GAME "unvanquished.game"
+ 
+ #define Q3_PACK "Q3Pack"
+ #define URT_PACK "UrTPack"
+@@ -231,6 +232,7 @@ void Dump();
+ #define QL_PACK "QLPack"
+ #define STVEF_PACK "STVEFPack"
+ #define WOLF_PACK "WolfPack"
++#define UNVANQUISHED_PACK "UnvanquishedPack"
+ 
+ class CGameInstall : public Dialog {
+ public:
+@@ -259,6 +261,7 @@ public:
+ 	GAME_QL,
+ 	GAME_STVEF,
+ 	GAME_WOLF,
++        GAME_UNVANQUISHED,
+ 	GAME_COUNT
+   };
+ 
+-- 
+1.8.3.2
+
+
+From abb329b7a343d53ac3766f26ea2483cbe9da942e Mon Sep 17 00:00:00 2001
+From: neumond <knifeslaughter@gmail.com>
+Date: Sun, 23 Mar 2014 07:30:06 +0400
+Subject: [PATCH 2/3] git clone gamepack
+
+---
+ config.py | 31 ++++++++++++++++++++++++-------
+ 1 file changed, 24 insertions(+), 7 deletions(-)
+
 diff --git a/config.py b/config.py
+index 63ad8a7..9ef1716 100644
 --- a/config.py
 +++ b/config.py
-@@ -27,7 +27,10 @@
+@@ -27,7 +27,10 @@ class Config:
          # platforms for which to assemble a setup
          self.setup_platforms = [ 'local', 'x86', 'x64', 'win32' ]
          # paks to assemble in the setup
@@ -13,7 +121,7 @@ diff --git a/config.py b/config.py
  
      def __repr__( self ):
          return 'config: target=%s config=%s' % ( self.target_selected, self.config_selected )
-@@ -154,7 +157,7 @@
+@@ -154,7 +157,7 @@ class Config:
              config = {}
              config['name'] = config_name
              config['shared'] = False
@@ -22,7 +130,7 @@ diff --git a/config.py b/config.py
              build_dir = os.path.join( 'build', config_name, compiler_name )
              VariantDir( build_dir, '.', duplicate = 0 )
              lib_objects = []
-@@ -243,7 +246,7 @@
+@@ -243,7 +246,7 @@ class Config:
  
              # this lets us catch libjpg and libpng libraries that we put in the same directory as radiant.bin
              env.Append( LINKFLAGS = '-Wl,-rpath,.' )
@@ -31,7 +139,7 @@ diff --git a/config.py b/config.py
          # On Mac, we pad headers so that we may rewrite them for packaging
          if ( self.platform == 'Darwin' ) :
              env.Append( LINKFLAGS = [ '-headerpad_max_install_names' ] )
-@@ -256,11 +259,25 @@
+@@ -256,11 +259,25 @@ class Config:
          print( repr( cmd ) )
          subprocess.check_call( cmd )
  
@@ -60,7 +168,7 @@ diff --git a/config.py b/config.py
      def CopyTree( self, src, dst):
          for root, dirs, files in os.walk( src ):
              target_dir = os.path.join( dst, root[root.find( '/' )+1:] )
-@@ -354,7 +371,7 @@
+@@ -354,7 +371,7 @@ class Config:
                  'gtkglext-1.2.0/share',
                  ]:
                  self.CopyTree( os.path.join( srcdir, extra ), 'install' )
@@ -69,267 +177,50 @@ diff --git a/config.py b/config.py
              try:
                  os.mkdir( 'install/x64' )
              except:
-diff --git a/radiant/camwindow.cpp b/radiant/camwindow.cpp
---- a/radiant/camwindow.cpp
-+++ b/radiant/camwindow.cpp
-@@ -168,7 +168,7 @@
- 	update_xor_rectangle( m_XORRectangle );
- }
+-- 
+1.8.3.2
+
+
+From b188f8a03834c2a8b63a630f5b38200bc43d81db Mon Sep 17 00:00:00 2001
+From: neumond <knifeslaughter@gmail.com>
+Date: Thu, 3 Apr 2014 06:22:01 +0400
+Subject: [PATCH 3/3] Moved to official repo. Removed git dependency.
+
+---
+ config.py | 14 ++------------
+ 1 file changed, 2 insertions(+), 12 deletions(-)
+
+diff --git a/config.py b/config.py
+index 9ef1716..d6e354c 100644
+--- a/config.py
++++ b/config.py
+@@ -259,24 +259,14 @@ class Config:
+         print( repr( cmd ) )
+         subprocess.check_call( cmd )
  
--void CamWnd::OnMouseWheel( bool bUp ){
-+void CamWnd::OnMouseWheel( bool bUp, int pointx, int pointy ){
- 	if ( bUp ) {
- 		VectorMA( m_Camera.origin, g_PrefsDlg.m_nMoveSpeed, m_Camera.forward, m_Camera.origin );
- 	}
-diff --git a/radiant/camwindow.h b/radiant/camwindow.h
---- a/radiant/camwindow.h
-+++ b/radiant/camwindow.h
-@@ -148,7 +148,7 @@
- void OnRButtonUp( guint32 flags, int pointx, int pointy );
- void OnMButtonUp( guint32 flags, int pointx, int pointy );
- void OnMouseMove( guint32 flags, int pointx, int pointy );
--void OnMouseWheel( bool bUp );
-+void OnMouseWheel( bool bUp, int pointx, int pointy );
- void OnSize( int cx, int cy );
+-    def GitCheckoutOrUpdate( self, giturl, path ):
+-        path = os.path.abspath( path )
+-        if ( os.path.exists( path ) ):
+-            cmd = [ 'git', '--work-tree', path, '--git-dir', os.path.join(path, '.git'), 'pull' ]
+-        else:
+-            cmd = [ 'git', 'clone', giturl, path ]
+-        print( repr( cmd ) )
+-        subprocess.check_call( cmd )
+-
+     def FetchGamePaks( self, path ):
+         for pak in self.setup_packs:
+             pak_path = os.path.join( path, 'installs', pak )
+             if pak == 'UnvanquishedPack':
+-                giturl = 'https://github.com/neumond/UnvanquishedPack.git'
+-                self.GitCheckoutOrUpdate( giturl, pak_path )
++                svnurl = 'https://github.com/Unvanquished/mapeditor-support/trunk/gtkradiant/'
+             else:
+                 svnurl = 'svn://svn.icculus.org/gtkradiant-gamepacks/%s/trunk' % pak
+-                self.CheckoutOrUpdate( svnurl, pak_path )
++            self.CheckoutOrUpdate( svnurl, pak_path )
  
- protected:
-diff --git a/radiant/eclass_def.cpp b/radiant/eclass_def.cpp
---- a/radiant/eclass_def.cpp
-+++ b/radiant/eclass_def.cpp
-@@ -159,8 +159,9 @@
- 	text++;
- 
- 	// get the size
--	text = COM_Parse( text );
-+	t = COM_Parse( text );
- 	if ( Get_COM_Token()[0] == '(' ) { // parse the size as two vectors
-+                text = t;
- 		e->fixedsize = true;
- 		r = sscanf( text,"%f %f %f) (%f %f %f)", &e->mins[0], &e->mins[1], &e->mins[2],
- 					&e->maxs[0], &e->maxs[1], &e->maxs[2] );
-diff --git a/radiant/glwindow.cpp b/radiant/glwindow.cpp
---- a/radiant/glwindow.cpp
-+++ b/radiant/glwindow.cpp
-@@ -79,8 +79,8 @@
- 	case 2: flags |= MK_MBUTTON; break;
- 	case 3: flags |= MK_RBUTTON; break;
- #if !GTK_CHECK_VERSION( 1,3,0 )
--	case 4: wnd->OnMouseWheel( true ); break;
--	case 5: wnd->OnMouseWheel( false ); break;
-+	case 4: wnd->OnMouseWheel( true, (int)event->x, (int)event->y ); break;
-+	case 5: wnd->OnMouseWheel( false, (int)event->x, (int)event->y ); break;
- #endif
- 	}
- 
-@@ -177,7 +177,7 @@
- 						  GdkEventScroll *event,
- 						  gpointer data ){
- 	GLWindow *wnd = (GLWindow*)data;
--	wnd->OnMouseWheel( ( event->direction == GDK_SCROLL_UP ) ? true : false );
-+	wnd->OnMouseWheel( ( event->direction == GDK_SCROLL_UP ) ? true : false, (int)event->x, (int)event->y );
- 	return TRUE;
- }
- #endif
-diff --git a/radiant/glwindow.h b/radiant/glwindow.h
---- a/radiant/glwindow.h
-+++ b/radiant/glwindow.h
-@@ -58,7 +58,7 @@
-   virtual void OnSize( int cx, int cy ) { }
-   virtual void OnTimer() { }
- 
--  virtual void OnMouseWheel( bool bUp ) { }
-+  virtual void OnMouseWheel( bool bUp, int pointx, int pointy ) { }
- 
-   void RedrawWindow() {	gtk_widget_queue_draw( m_pWidget ); }
- 
-diff --git a/radiant/preferences.cpp b/radiant/preferences.cpp
---- a/radiant/preferences.cpp
-+++ b/radiant/preferences.cpp
-@@ -102,6 +102,7 @@
- #define ROTATION_KEY            "Rotation"
- #define BUGGYICD_KEY            "BuggyICD"
- #define CHASEMOUSE_KEY          "ChaseMouse"
-+#define MOUSEWHEELZOOM_KEY      "MousewheelZoom"
- #define ENTITYSHOW_KEY          "EntityShow"
- #define TEXTURESCALE_KEY        "TextureScale"
- #define TEXTURESCROLLBAR_KEY    "TextureScrollbar"
-@@ -620,6 +621,7 @@
- 	m_strUserPath = "";
- 	m_nRotation = 0;
- 	m_bChaseMouse = FALSE;
-+        m_bMousewheelZoom = FALSE;
- 	m_bTextureScrollbar = TRUE;
- 	m_bDisplayLists = TRUE;
- 	m_bAntialiasedPointsAndLines = FALSE; // Fishman - Add antialiazed points and lines support. 09/03/00
-@@ -2271,6 +2273,12 @@
- 	gtk_box_pack_start( GTK_BOX( vbox ), check, FALSE, FALSE, 0 );
- 	AddDialogData( check, &m_bALTEdge, DLG_CHECK_BOOL );
- 
-+        // Imroved mouse wheel zoom in
-+	check = gtk_check_button_new_with_label( _( "Improved mousewheel zoom-in" ) );
-+	gtk_widget_show( check );
-+	gtk_box_pack_start( GTK_BOX( vbox ), check, FALSE, FALSE, 0 );
-+	AddDialogData( check, &m_bMousewheelZoom, DLG_CHECK_BOOL );
-+
- 	// Mouse wheel increments
- 	// container
- 	hbox2 = gtk_hbox_new( FALSE, 5 );
-@@ -2996,6 +3004,7 @@
- 	mLocalPrefs.GetPref( USERINI_KEY,            &m_strUserPath,                 "" );
- 	mLocalPrefs.GetPref( ROTATION_KEY,           &m_nRotation,                   45 );
- 	mLocalPrefs.GetPref( CHASEMOUSE_KEY,         &m_bChaseMouse,                 TRUE );
-+	mLocalPrefs.GetPref( MOUSEWHEELZOOM_KEY,     &m_bMousewheelZoom,             FALSE );
- 	mLocalPrefs.GetPref( ENTITYSHOW_KEY,         &m_nEntityShowState,            ENTITY_SKINNED_BOXED );
- 
- 	// this will probably need to be 75 or 100 for Q1.
-@@ -3417,6 +3426,9 @@
- 		case GAME_WOLF:
- 			gtk_combo_box_append_text( GTK_COMBO_BOX( game_select_combo ), _( "Return To Castle Wolfenstein" ) );
- 			break;
-+		case GAME_UNVANQUISHED:
-+			gtk_combo_box_append_text( GTK_COMBO_BOX( game_select_combo ), _( "Unvanquished" ) );
-+			break;
- 		}
- 		iGame++;
- 	}
-@@ -3563,6 +3575,10 @@
- 		gamePack = WOLF_PACK;
- 		gameFilePath += WOLF_GAME;
- 		break;
-+	case GAME_UNVANQUISHED:
-+		gamePack = UNVANQUISHED_PACK;
-+		gameFilePath += UNVANQUISHED_GAME;
-+		break;
- 	default:
- 		Error( "Invalid game selected: %d", m_availGames[ m_nComboSelect ] );
- 	}
-@@ -3741,6 +3757,20 @@
- 		}
- 		break;
- 	}
-+	case GAME_UNVANQUISHED: {
-+		fprintf( fg, "  prefix=\".unvanquished\"\n" );
-+		fprintf( fg, "  basegame=\"pkg\"\n" );
-+
-+		// Hardcoded fix for "missing" shaderlist in gamepack
-+		Str dest = m_strEngine.GetBuffer();
-+		dest += "/pkg/scripts/shaderlist.txt";
-+		if( CheckFile( dest.GetBuffer() ) != PATH_FILE ) {
-+			Str source = gameInstallPath.GetBuffer();
-+			source += "pkg/scripts/default_shaderlist.txt";
-+			radCopyFile( source.GetBuffer(), dest.GetBuffer() );
-+		}
-+		break;
-+	}
- 	}
- 	fprintf( fg, "/>\n" );
- 	fclose( fg );
-@@ -3802,6 +3832,9 @@
- 		if ( stricmp( dirname, WOLF_PACK ) == 0) {
- 			m_availGames[ iGame++ ] = GAME_WOLF;
- 		}
-+		if ( stricmp( dirname, UNVANQUISHED_PACK ) == 0) {
-+			m_availGames[ iGame++ ] = GAME_UNVANQUISHED;
-+		}
- 	}
- 	Sys_Printf( "No installable games found in: %s\n",
- 				pakPaths.GetBuffer() );
-diff --git a/radiant/preferences.h b/radiant/preferences.h
---- a/radiant/preferences.h
-+++ b/radiant/preferences.h
-@@ -216,6 +216,7 @@
- #define QL_GAME "ql.game"
- #define STVEF_GAME "stvef.game"
- #define WOLF_GAME "wolf.game"
-+#define UNVANQUISHED_GAME "unvanquished.game"
- 
- #define Q3_PACK "Q3Pack"
- #define URT_PACK "UrTPack"
-@@ -231,6 +232,7 @@
- #define QL_PACK "QLPack"
- #define STVEF_PACK "STVEFPack"
- #define WOLF_PACK "WolfPack"
-+#define UNVANQUISHED_PACK "UnvanquishedPack"
- 
- class CGameInstall : public Dialog {
- public:
-@@ -259,6 +261,7 @@
- 	GAME_QL,
- 	GAME_STVEF,
- 	GAME_WOLF,
-+        GAME_UNVANQUISHED,
- 	GAME_COUNT
-   };
- 
-@@ -619,6 +622,7 @@
- Str m_strUserPath;
- int m_nRotation;
- bool m_bChaseMouse;
-+bool m_bMousewheelZoom;
- bool m_bTextureScrollbar;
- bool m_bDisplayLists;
- bool m_bAntialiasedPointsAndLines;    // Fishman - Add antialiazed points and lines support. 09/03/00
-diff --git a/radiant/texwindow.cpp b/radiant/texwindow.cpp
---- a/radiant/texwindow.cpp
-+++ b/radiant/texwindow.cpp
-@@ -1784,7 +1784,7 @@
- 	}
- }
- 
--void TexWnd::OnMouseWheel( bool bUp ){
-+void TexWnd::OnMouseWheel( bool bUp, int pointx, int pointy ){
- 	if ( bUp ) {
- 		if ( g_qeglobals.d_texturewin.originy < 0 ) {
- 			g_qeglobals.d_texturewin.originy += g_PrefsDlg.m_nWheelInc;
-diff --git a/radiant/texwindow.h b/radiant/texwindow.h
---- a/radiant/texwindow.h
-+++ b/radiant/texwindow.h
-@@ -50,7 +50,7 @@
- void OnMouseMove( guint32 flags, int pointx, int pointy );
- void OnSize( int cx, int cy );
- 
--void OnMouseWheel( bool bUp );
-+void OnMouseWheel( bool bUp, int pointx, int pointy );
- 
- public:
- void OnVScroll();
-diff --git a/radiant/xywindow.cpp b/radiant/xywindow.cpp
---- a/radiant/xywindow.cpp
-+++ b/radiant/xywindow.cpp
-@@ -1156,9 +1156,22 @@
- 	update_xor_rectangle_xy( m_XORRectangle );
- }
- 
--void XYWnd::OnMouseWheel( bool bUp ){
-+void XYWnd::OnMouseWheel( bool bUp, int pointx, int pointy ){
- 	if ( bUp ) {
--		g_pParentWnd->OnViewZoomin();
-+                if ( g_PrefsDlg.m_bMousewheelZoom == TRUE ) {
-+                        // improved zoom-in
-+                        // frame coverges to part of window where the cursor currently resides
-+                        float old_scale = m_fScale;
-+                        g_pParentWnd->OnViewZoomin();
-+                        float scale_diff = 1.0 / old_scale - 1.0 / m_fScale;
-+                        int nDim1 = ( m_nViewType == YZ ) ? 1 : 0;
-+                        int nDim2 = ( m_nViewType == XY ) ? 1 : 2;
-+                        m_vOrigin[nDim1] += scale_diff * (pointx - 0.5 * m_nWidth);
-+                        m_vOrigin[nDim2] -= scale_diff * (pointy - 0.5 * m_nHeight);
-+                }
-+                else{
-+                        g_pParentWnd->OnViewZoomin();
-+                }
- 	}
- 	else{
- 		g_pParentWnd->OnViewZoomout();
-diff --git a/radiant/xywindow.h b/radiant/xywindow.h
---- a/radiant/xywindow.h
-+++ b/radiant/xywindow.h
-@@ -191,7 +191,7 @@
- void OnRButtonUp( guint32 flags, int pointx, int pointy );
- void OnMButtonUp( guint32 flags, int pointx, int pointy );
- void OnMouseMove( guint32 nFlags, int pointx, int pointy );
--void OnMouseWheel( bool bUp );
-+void OnMouseWheel( bool bUp, int pointx, int pointy );
- void OnSize( int cx, int cy );
- void OnTimer();
- 
+     def CopyTree( self, src, dst):
+         for root, dirs, files in os.walk( src ):
+-- 
+1.8.3.2
+
