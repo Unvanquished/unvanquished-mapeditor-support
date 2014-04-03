@@ -16,7 +16,7 @@
 
 
 # when you create new dirs or files in your map dir
-# and wany symlinks to be created for them
+# and want symlinks to be created for them
 # add them here:
 DIRS='env maps music textures sound'
 FILES='scripts/${M}.shader scripts/q3map2_${M}.shader scripts/${M}.arena'

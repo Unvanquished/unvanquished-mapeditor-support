@@ -275,6 +275,8 @@ def create_parser():
     group.add_argument('--validate', action='store_true', help='Make validation of yaml contents')
     group.add_argument('--generate', action='store_true', help='Print final entities file')
     group.add_argument('--coverage', action='store_true', help='Analyse fullfillness of data')
+    parser.add_argument('--dummyflag', action='store_true',
+        help='Use in unpatched Radiant: https://github.com/TTimo/GtkRadiant/issues/262')
     return parser
 
 def load_main_file(name):
@@ -307,6 +309,8 @@ def load_deftypes_file(name):
 args = create_parser().parse_args()
 elist = load_main_file(args.yamlname)
 deftypes = load_deftypes_file(get_deftypes_name(args.yamlname))
+
+dont_place_dummy_flag = not args.dummyflag
 
 if args.validate:
     warns = []
