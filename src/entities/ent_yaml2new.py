@@ -269,12 +269,16 @@ def entity_type_coverage(e, dt):
 
 
 def create_parser():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--yamlname', default='entities.yaml')
-    group = parser.add_mutually_exclusive_group()
-    group.add_argument('--validate', action='store_true', help='Make validation of yaml contents')
-    group.add_argument('--generate', action='store_true', help='Print final entities file')
-    group.add_argument('--coverage', action='store_true', help='Analyse fullfillness of data')
+    parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        description='Generates radiant entity definition files from a yaml input file.')
+
+    group = parser.add_argument_group(title='action')
+    group = group.add_mutually_exclusive_group(required=True)
+    group.add_argument('--validate', action='store_true', help='Validate yaml syntax')
+    group.add_argument('--generate', action='store_true', help='Generate entities file')
+    group.add_argument('--coverage', action='store_true', help='Analyse completeness of data')
+
+    parser.add_argument('yamlname', default='entities.yaml', nargs='?', help='Path to input file')
     parser.add_argument('--dummyflag', action='store_true',
         help='Use in unpatched Radiant: https://github.com/TTimo/GtkRadiant/issues/262')
     return parser
@@ -305,7 +309,6 @@ def load_deftypes_file(name):
         deftypes = yaml.load(text)
     return deftypes
 
-
 args = create_parser().parse_args()
 elist = load_main_file(args.yamlname)
 deftypes = load_deftypes_file(get_deftypes_name(args.yamlname))
@@ -334,5 +337,3 @@ elif args.generate:
     print(starting_text)
     for e in elist:
         print_entity(e, deftypes)
-else:
-    print('Choose action!')
