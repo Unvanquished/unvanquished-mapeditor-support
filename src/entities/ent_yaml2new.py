@@ -75,18 +75,20 @@ def print_flag_desc(e):
             print(v)
 
 
-def print_prop_desc(e, dt, pr_types, pr_defaults, pr_ranges):
+def print_prop_desc(e, dt, pr_types, pr_defaults, pr_ranges, pr_eg):
     if 'props' not in e or not e['props']:
         return
 
     print(heading.format('PROPERTIES'))
-    proptypes, propdefaults, propranges, propreplace = \
-        (e.get(k, {}) for k in ('proptypes', 'propdefaults', 'propranges', 'propreplace'))
+    proptypes, propdefaults, propranges, propreplace, propeg = \
+        (e.get(k, {}) for k in ('proptypes', 'propdefaults', 'propranges', 'propreplace', 'propeg'))
 
     for k, v in sorted(e['props'].items()):
         info = []
         if pr_types and (k in proptypes or k in dt):
             info.append(proptypes[k] if k in proptypes else dt[k])
+        if pr_eg and k in propeg:
+            info.append('eg: {}'.format(propeg[k]))
         if pr_ranges and k in propranges:
             v1, v2 = propranges[k]
             info.append('{}..{}'.format(v1, v2))
@@ -96,6 +98,9 @@ def print_prop_desc(e, dt, pr_types, pr_defaults, pr_ranges):
             info = ' ({})'.format(', '.join(info))
         else:
             info = ''
+        if k in propreplace:
+            for _from, _to in propreplace[k].items():
+                v = v.replace(_from, _to)
         print('{}: {}{}'.format(k, v, info))
 
 
@@ -111,10 +116,10 @@ def print_specials(e):
             print('{}="{}"'.format(k, v))
 
 
-def print_entity(e, dt, pr_types=False, pr_defaults=False, pr_ranges=False):
+def print_entity(e, dt, pr_types=False, pr_defaults=False, pr_ranges=False, pr_eg=False):
     print_entity_head(e)
     print_flag_desc(e)
-    print_prop_desc(e, dt, pr_types, pr_defaults, pr_ranges)
+    print_prop_desc(e, dt, pr_types, pr_defaults, pr_ranges, pr_eg)
     print_common_desc(e)
     print_specials(e)
     print('*/')
@@ -161,7 +166,7 @@ def val_fields_exist(e):
 
 required_fields = {'name', 'color', 'flags', 'props', 'desc', 'specials'}
 required_fields2 = required_fields | {'size_min', 'size_max'}
-additional_fields = {'propreplace', 'proptypes', 'propdefaults', 'propranges', 'boolvalues'}
+additional_fields = {'propreplace', 'proptypes', 'propdefaults', 'propranges', 'boolvalues', 'propeg'}
 all_fields = required_fields2 | additional_fields
 
 def validate_entity(e, dt):
@@ -192,7 +197,7 @@ def validate_entity(e, dt):
         if x:
             r.append('Non-existent properties ({}) in {}: {}'.format(len(x), k, x))
 
-    boolvalues, propdefaults, propranges, propreplace, proptypes =\
+    boolvalues, propdefaults, propeg, propranges, propreplace, proptypes =\
         (set(e.get(k, {}).keys()) for k in sorted(additional_fields))
 
     possible_types = proptypes | set(dt.keys())
@@ -257,6 +262,17 @@ def validate_entity(e, dt):
                 r.append('Invalid max value of {}: {}, must be of type {}'.format(field, v2, ftype))
             # todo: check max>min
 
+    # validate types of examples
+    for field in propeg & possible_types:
+        ftype = canonize_type(etypes[field] if field in etypes else dt[field])
+        if ftype in unknown_types:
+            continue
+        func_name = '_validate_{}'.format(ftype)
+        v = e['propeg'][field]
+        if not globals()[func_name](v):
+            r.append('Invalid example value of {}: {}, must be of type {}'.format(field, v, ftype))
+
+
     if unknown_types:
         r.append('Types ({}) are unknown: {}'.format(len(unknown_types), unknown_types))
 
@@ -300,6 +316,7 @@ def create_parser():
     parser.add_argument('-T', '--gtypes', action='store_true', help='Output types of values')
     parser.add_argument('-D', '--gdefaults', action='store_true', help='Output default values')
     parser.add_argument('-R', '--granges', action='store_true', help='Output possible value ranges')
+    parser.add_argument('-E', '--gexamples', action='store_true', help='Output example values')
     return parser
 
 def load_main_file(name):
@@ -362,6 +379,7 @@ elif args.generate:
         'pr_types': args.gtypes,
         'pr_defaults': args.gdefaults,
         'pr_ranges': args.granges,
+        'pr_eg': args.gexamples,
     }
     for e in elist:
         print_entity(e, deftypes, **opts)

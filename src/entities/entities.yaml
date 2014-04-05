@@ -1643,7 +1643,7 @@
       (eggpod,overmind,barricade,acid_tube,trapper,booster,hive,leech,telenode,mgturret,
       tesla,arm,medistat,drill,reactor,repeater)
       # bug: disable buildables works, but shows warnings
-    colorGrade: or gradingTexture - Path of color grading effect (eg. gfx/cgrading/red-only)
+    colorGrade: or gradingTexture - Path of color grading effect
   proptypes:
     music: string
     disabledEquipment: string
@@ -1656,6 +1656,8 @@
     gravity: 800
   propranges:
     reverbIntensity: [0.0, 2.0]
+  propeg:
+    colorGrade: gfx/cgrading/red-only
   desc: Only used for the world.
   specials: {}
 #- name: ctrl_limited
