@@ -65,7 +65,7 @@
     of entity sun lights.
   specials: {}
 - name: lightJunior
-# todo: seems to q3map2-only
+# todo: seems to be q3map2-only
   color: 00b34c
   size_min: [-6.0, -6.0, -6.0]
   size_max: [6.0, 6.0, 6.0]
@@ -89,10 +89,17 @@
     The -skyscale argument affects brightness of entity sun lights.
   specials: {}
 - name: func_bobbing
+# doesn't work, requires fix https://github.com/Unvanquished/Unvanquished/pull/295
+#
+# TODO:
+#// if the "model2" key is set, use a separate model
+#// for drawing, but clip against the brushes
+# all movers have 
+# "group" (= deprecated "team")
   color: 007fcc
-  flags:
-  - X_AXIS: entity will bob along the X axis. (overrides Y_AXIS)
-  - Y_AXIS: entity will bob along the Y axis. (if both not set - it will Z axis.)
+  flags: # ALL OK
+  - X_AXIS: entity will bob along the X axis.
+  - Y_AXIS: entity will bob along the Y axis.
   props:
     _celshader: 'Sets the cel shader used for this geometry. Note: omit the "textures/"
       prefix.'
@@ -115,7 +122,6 @@
     _targetname: Used to attach a misc_model entity to this entity.
     color: constantLight color of .md3 model included with entity. Has no effect on
       the entity's brushes (default 1 1 1).
-    height: sets the amount of travel of the oscillation movement (default 32).
     light: constantLight radius of .md3 model included with entity. Has no effect
       on the entity's brushes (default 0).
     model2: 'path/name of model to include (eg: models/mapobjects/jets/jets01.md3).'
@@ -123,13 +129,29 @@
       - See Notes).
     origin: alternate method of setting XYZ origin of sound and .md3 model included
       with entity (See Notes).
-    phase: sets the start offset of the oscillation cycle. Values must be 0 < phase
-      < 1. Any integer phase value is the same as no offset (default 0).
-    speed: amount of time in seconds for one complete oscillation cycle (default 4).
-  desc: 'Solid entity that oscillates back and forth in a linear motion. By default,
-    it will have an amount of displacement in either direction equal to the dimension
-    of the brush in the axis in which it''s bobbing. Entity bobs on the Z axis (up-down)
-    by default. It can also emit sound if the "noise" key is set. Will crush the player
+    # OK
+    speed: Amount of time in seconds for one complete oscillation cycle.
+    height: Amount of travel of the oscillation movement.
+    dmg: Damage dealt when blocked.
+    # bug: parsed, but actually unused (maybe remove it?).
+    # there is the line of code overrides this parameter
+    # src/gamelogic/game/g_spawn_mover.c:370
+    phase: Sets the start offset of the oscillation cycle.
+  proptypes:
+    height: float
+    phase: float
+    dmg: int
+  propdefaults:
+    height: 32
+    phase: 0
+    dmg: 2
+    speed: 4
+  propranges:
+    phase: [0, 1]
+  desc: 'Solid entity that oscillates back and forth in a linear motion.
+    Entity bobs on the Z axis (up-down) by default. # OK
+
+    It can also emit sound if the "noise" key is set. Will crush the player
     when blocked.
 
     In order for the sound to be emitted from the entity, it is recommended to include
@@ -183,8 +205,7 @@
       Positive lip value discreases displacement, leaving lip remaining at the end of move.
     angle: &brush_angle 'Determines moving direction of brush (around Z axis:
       0=+x, 90=+y, 180=-x, 270=-y; special values: up = -1, down = -2).'
-    health: &brush_health If set to any non-zero value, the brush must take damage (any
-      amount) to activate.
+    health: &brush_health If set, the brush must take damage (any amount) to activate.
   propreplace:
     speed: &Rbutt {brush: button}
     lip: *Rbutt
@@ -203,7 +224,7 @@
   desc: 'When a button is touched by a player, it moves in the direction set by the
     "angle" key, triggers all its targets, stays pressed by an amount of time set
     by the "wait" key, then returns to it''s original position where it can be operated
-    again.
+    again. # OK
 
     Setting the origin key is simply an alternate method to using an origin brush.
     When using the model2 key, the origin point of the model will correspond to the
@@ -213,16 +234,18 @@
     (set the model''s "target" key to the same value as this entity''s "targetname").'
   specials: {}
 - name: func_destructable
-  flags: []
+# bug: object just disappers without any explosion effect or sound.
+  flags:
+  - INDESTRUCTABLE: '' # todo: causes object to disappear. for what? (trap_LinkEntity skipped to call)
   color: 007fcc
   props:
     model: '' # todo:
-    origin: '' # todo:
-    angles: '' # todo:
+    origin: '' # todo: sets restingPosition, but no noticeable difference in game (maybe it's for custom "model"?)
+    angles: '' # todo: look like applies only for custom "model"
     # OK:
     health: Amount of damage needed to destroy this.
-    damage: Splash damage. # todo: additionally check, dmg or damage
-    radius: Splash radius.
+    damage: Splash damage caused when destroyed.
+    radius: Splash damage radius.
   proptypes:
     damage: int
     radius: int
@@ -230,14 +253,14 @@
     damage: 0
     radius: 0
     health: 100
-  desc: 'Destructable object.'
+  desc: 'Destructable object. Does not cause splash damage to builables.'
   specials: {}
 - name: func_door
   color: 007fcc
   flags: # ALL OK
   - START_OPEN: The door will spawn in the open state and operate in reverse.
   - '-': ''
-  - CRUSHER: Door will not reverse direction when blocked and will keep damaging player
+  - CRUSHER: &door_crusher Door will not reverse direction when blocked and will keep damaging player
       or building until it dies or gets out of the way.
     # bug: when CRUSHER is off, door blocked, goes back for 1 frame, then goes forward
     # again, etc, crushing everything while player in triggering zone
@@ -373,12 +396,12 @@
     using the modelOrigin, scale and angle/angles keys repsectively.'
   specials: {}
 - name: func_door_rotating
+# maybe bug: no blocking damage.
   color: 007fcc
   flags:
   - START_OPEN: the door will spawn in the open state and operate in reverse.
   - '-': ''
-  - CRUSHER: door will not reverse direction when blocked and will keep damaging player
-      until he dies or gets out of the way.
+  - CRUSHER: *door_crusher # OK
   - REVERSE: the door will open the other way.
   - '-': ''
   - X_AXIS: rotate on the X axis instead of the Z.
@@ -405,29 +428,41 @@
     _targetname: Used to attach a misc_model entity to this entity.
     color: constantLight color of .md3 model included with entity. Has no effect on
       the entity's brushes (default 1 1 1).
-    dmg: damage to inflict on player when he blocks operation of door (default 4).
-      Door will reverse direction when blocked unless CRUSHER spawnflag is set.
-    health: (default 0) if set to any non-zero value, the door must take damage (any
-      amount) to activate.
     light: constantLight radius of .md3 model included with entity. Has no effect
       on the entity's brushes (default 0).
     model2: 'path/name of model to include (eg: models/mapobjects/pipe/pipe02.md3).'
     origin: alternate method of setting XYZ origin of .md3 model included with entity
       (See Notes).
-    rotatorAngle: the number of degrees through which to rotate (default 90).
     sound1to2: the sound played when the door, platform or button moves from state
       1 to state 2.
     sound2to1: the sound played when the door or platform moves from from state 2
       to state 1.
     soundPos1: the sound played when the door or platform reaches state 1.
     soundPos2: the sound played when the door or platform reaches state 2.
-    speed: determines how fast the door moves (in degrees/second).
     targetname: if set, a func_button or trigger is required to activate the door.
     team: assign the same team name to multiple doors that should operate together
       (see Notes).
-    wait: number of seconds before door returns (default 2)
+    # OK
+    wait: *brush_wait
+      # bug: bad -1 value, it makes annoying sound cascade (opens/closes every frame)
+    speed: Determines how fast the door moves, in degrees/second.
+    rotatorAngle: The number of degrees through which to rotate, in degrees.
+    health: *brush_health
+  proptypes:
+    wait: float # variance not used
+  propdefaults:
+    wait: 2
+    rotatorAngle: 90
+    health: false
+  propreplace:
+    wait: *Rdoor
+    health: *Rdoor
+  boolvalues:
+    health: [0, 1]
   desc: 'Rotating door entity. By default, the door will activate when player walks
-    close to it.
+    close to it. # OK
+
+    Rotating door will not cause damage to player when blocked. # OK
 
     Unlike in Quake 2, doors that touch are NOT automatically teamed. If you want
     doors to operate together, you have to team them manually by assigning the same
@@ -455,7 +490,6 @@
   color: 007fcc
   flags: []
   props:
-    '-------- OLD TERRAIN KEYS (note': obsolete with Q3Map2) --------
     _celshader: 'Sets the cel shader used for this geometry. Note: omit the "textures/"
       prefix.'
     _cs OR _castshadows: Allows per-entity control over shadow casting. Defaults to
@@ -554,6 +588,8 @@
   flags:
   - DONT_WAIT: The platform will not wait for a client to leave before returning to
       its original position.
+  - '-': ''
+  - CRUSHER: *door_crusher
   props:
     _celshader: 'Sets the cel shader used for this geometry. Note: omit the "textures/"
       prefix.'
@@ -1355,8 +1391,8 @@
   specials: {model: models/buildables/arm/arm.md3}
 - name: team_human_drill
   color: 0033ff
-  size_min: [-10.0, -10.0, -10.0] # TODO: size
-  size_max: [10.0, 10.0, 10.0] # TODO: size
+  size_min: [-15.0, -15.0, -15.0]
+  size_max: [15.0, 15.0, 25.0]
   flags: []
   props: {}
   desc: The human drill.
@@ -1459,8 +1495,8 @@
   specials: {model: models/buildables/hive/hive.md3}
 - name: team_alien_leech
   color: ff3300
-  size_min: [-10.0, -10.0, -10.0] # TODO: size
-  size_max: [-10.0, -10.0, -10.0] # TODO: size
+  size_min: [-56.0, -40.0, -20.0]
+  size_max: [56.0, 40.0, 20.0]
   flags: []
   props: {}
   desc: The alien leech.
