@@ -1610,7 +1610,7 @@
       separated by spaces, representing number of units between grid points in X Y
       Z. Default gridsize value is 128 128 256. Use larger powers of 2 to reduce BSP
       size and compile time on very large maps.
-    reverbIntensity: float 0.0 .. 2.0 # OK
+    reverbIntensity: '' # OK, todo:
     reverbEffect: none|generic # todo: there can be more names, but I didn't found any
     # testReverb command works on these values
     # bug: causes game to crash CM_ClipHandleToModel: bad handle -1
@@ -1651,8 +1651,11 @@
     disabledBuildables: string
     colorGrade: string
     gravity: float
+    reverbIntensity: float
   propdefaults:
     gravity: 800
+  propranges:
+    reverbIntensity: [0.0, 2.0]
   desc: Only used for the world.
   specials: {}
 #- name: ctrl_limited

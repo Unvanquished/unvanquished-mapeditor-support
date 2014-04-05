@@ -75,14 +75,28 @@ def print_flag_desc(e):
             print(v)
 
 
-def print_prop_desc(e):
-    props = []
+def print_prop_desc(e, dt, pr_types, pr_defaults, pr_ranges):
+    if 'props' not in e or not e['props']:
+        return
+
+    print(heading.format('PROPERTIES'))
+    proptypes, propdefaults, propranges, propreplace = \
+        (e.get(k, {}) for k in ('proptypes', 'propdefaults', 'propranges', 'propreplace'))
+
     for k, v in sorted(e['props'].items()):
-        props.append('{}: {}'.format(k, v))
-    if props:
-        print(heading.format('PROPERTIES'))
-        for v in props:
-            print(v)
+        info = []
+        if pr_types and (k in proptypes or k in dt):
+            info.append(proptypes[k] if k in proptypes else dt[k])
+        if pr_ranges and k in propranges:
+            v1, v2 = propranges[k]
+            info.append('{}..{}'.format(v1, v2))
+        if pr_defaults and k in propdefaults:
+            info.append('def: {}'.format(propdefaults[k]))
+        if info:
+            info = ' ({})'.format(', '.join(info))
+        else:
+            info = ''
+        print('{}: {}{}'.format(k, v, info))
 
 
 def print_common_desc(e):
@@ -97,10 +111,10 @@ def print_specials(e):
             print('{}="{}"'.format(k, v))
 
 
-def print_entity(e, dt):
+def print_entity(e, dt, pr_types=False, pr_defaults=False, pr_ranges=False):
     print_entity_head(e)
     print_flag_desc(e)
-    print_prop_desc(e)
+    print_prop_desc(e, dt, pr_types, pr_defaults, pr_ranges)
     print_common_desc(e)
     print_specials(e)
     print('*/')
@@ -147,11 +161,13 @@ def val_fields_exist(e):
 
 required_fields = {'name', 'color', 'flags', 'props', 'desc', 'specials'}
 required_fields2 = required_fields | {'size_min', 'size_max'}
-all_fields = required_fields2 | {'propreplace', 'proptypes', 'propdefaults', 'boolvalues'}
+additional_fields = {'propreplace', 'proptypes', 'propdefaults', 'propranges', 'boolvalues'}
+all_fields = required_fields2 | additional_fields
 
 def validate_entity(e, dt):
     r = []
 
+    # required fields presence
     d = required_fields - e.keys()
     if d:
         r.append('No required fields: {}'.format(d))
@@ -161,36 +177,36 @@ def validate_entity(e, dt):
         if d:
             r.append('No required fields: {}'.format(d))
             return r
+
+    # unknown fields
     d = e.keys() - all_fields
     if d:
         r.append('Unknown fields: {}'.format(d))
         return r
 
-
+    # prop* keys consistency
     props = set(e['props'].keys())
-    propreplace = set(e.get('propreplace', {}).keys())
-    proptypes = set(e.get('proptypes', {}).keys())
-    propdefaults = set(e.get('propdefaults', {}).keys())
-    boolvalues = set(e.get('boolvalues', {}).keys())
+    for k in additional_fields:
+        val = set(e.get(k, {}).keys())
+        x = val - props
+        if x:
+            r.append('Non-existent properties ({}) in {}: {}'.format(len(x), k, x))
 
-    x = propreplace - props
-    if x:
-        r.append('Non-existent properties ({}) in propreplace: {}'.format(len(x), x))
-    x = proptypes - props
-    if x:
-        r.append('Non-existent properties ({}) in proptypes: {}'.format(len(x), x))
-    x = propdefaults - props
-    if x:
-        r.append('Non-existent properties ({}) in propdefaults: {}'.format(len(x), x))
-    x = boolvalues - props
-    if x:
-        r.append('Non-existent properties ({}) in boolvalues: {}'.format(len(x), x))
+    boolvalues, propdefaults, propranges, propreplace, proptypes =\
+        (set(e.get(k, {}).keys()) for k in sorted(additional_fields))
 
-    mergedtypes = proptypes | set(dt.keys())
+    possible_types = proptypes | set(dt.keys())
+
     # if we have default, we must have known type
-    x = propdefaults - mergedtypes
+    x = propdefaults - possible_types
     if x:
         r.append('Properties ({}) in defaults are not exist in types: {}'.format(len(x), x))
+
+    # if we have value range, we must have known type
+    x = propranges - possible_types
+    if x:
+        r.append('Properties ({}) in ranges are not exist in types: {}'.format(len(x), x))
+
 
     etypes = e.get('proptypes', {})
 
@@ -208,14 +224,14 @@ def validate_entity(e, dt):
             r.append('Property type {}:{} duplicates entry from deftypes'.format(field, ftype))
 
     # validate types of default values
-    for field in propdefaults & mergedtypes:
+    for field in propdefaults & possible_types:
         ftype = canonize_type(etypes[field] if field in etypes else dt[field])
         if ftype in unknown_types:
             continue
         func_name = '_validate_{}'.format(ftype)
         v = e['propdefaults'][field]
-        if type(v) == bool and field in boolvalues:
-            if type(e['boolvalues'][field]) != list or len(e['boolvalues'][field]) != 2:
+        if isinstance(v, bool) and field in boolvalues:
+            if not isinstance(e['boolvalues'][field], list) or len(e['boolvalues'][field]) != 2:
                 r.append('Invalid bool list of prop {}'.format(field))
             else:
                 for bv in e['boolvalues'][field]:
@@ -223,6 +239,23 @@ def validate_entity(e, dt):
                         r.append('Invalid bool value {} of prop {}, must be of type {}'.format(bv, field, ftype))
         elif not globals()[func_name](v):
             r.append('Invalid default value of {}: {}, must be of type {}'.format(field, v, ftype))
+
+    # validate types of range values
+    for field in propranges & possible_types:
+        ftype = canonize_type(etypes[field] if field in etypes else dt[field])
+        if ftype in unknown_types:
+            continue
+        func_name = '_validate_{}'.format(ftype)
+        v = e['propranges'][field]
+        if not isinstance(v, list) or len(v) != 2:
+            r.append('Invalid range of prop {}'.format(field))
+        else:
+            v1, v2 = v
+            if not globals()[func_name](v1):
+                r.append('Invalid min value of {}: {}, must be of type {}'.format(field, v1, ftype))
+            if not globals()[func_name](v2):
+                r.append('Invalid max value of {}: {}, must be of type {}'.format(field, v2, ftype))
+            # todo: check max>min
 
     if unknown_types:
         r.append('Types ({}) are unknown: {}'.format(len(unknown_types), unknown_types))
@@ -263,6 +296,10 @@ def create_parser():
     parser.add_argument('-d', '--dummyflag', action='store_true',
         help='Use in unpatched Radiant: https://github.com/TTimo/GtkRadiant/issues/262')
     parser.add_argument('-p', '--header', help='Prepend a header to the generated file.')
+
+    parser.add_argument('-T', '--gtypes', action='store_true', help='Output types of values')
+    parser.add_argument('-D', '--gdefaults', action='store_true', help='Output default values')
+    parser.add_argument('-R', '--granges', action='store_true', help='Output possible value ranges')
     return parser
 
 def load_main_file(name):
@@ -321,5 +358,10 @@ elif args.generate:
             for line in fp.readlines():
                 print("// {}".format(line.rstrip()))
         print()
+    opts = {
+        'pr_types': args.gtypes,
+        'pr_defaults': args.gdefaults,
+        'pr_ranges': args.granges,
+    }
     for e in elist:
-        print_entity(e, deftypes)
+        print_entity(e, deftypes, **opts)
