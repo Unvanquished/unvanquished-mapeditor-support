@@ -1,4 +1,7 @@
 - name: light
+# Marked as deprecated in code.
+# src/gamelogic/game/g_spawn.c:368
+# It's strange. Light is actually q3map2 workhorse.
   color: a6a6ff
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
@@ -62,6 +65,7 @@
     of entity sun lights.
   specials: {}
 - name: lightJunior
+# todo: seems to q3map2-only
   color: 00b34c
   size_min: [-6.0, -6.0, -6.0]
   size_max: [6.0, 6.0, 6.0]
@@ -177,7 +181,7 @@
     speed: &brush_speed Determines how fast the brush moves.
     lip: &brush_lip When 0, brush displacement = brush's size in direction of movement.
       Positive lip value discreases displacement, leaving lip remaining at the end of move.
-    angle: &brush_angle 'Determines moving direction of brush (0..360 - around Z axis:
+    angle: &brush_angle 'Determines moving direction of brush (around Z axis:
       0=+x, 90=+y, 180=-x, 270=-y; special values: up = -1, down = -2).'
     health: &brush_health If set to any non-zero value, the brush must take damage (any
       amount) to activate.
@@ -194,6 +198,8 @@
     health: false
   boolvalues:
     health: [0, 1]
+  propranges:
+    angle: [-2, 360]
   desc: 'When a button is touched by a player, it moves in the direction set by the
     "angle" key, triggers all its targets, stays pressed by an amount of time set
     by the "wait" key, then returns to it''s original position where it can be operated
@@ -800,6 +806,7 @@
     (set the model''s "target" key to the same value as this entity''s "targetname").'
   specials: {}
 - name: info_notnull
+  deprecated: y
   color: 007f00
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
@@ -810,6 +817,7 @@
     A target_position can be used instead of this but was kept in Q3A for legacy purposes.
   specials: {}
 - name: info_null
+  deprecated: y
   color: 007f00
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
@@ -819,7 +827,15 @@
   desc: Used as a positional target for light entities to create a spotlight effect.
     A target_position can be used instead of this but was kept in Q3A for legacy purposes.
   specials: {}
+- name: info_player_deathmatch
+  deprecated: y
+  color: ff00ff
+  flags: []
+  props: {}
+  desc: ''
+  specials: {}
 - name: info_player_intermission
+  deprecated: y
   color: ff00ff
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
@@ -832,7 +848,15 @@
   desc: Camera for intermission screen between matches. Can be aimed by setting the
     "angles" key or targeting an pointing to an aiming entity. Use only one per level.
   specials: {}
+- name: info_player_start
+  deprecated: y
+  color: ff00ff
+  flags: []
+  props: {}
+  desc: ''
+  specials: {}
 - name: info_alien_intermission
+  deprecated: y
   color: ff00ff
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
@@ -846,6 +870,7 @@
     key or targeting an pointing to an aiming entity. Use one per level.
   specials: {}
 - name: info_human_intermission
+  deprecated: y
   color: ff00ff
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
@@ -859,6 +884,7 @@
     key or targeting an pointing to an aiming entity. Use one per level.
   specials: {}
 - name: misc_model
+  deprecated: y
   color: ff7f3f
   size_min: [-16.0, -16.0, -16.0]
   size_max: [16.0, 16.0, 16.0]
@@ -903,6 +929,7 @@
     ASE, 3DS, OBJ and other model formats are supported.
   specials: {}
 - name: misc_anim_model
+  deprecated: y
   color: ff7f3f
   size_min: [-16.0, -16.0, -16.0]
   size_max: [16.0, 16.0, 16.0]
@@ -921,6 +948,7 @@
     in the world with an arbituary frame or with an animation.
   specials: {}
 - name: misc_particle_system
+  deprecated: y
   color: ff7f3f
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
@@ -933,6 +961,7 @@
     Triggering this entity toggles it on and off.'
   specials: {}
 - name: misc_light_flare
+  deprecated: y
   color: a6a6ff
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
@@ -968,6 +997,7 @@
     Triggering this entity toggles it.'
   specials: {}
 - name: misc_portal_camera
+  deprecated: y
   color: ff7f3f
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
@@ -992,6 +1022,7 @@
     or FASTROTATE spawnflag is set, then the "roll" value is irrelevant.'
   specials: {}
 - name: misc_portal_surface
+  deprecated: y
   color: ff7f3f
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
@@ -1009,6 +1040,7 @@
     this entity near it but don''t target a misc_portal_camera.'
   specials: {}
 - name: misc_teleporter_dest
+  deprecated: y
   color: ff7f3f
   size_min: [-32.0, -32.0, -24.0]
   size_max: [32.0, 32.0, -16.0]
@@ -1036,7 +1068,44 @@
     Setting the wait key to -1 will not make the train stop on the path corner, it
     will simply default to 0.'
   specials: {}
+- name: pos_alien_intermission
+  color: '000000'
+  flags: []
+  props: {}
+  desc: ''
+  specials: {}
+- name: pos_human_intermission
+  color: '000000'
+  flags: []
+  props: {}
+  desc: ''
+  specials: {}
+- name: pos_location
+  color: '000000'
+  flags: []
+  props: {}
+  desc: ''
+  specials: {}
+- name: pos_player_intermission
+  color: '000000'
+  flags: []
+  props: {}
+  desc: ''
+  specials: {}
+- name: pos_player_spawn
+  color: '000000'
+  flags: []
+  props: {}
+  desc: ''
+  specials: {}
+- name: pos_target
+  color: '000000'
+  flags: []
+  props: {}
+  desc: ''
+  specials: {}
 - name: target_rumble
+  deprecated: y
   color: ff0000
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
@@ -1048,6 +1117,7 @@
     affected.
   specials: {}
 - name: target_delay
+  deprecated: y
   color: 00b3b3
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
@@ -1068,6 +1138,7 @@
     by other triggers which will cause it in turn to fire its own targets.
   specials: {}
 - name: target_kill
+  deprecated: y
   color: 007f00
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
@@ -1077,6 +1148,7 @@
   desc: This will kill the player who activates the trigger that fires this target.
   specials: {}
 - name: target_location
+  deprecated: y
   color: 007f00
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
@@ -1098,6 +1170,7 @@
     is used for the location. If none is in sight, the closest in distance is used.
   specials: {}
 - name: target_position # todo: game advices to use pos_target instead
+  deprecated: y
   color: 007f00
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
@@ -1112,6 +1185,7 @@
     it with a trigger_push entity.'
   specials: {}
 - name: target_print
+  deprecated: y
   color: 007f00
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
@@ -1126,6 +1200,7 @@
     all the clients will see the message.
   specials: {}
 - name: target_push
+  deprecated: y
   color: 7f7f7f
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
@@ -1153,6 +1228,7 @@
     (or set the target_push''s "angles" key). Note that the "angle" key also works.'
   specials: {}
 - name: target_relay
+  deprecated: y
   color: 00b3b3
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
@@ -1167,6 +1243,7 @@
     activate its own targets.
   specials: {}
 - name: target_score
+  deprecated: y
   color: 007f00
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
@@ -1180,6 +1257,7 @@
     can also be used to activate this. The activator of the trigger will get the points.
   specials: {}
 - name: target_speaker
+  deprecated: y
   color: 00b3b3
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
@@ -1219,6 +1297,7 @@
     levels.'
   specials: {}
 - name: target_teleporter
+  deprecated: y
   color: 007f00
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
@@ -1231,6 +1310,7 @@
     does NOT allow client prediction of events.
   specials: {}
 - name: target_alien_win
+  deprecated: y
   color: ff0000
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
@@ -1239,6 +1319,7 @@
   desc: When triggered, this causes an unconditional win for the alien team.
   specials: {}
 - name: target_human_win
+  deprecated: y
   color: ff0000
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
@@ -1247,6 +1328,7 @@
   desc: When triggered, this causes an unconditional win for the human team.
   specials: {}
 - name: target_hurt
+  deprecated: y
   color: ff0000
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
@@ -1271,14 +1353,14 @@
   props: {}
   desc: The human armoury.
   specials: {model: models/buildables/arm/arm.md3}
-- name: team_human_dcc
+- name: team_human_drill
   color: 0033ff
-  size_min: [-35.0, -35.0, -13.0]
-  size_max: [35.0, 35.0, 47.0]
+  size_min: [-10.0, -10.0, -10.0] # TODO: size
+  size_max: [10.0, 10.0, 10.0] # TODO: size
   flags: []
   props: {}
-  desc: The human defense computer.
-  specials: {model: models/buildables/dcc/dcc.md3}
+  desc: The human drill.
+  specials: {model: models/buildables/drill/drill.md3}
 - name: team_human_medistat
   color: 0033ff
   size_min: [-35.0, -35.0, -7.0]
@@ -1351,14 +1433,6 @@
   props: {}
   desc: The alien booster.
   specials: {model: models/buildables/booster/booster.md3}
-- name: team_alien_hovel
-  color: ff3300
-  size_min: [-50.0, -50.0, -20.0]
-  size_max: [50.0, 50.0, 20.0]
-  flags: []
-  props: {}
-  desc: The alien hovel.
-  specials: {model: models/buildables/hovel/hovel.md3}
 - name: team_alien_overmind
   color: ff3300
   size_min: [-45.0, -45.0, -15.0]
@@ -1383,7 +1457,16 @@
   props: {}
   desc: The alien hive.
   specials: {model: models/buildables/hive/hive.md3}
+- name: team_alien_leech
+  color: ff3300
+  size_min: [-10.0, -10.0, -10.0] # TODO: size
+  size_max: [-10.0, -10.0, -10.0] # TODO: size
+  flags: []
+  props: {}
+  desc: The alien leech.
+  specials: {model: models/buildables/leech/leech.md3}
 - name: trigger_heal
+  deprecated: y
   color: 7f7f7f
   flags:
   - START_OFF: needs to be triggered (toggle) to activate.
@@ -1394,6 +1477,7 @@
     each server frame. Targeting the trigger will toggle its effects.
   specials: {}
 - name: trigger_ammo
+  deprecated: y
   color: 7f7f7f
   flags:
   - SLOW: changes the ammo rate to once per second.
@@ -1405,6 +1489,7 @@
     It gives ammo in chunks reflected by the key "ammo" each server frame.
   specials: {}
 - name: trigger_gravity
+  deprecated: y
   color: 7f7f7f
   flags: []
   props:
@@ -1414,6 +1499,7 @@
     key. Targetting this entity toggles its effects.
   specials: {}
 - name: trigger_buildable
+  deprecated: y
   color: 7f7f7f
   flags:
   - SPAWN_DISABLED: needs to be triggered (toggle) to activate.
@@ -1432,6 +1518,7 @@
     Targetting this entity toggles it.'
   specials: {}
 - name: trigger_class
+  deprecated: y
   color: 7f7f7f
   flags:
   - SPAWN_DISABLED: needs to be triggered (toggle) to activate.
@@ -1448,6 +1535,7 @@
     every class will trigger this entity.
   specials: {}
 - name: trigger_equipment
+  deprecated: y
   color: 7f7f7f
   flags:
   - SPAWN_DISABLED: needs to be triggered (toggle) to activate.
@@ -1466,6 +1554,7 @@
     Targetting this entity toggles it.'
   specials: {}
 - name: trigger_stage
+  deprecated: y
   color: 7f7f7f
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
@@ -1479,6 +1568,7 @@
   desc: Fires its targets when the team key reaches stage key.
   specials: {}
 - name: trigger_win
+  deprecated: y
   color: 7f7f7f
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
@@ -1490,6 +1580,7 @@
   desc: Fires its targets when the team key wins.
   specials: {}
 - name: trigger_always
+  deprecated: y
   color: 7f7f7f
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
@@ -1500,6 +1591,7 @@
     in the game.
   specials: {}
 - name: trigger_hurt
+  deprecated: y
   color: 7f7f7f
   flags:
   - START_OFF: ''
@@ -1522,6 +1614,7 @@
     is not set. A trigger_hurt always starts on in the game.'
   specials: {}
 - name: trigger_multiple
+  deprecated: y
   color: 7f7f7f
   flags: []
   props:
@@ -1541,6 +1634,7 @@
     it.
   specials: {}
 - name: trigger_push
+  deprecated: y
   color: 7f7f7f
   flags: []
   props:
@@ -1552,6 +1646,7 @@
     at the highest point of the jump and target it with this entity.'
   specials: {}
 - name: trigger_teleport
+  deprecated: y
   color: 7f7f7f
   flags:
   - SPECTATOR: 'only spectators can use this teleport.
@@ -1630,7 +1725,7 @@
     enabledust: '' # from shader manual
     # OK:
     message: Shown above loading bar.
-    music: Path/name of looping .wav or .ogg file used for level's music (eg. music/sonic5.wav)
+    music: Path/name of looping .wav or .ogg file used for level's music.
       # bug: music doesn't loop, plays only once
     gravity: Gravity of level.
     disabledEquipment: A comma delimited list of human weapons or upgrades to disable
@@ -1658,28 +1753,185 @@
     reverbIntensity: [0.0, 2.0]
   propeg:
     colorGrade: gfx/cgrading/red-only
+    music: music/sonic5.wav
   desc: Only used for the world.
   specials: {}
-#- name: ctrl_limited
-  #color: '000000'
-  #flags: []
-  #props: {}
-  #desc: ''
-  #specials: {}
-#- name: ctrl_relay
-  #color: '000000'
-  #flags:
-  #- HUMANS: Can be activated by human.
-  #- ALIENS: Can be activated by alien.
-  #- RANDOM: 'G_FireEntityRandomly( self, activator );'
-  #props:
-    #wait: ''
-    #delay: Old, replaced with wait.
-  #desc: ''
-  #specials: {}
-#env_afx_ammo"
-#env_afx_gravity"
-#env_afx_heal"
-#env_afx_hurt"
-#env_afx_push"
-#env_afx_teleport"
+- name: ctrl_limited
+  color: '000000'
+  flags: []
+  props: {}
+  desc: ''
+  specials: {}
+- name: ctrl_relay
+  color: '000000'
+  flags:
+  - HUMANS: Can be activated by human.
+  - ALIENS: Can be activated by alien.
+  - RANDOM: 'G_FireEntityRandomly( self, activator );'
+  props:
+    wait: ''
+    delay: Deprecated, replaced with wait.
+  desc: ''
+  specials: {}
+- name: env_afx_ammo
+  color: '000000'
+  flags: []
+  props: {}
+  desc: ''
+  specials: {}
+- name: env_afx_gravity
+  color: '000000'
+  flags: []
+  props: {}
+  desc: ''
+  specials: {}
+- name: env_afx_heal
+  color: '000000'
+  flags: []
+  props: {}
+  desc: ''
+  specials: {}
+- name: env_afx_hurt
+  color: '000000'
+  flags: []
+  props: {}
+  desc: ''
+  specials: {}
+- name: env_afx_push
+  color: '000000'
+  flags: []
+  props: {}
+  desc: ''
+  specials: {}
+- name: env_afx_teleport
+  color: '000000'
+  flags: []
+  props: {}
+  desc: ''
+  specials: {}
+- name: fx_rumble
+  color: '000000'
+  flags: []
+  props: {}
+  desc: ''
+  specials: {}
+- name: game_end
+  color: '000000'
+  flags: []
+  props: {}
+  desc: ''
+  specials: {}
+- name: game_funds
+  color: '000000'
+  flags: []
+  props: {}
+  desc: ''
+  specials: {}
+- name: game_kill
+  color: '000000'
+  flags: []
+  props: {}
+  desc: ''
+  specials: {}
+- name: game_score
+  color: '000000'
+  flags: []
+  props: {}
+  desc: ''
+  specials: {}
+- name: gfx_animated_model
+  color: '000000'
+  flags: []
+  props: {}
+  desc: ''
+  specials: {}
+- name: gfx_light_flare
+  color: '000000'
+  flags: []
+  props: {}
+  desc: ''
+  specials: {}
+- name: gfx_particle_system
+  color: '000000'
+  flags: []
+  props: {}
+  desc: ''
+  specials: {}
+- name: gfx_portal_camera
+  color: '000000'
+  flags: []
+  props: {}
+  desc: ''
+  specials: {}
+- name: gfx_portal_surface
+  color: '000000'
+  flags: []
+  props: {}
+  desc: ''
+  specials: {}
+- name: gfx_shader_mod
+  color: '000000'
+  flags: []
+  props: {}
+  desc: ''
+  specials: {}
+- name: sensor_builable
+  color: '000000'
+  flags: []
+  props: {}
+  desc: ''
+  specials: {}
+- name: sensor_creep
+  color: '000000'
+  flags: []
+  props: {}
+  desc: ''
+  specials: {}
+- name: sensor_end
+  color: '000000'
+  flags: []
+  props: {}
+  desc: ''
+  specials: {}
+- name: sensor_player
+  color: '000000'
+  flags: []
+  props: {}
+  desc: ''
+  specials: {}
+- name: sensor_power
+  color: '000000'
+  flags: []
+  props: {}
+  desc: ''
+  specials: {}
+- name: sensor_stage
+  color: '000000'
+  flags: []
+  props: {}
+  desc: ''
+  specials: {}
+- name: sensor_start
+  color: '000000'
+  flags: []
+  props: {}
+  desc: ''
+  specials: {}
+- name: sensor_support
+  color: '000000'
+  flags: []
+  props: {}
+  desc: ''
+  specials: {}
+- name: sensor_timer
+  color: '000000'
+  flags: []
+  props: {}
+  desc: ''
+  specials: {}
+- name: sfx_speaker
+  color: '000000'
+  flags: []
+  props: {}
+  desc: ''
+  specials: {}

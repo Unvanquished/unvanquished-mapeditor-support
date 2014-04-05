@@ -1,3 +1,4 @@
+# src/gamelogic/game/g_spawn.c:192
 acceleration: vec3_float
 alias: string
 alpha: vec3_float
