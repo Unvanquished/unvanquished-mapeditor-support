@@ -97,11 +97,12 @@ def print_prop_desc(e, dt, pr_types, pr_defaults, pr_ranges, pr_eg):
         return
 
     print(heading.format('PROPERTIES'))
-    proptypes, propdefaults, propranges, propreplace, propeg = \
-        (e.get(k, {}) for k in ('proptypes', 'propdefaults', 'propranges', 'propreplace', 'propeg'))
+    proptypes, propdefaults, propranges, propreplace, propeg, boolvalues = \
+        (e.get(k, {}) for k in ('proptypes', 'propdefaults', 'propranges', 'propreplace', 'propeg', 'boolvalues'))
 
     for k, v in sorted(e['props'].items()):
         _type = proptypes[k] if k in proptypes else (dt[k] if k in dt else None)
+        _bool = k in boolvalues
         info = []
         if pr_types and _type is not None:
             info.append(_type)
@@ -110,8 +111,14 @@ def print_prop_desc(e, dt, pr_types, pr_defaults, pr_ranges, pr_eg):
         if pr_ranges and k in propranges:
             v1, v2 = propranges[k]
             info.append('{}..{}'.format(outvalue(v1, _type), outvalue(v2, _type)))
+        if pr_ranges and _bool:
+            v1, v2 = boolvalues[k]
+            info.append('{} or {}'.format(outvalue(v1, _type), outvalue(v2, _type)))
         if pr_defaults and k in propdefaults:
-            info.append('def: {}'.format(outvalue(propdefaults[k], _type)))
+            v1 = propdefaults[k]
+            if _bool:
+                v1 = boolvalues[k][1 if v1 else 0]
+            info.append('def: {}'.format(outvalue(v1, _type)))
         if info:
             info = ' ({})'.format(', '.join(info))
         else:
@@ -230,6 +237,10 @@ def validate_entity(e, dt):
     if x:
         r.append('Properties ({}) in ranges are not exist in types: {}'.format(len(x), x))
 
+    # value cannot have range and be bool at the same time
+    x = propranges & boolvalues
+    if x:
+        r.append('Properties ({}) have ranges and boolvalues at the same time: {}'.format(len(x), x))
 
     etypes = e.get('proptypes', {})
 
