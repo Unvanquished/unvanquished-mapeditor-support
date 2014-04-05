@@ -4,7 +4,7 @@ alias: string
 alpha: vec3_float
 amount: int
 angle: &yaw float (yaw)
-angles: vec3_float
+angles: vec3_float (yaw pitch roll TODO check)
 animation: vec4_float
 bounce: float
 classname: string
