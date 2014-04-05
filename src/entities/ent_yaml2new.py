@@ -46,6 +46,23 @@ def fmt_float(f):
         return x
     return x.rstrip('0').rstrip('.')
 
+def _output_float(v):
+    return fmt_float(v)
+
+def _output_vec2_float(v):
+    return ' '.join(_output_float(vv) for vv in v)
+
+def _output_vec3_float(v):
+    return ' '.join(_output_float(vv) for vv in v)
+
+def _output_vec4_float(v):
+    return ' '.join(_output_float(vv) for vv in v)
+
+def outvalue(v, _type):
+    func_name = '_output_' + _type
+    if _type is None or func_name not in globals():
+        return str(v)
+    return globals()[func_name](v)
 
 def print_entity_head(e):
     name = escape_token(e['name'])
@@ -84,16 +101,17 @@ def print_prop_desc(e, dt, pr_types, pr_defaults, pr_ranges, pr_eg):
         (e.get(k, {}) for k in ('proptypes', 'propdefaults', 'propranges', 'propreplace', 'propeg'))
 
     for k, v in sorted(e['props'].items()):
+        _type = proptypes[k] if k in proptypes else (dt[k] if k in dt else None)
         info = []
-        if pr_types and (k in proptypes or k in dt):
-            info.append(proptypes[k] if k in proptypes else dt[k])
+        if pr_types and _type is not None:
+            info.append(_type)
         if pr_eg and k in propeg:
-            info.append('eg: {}'.format(propeg[k]))
+            info.append('eg: {}'.format(outvalue(propeg[k], _type)))
         if pr_ranges and k in propranges:
             v1, v2 = propranges[k]
-            info.append('{}..{}'.format(v1, v2))
+            info.append('{}..{}'.format(outvalue(v1, _type), outvalue(v2, _type)))
         if pr_defaults and k in propdefaults:
-            info.append('def: {}'.format(propdefaults[k]))
+            info.append('def: {}'.format(outvalue(propdefaults[k], _type)))
         if info:
             info = ' ({})'.format(', '.join(info))
         else:
