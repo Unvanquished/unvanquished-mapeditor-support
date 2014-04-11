@@ -260,11 +260,11 @@
   color: 007fcc
   flags: # ALL OK
   - START_OPEN: The door will spawn in the open state and operate in reverse.
+  # bug: activation area placed near opened state door position, often unreachable
   - '-': ''
   - CRUSHER: &door_crusher Door will not reverse direction when blocked and will keep damaging player
       or building until it dies or gets out of the way.
-    # bug: when CRUSHER is off, door blocked, goes back for 1 frame, then goes forward
-    # again, etc, crushing everything while player in triggering zone
+    # bug: crusher door trembling when blocked
   props:
     _celshader: 'Sets the cel shader used for this geometry. Note: omit the "textures/"
       prefix.'
@@ -301,6 +301,7 @@
     # OK:
     targetname: If set, a func_button or trigger is required to activate the door.
       Overrides activation by damage.
+    # bug: spectator cannot go through door with targetname set
     speed: *brush_speed
     lip: *brush_lip
     angle: *brush_angle
@@ -310,6 +311,7 @@
     range: Door triggering range.
     dmg: Damage to inflict on player when he blocks operation of door.
       Door will reverse direction when blocked unless CRUSHER spawnflag is set.
+      # bug: cannot set 0 dmg
     health: *brush_health
     team: Assign the same team name to multiple doors that should operate together.
   propreplace:
@@ -399,10 +401,12 @@
 - name: func_door_rotating
 # maybe bug: no blocking damage.
   color: 007fcc
-  flags:
+  flags: # ALL OK
   - START_OPEN: the door will spawn in the open state and operate in reverse.
+  # bug: closes at the start of map and cannot be opened then
   - '-': ''
-  - CRUSHER: *door_crusher # OK
+  - CRUSHER: *door_crusher
+  # bug: crusher door trembling when blocked
   - REVERSE: the door will open the other way.
   - '-': ''
   - X_AXIS: rotate on the X axis instead of the Z.
@@ -432,15 +436,12 @@
     light: constantLight radius of .md3 model included with entity. Has no effect
       on the entity's brushes (default 0).
     model2: 'path/name of model to include (eg: models/mapobjects/pipe/pipe02.md3).'
-    origin: alternate method of setting XYZ origin of .md3 model included with entity
-      (See Notes).
     sound1to2: the sound played when the door, platform or button moves from state
       1 to state 2.
     sound2to1: the sound played when the door or platform moves from from state 2
       to state 1.
     soundPos1: the sound played when the door or platform reaches state 1.
     soundPos2: the sound played when the door or platform reaches state 2.
-    targetname: if set, a func_button or trigger is required to activate the door.
     team: assign the same team name to multiple doors that should operate together
       (see Notes).
     # OK
@@ -449,6 +450,8 @@
     speed: Determines how fast the door moves, in degrees/second.
     rotatorAngle: The number of degrees through which to rotate.
     health: *brush_health
+    origin: Sets the rotation axis position. # TODO: check it sets .md3 position
+    targetname: If set, a func_button or trigger is required to activate the door.
   proptypes:
     wait: float # variance not used
     rotatorAngle: float
@@ -528,6 +531,7 @@
   specials: {}
 - name: func_pendulum
 # doesn't work, requires fix https://github.com/Unvanquished/Unvanquished/pull/295
+# bug: instakill in very big touching angle. It should just rub, not squish.
   color: 007fcc
   flags: []
   props:
@@ -569,6 +573,9 @@
     # src/gamelogic/game/g_spawn_mover.c:370
     # player squashed instantly
     angles: Orienting pendulum.
+    targetname: ''
+    # bug: when signalled via button: stops and never resumes
+    # bug: when stopped position resets hardly, instantly moving to origin
   proptypes:
     phase: float
     speed: float
@@ -609,6 +616,7 @@
       its original position.
   - '-': ''
   - CRUSHER: *door_crusher
+  # bug: crusher door trembling when blocked
   props:
     _celshader: 'Sets the cel shader used for this geometry. Note: omit the "textures/"
       prefix.'
@@ -642,9 +650,6 @@
       to state 1.
     soundPos1: the sound played when the door or platform reaches state 1.
     soundPos2: the sound played when the door or platform reaches state 2.
-    targetname: if set, the trigger that points to this will raise the plat each time
-      it fires. The plat raises and comes back down a second later if no player is
-      on it.
     # OK
     height: If set, this will determine the total amount of vertical travel of the
       plat. Place plat at the top point. In game it will be at bottom.
@@ -652,6 +657,9 @@
     dmg: Damage dealt when blocked.
     speed: Determines how fast the plat moves.
     lip: *brush_lip
+    targetname: If set, the trigger that points to this will raise the plat each time
+      it fires. The plat raises and comes back down a second later if no player is
+      on it.
   propreplace:
     lip: {brush: plat, 'move.': 'move. Can be overridden by "height". If you use lip
       place your plat near the bottom point.'}
@@ -694,8 +702,10 @@
     (set the model''s "target" key to the same value as this entity''s "targetname").'
   specials: {}
 - name: func_rotating
+# bug: doesn't work when speed is not set
+# bug: by default rotates around 0 0 0 instead of brush center
   color: 007fcc
-  flags:
+  flags: # ALL OK
   - '-': ''
   - '-': ''
   - X_AXIS: entity will rotate along the X axis.
@@ -726,9 +736,18 @@
       on the entity's brushes (default 0).
     model2: 'path/name of model to include (eg: models/mapobjects/bitch/fembotbig.md3).'
     noise: path/name of .wav file to play. Use looping sounds only (eg. sound/world/drone6.wav).
-    origin: alternate method of setting XYZ origin of entity's rotation axis and .md3
-      model included with entity (default "0 0 0" - See Notes).
+    # OK
     speed: determines how fast entity rotates (default 100).
+    origin: Sets the rotation axis position. # TODO: check it sets .md3 position
+    dmg: Damage dealt when blocked.
+    # bug: parsed, but not used. No damage dealt
+    # bug: trembling when blocked
+  proptypes:
+    speed: float
+    dmg: int
+  propdefaults:
+    speed: 400
+    dmg: 2
   desc: 'Solid entity that rotates continuously. Rotates on the Z axis by default
     and requires an origin brush. It will always start on in the game and is not targetable.
 
@@ -795,6 +814,23 @@
       (See Notes).
     targetname: NOT SUPPORTED BY RENDERER - if set, a func_button or trigger can make
       entity disappear from the game (See Notes).
+    # found in code
+    reverbEffect: ''
+    reverbDistance: ''
+    reverbIntensity: ''
+    # OK
+    gradingTexture: If set, there is the grading effect fluently appears when player comes closer.
+    gradingDistance: Distance where grading effect appears.
+  proptypes:
+    gradingTexture: string
+    gradingDistance: float
+    reverbEffect: string
+    reverbDistance: float
+    reverbIntensity: float
+  propdefaults:
+    gradingDistance: 250
+    reverbDistance: 250
+    reverbIntensity: 1
   desc: Static non-solid bspmodel. Can be used for conditional walls and models.
   specials: {}
 - name: func_timer
@@ -818,10 +854,11 @@
     and maximum values (min delay = wait - random) (max delay = wait + random).'
   specials: {}
 - name: func_train
+# bug: can watch through train when it pushes player
   color: 007fcc
-  flags:
+  flags: # ALL OK
   - START_OFF: the train will spawn in the off state
-  - BLOCK_STOPS: with this set a train simply stops if blocked, instead of killing.
+  - BLOCK_STOPS: Train simply stops if blocked, instead of killing.
   props:
     _celshader: 'Sets the cel shader used for this geometry. Note: omit the "textures/"
       prefix.'
@@ -847,12 +884,19 @@
     light: constantLight radius of .md3 model included with entity. Has no effect
       on the entity's brushes (default 0).
     model2: 'path/name of model to include (eg: models/mapobjects/pipe/pipe02.md3).'
-    origin: alternate method of setting XYZ origin of the train's brush(es) and .md3
-      model included with entity (See Notes).
-    speed: speed of displacement of train (default 100 or overridden by speed value
-      of path).
-    target: this points to the first path_corner of the path which is also the spawn
+    # found in code
+    dmg: '' # seems to be parsed but unused.
+    origin: Required. Base position of train brush or .md3 model.
+    speed: *brush_speed
+    target: This points to the first path_corner of the path which is also the spawn
       location of the train's origin.
+  proptypes:
+    dmg: int
+  propdefaults:
+    dmg: 2
+    speed: 100
+  propreplace:
+    speed: {brush: train, 'moves.': 'moves. Can be overridden by path_corner speed.'}
   desc: 'Trains are moving solids that follow a string of path_corner entities. Trains
     in Tremulous are less basic than in Q3A, they also require an origin brush (see
     Notes).
@@ -1046,7 +1090,7 @@
       The first component is the size of the light flare. The radius is calculated
       by taking the distance of the viewer from the light flare and dividing by this
       key, so the larger the key value, the smaller the flare. Values between 2 and
-      10 are sensible.
+      10 are sensible. # OK
 
       The second component indicates the angle around the direction the flare points
       for which it is visible. For example a value of 90 means that you can see the
