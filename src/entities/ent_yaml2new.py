@@ -132,7 +132,11 @@ def print_prop_desc(e, dt, pr_types, pr_defaults, pr_ranges, pr_eg):
 def print_common_desc(e):
     if e['desc']:
         print(heading.format('DESCRIPTION'))
-        print(e['desc'])
+        v = e['desc']
+        if 'descreplace' in e:
+            for _from, _to in e['descreplace'].items():
+                v = v.replace(_from, _to)
+        print(v)
 
 
 def print_specials(e):
@@ -143,6 +147,8 @@ def print_specials(e):
 
 def print_entity(e, dt, pr_types=False, pr_defaults=False, pr_ranges=False, pr_eg=False):
     print_entity_head(e)
+    if e.get('deprecated'):
+        print('DEPRECATED! DEPRECATED! DEPRECATED!')
     print_flag_desc(e)
     print_prop_desc(e, dt, pr_types, pr_defaults, pr_ranges, pr_eg)
     print_common_desc(e)
@@ -165,13 +171,21 @@ def _validate_float(v):
     return type(v) in (int, float)
 
 def _validate_vec2_float(v):
-    return len(v) == 2 and all(_validate_float(x) for x in v)
+    return isinstance(v, (list, tuple)) and len(v) == 2 and all(_validate_float(x) for x in v)
 
 def _validate_vec3_float(v):
-    return len(v) == 3 and all(_validate_float(x) for x in v)
+    return isinstance(v, (list, tuple)) and len(v) == 3 and all(_validate_float(x) for x in v)
 
 def _validate_vec4_float(v):
-    return len(v) == 3 and all(_validate_float(x) for x in v)
+    return isinstance(v, (list, tuple)) and len(v) == 3 and all(_validate_float(x) for x in v)
+
+def _validate_time_2float(v):
+    if isinstance(v, (list, tuple)):
+        return _validate_vec2_float(v)
+    return _validate_float(v)
+
+def _validate_vec2_int(v):
+    return isinstance(v, (list, tuple)) and len(v) == 2 and all(_validate_int(x) for x in v)
 
 
 def canonize_type(t):
@@ -192,7 +206,7 @@ def val_fields_exist(e):
 required_fields = {'name', 'color', 'flags', 'props', 'desc', 'specials'}
 required_fields2 = required_fields | {'size_min', 'size_max'}
 additional_fields = {'propreplace', 'proptypes', 'propdefaults', 'propranges', 'boolvalues', 'propeg'}
-all_fields = required_fields2 | additional_fields
+all_fields = required_fields2 | additional_fields | {'deprecated', 'descreplace'}
 
 def validate_entity(e, dt):
     r = []

@@ -146,7 +146,6 @@
   proptypes:
     height: float
     phase: float
-    dmg: int
     light: float
     color: vec3_float
   propdefaults:
@@ -155,6 +154,7 @@
     dmg: 2
     speed: 4
     light: 100
+    color: [1, 1, 1]
   propranges:
     phase: [0, 1]
   desc: 'Solid entity that oscillates back and forth in a linear motion.
@@ -224,9 +224,13 @@
     wait: {'before brush returns': 'button stays pressed'}
   proptypes:
     lip: float
+    light: float
+    color: vec3_float
   propdefaults:
     lip: 4
     health: false
+    light: 100
+    color: [1, 1, 1]
   boolvalues:
     health: [0, 1]
   propranges:
@@ -331,12 +335,16 @@
   proptypes:
     range: int
     lip: float
+    light: float
+    color: vec3_float
   propdefaults:
     health: false
     range: 72
     lip: 8
     speed: 400
     dmg: 2
+    light: 100
+    color: [1, 1, 1]
   boolvalues:
     health: [0, 1]
   desc: 'Normal sliding door entity. By default, the door will activate when player
@@ -375,30 +383,50 @@
     _shader OR shader: 'Path to the metashader used to assign textures to the terrain
       entity. Note: Omit the "textures/" prefix.'
     _targetname: Used to attach a misc_model entity to this entity.
-    animation: The first frame and number of frames in the door open animation (e.g.
-      0 10). This will be reversed for the close animation.
-    color: constantLight color of .md3 model included with entity. Has no effect on
-      the entity's brushes (default 1 1 1).
-    health: (default 0) if set to any non-zero value, the door must take damage (any
-      amount) to activate.
-    light: constantLight radius of .md3 model included with entity. Has no effect
-      on the entity's brushes (default 0).
-    model2: 'path/name of the door model (eg: models/mapobjects/pipe/pipe02.md3).'
-    modelOrigin: means of setting the origin of the model.
-    scale: scale the model in each of the major axes (e.g. 1.0 1.0 2.0 -- twice as
-      high as normal).
+    targetname: if set, a func_button or trigger is required to activate the door.
+    team: assign the same team name to multiple doors that should operate together
+      (see Notes).
+    # found in code
     sound1to2: the sound played when the door, platform or button moves from state
       1 to state 2.
     sound2to1: the sound played when the door or platform moves from from state 2
       to state 1.
     soundPos1: the sound played when the door or platform reaches state 1.
     soundPos2: the sound played when the door or platform reaches state 2.
+    wait: number of seconds before door returns (default 2)
+    range: ''
+    model: '' # seems to be clip model
+    modelOrigin: means of setting the origin of the model.
+    scale: scale the model in each of the major axes (e.g. 1.0 1.0 2.0 -- twice as
+      high as normal).
+    model2: 'path/name of the door model (eg: models/mapobjects/pipe/pipe02.md3).'
+      # seems to be visible model
+      # TODO: drops warning if not set
+    noise: '' # sound
+    light: *SP_ConstantLightField_light
+    color: *SP_ConstantLightField_color
+    angles: '' #???
+    animation: The first frame and number of frames in the door open animation (e.g.
+      0 10). This will be reversed for the close animation.
     speed: determines the time taken for the door to change state in msec (default
       200).
-    targetname: if set, a func_button or trigger is required to activate the door.
-    team: assign the same team name to multiple doors that should operate together
-      (see Notes).
-    wait: number of seconds before door returns (default 2)
+    health: (default 0) if set to any non-zero value, the door must take damage (any
+      amount) to activate.
+  proptypes:
+    range: int
+    modelOrigin: vec3_float
+    scale: vec3_float
+    animation: vec2_int
+    light: float
+    color: vec3_float
+  propdefaults:
+    range: 72
+    wait: 2
+    modelOrigin: [0, 0, 0]
+    scale: [1, 1, 1]
+    speed: 200
+    light: 100
+    color: [1, 1, 1]
   desc: 'A model based door entity. By default, the door will activate when player
     walks close to it. The opening and closing of the door is provided by an animation
     in the model itself.
@@ -462,10 +490,14 @@
   proptypes:
     wait: float # variance not used
     rotatorAngle: float
+    light: float
+    color: vec3_float
   propdefaults:
     wait: 2
     rotatorAngle: 90
     health: false
+    light: 100
+    color: [1, 1, 1]
   propreplace:
     wait: *Rdoor
     health: *Rdoor
@@ -589,8 +621,8 @@
     origin: *InitMover_origin
   proptypes:
     phase: float
-    speed: float
-    dmg: int
+    light: float
+    color: vec3_float
   propdefaults:
     phase: 0
     dmg: 2
@@ -598,6 +630,8 @@
     origin: [0, 0, 0]
     angle: 0
     angles: [0, 0, 0]
+    light: 100
+    color: [1, 1, 1]
   propranges:
     phase: [0, 1]
     angle: [-180.0, 180.0]
@@ -673,15 +707,17 @@
     lip: {brush: plat, 'move.': 'move. Can be overridden by "height". If you use lip
       place your plat near the bottom point.'}
   proptypes:
-    dmg: int
     lip: float
     height: float
-    speed: float
+    light: float
+    color: vec3_float
   propdefaults:
     dmg: 2
     lip: 8
     height: 0
     speed: 400
+    light: 100
+    color: [1, 1, 1]
   desc: 'Rising platform the player can ride to reach higher places. Plats must always
     be drawn in the raised position, so they will operate and be lighted correctly
     but they spawn in the lowered position. The plat will stay in the raised position
@@ -751,11 +787,13 @@
     group: *InitMover_group
     origin: *InitMover_origin
   proptypes:
-    speed: float
-    dmg: int
+    light: float
+    color: vec3_float
   propdefaults:
     speed: 400
     dmg: 2
+    light: 100
+    color: [1, 1, 1]
   propreplace:
     origin: {'point.': 'point. Sets the rotation axis position.'}
   desc: 'Solid entity that rotates continuously. Rotates on the Z axis by default
@@ -906,10 +944,13 @@
     color: *SP_ConstantLightField_color
     group: *InitMover_group
   proptypes:
-    dmg: int
+    light: float
+    color: vec3_float
   propdefaults:
     dmg: 2
     speed: 100
+    light: 100
+    color: [1, 1, 1]
   propreplace:
     speed: {brush: train, 'moves.': 'moves. Can be overridden by path_corner speed.'}
   desc: 'Trains are moving solids that follow a string of path_corner entities. Trains
@@ -962,54 +1003,12 @@
   props: {}
   desc: ''
   specials: {}
-- name: info_player_intermission
-  deprecated: y
-  color: ff00ff
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
-  flags: []
-  props:
-    angles: alternate "pitch, yaw, roll" angles method of aiming intermission camera
-      (default 0 0 0).
-    target: point this to an info_notnull or target_position entity to set the camera's
-      pointing angles.
-  desc: Camera for intermission screen between matches. Can be aimed by setting the
-    "angles" key or targeting an pointing to an aiming entity. Use only one per level.
-  specials: {}
 - name: info_player_start
   deprecated: y
   color: ff00ff
   flags: []
   props: {}
   desc: ''
-  specials: {}
-- name: info_alien_intermission
-  deprecated: y
-  color: ff00ff
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
-  flags: []
-  props:
-    angles: alternate "pitch, yaw, roll" angles method of aiming intermission camera
-      (default 0 0 0).
-    target: point this to an info_notnull or target_position entity to set the camera's
-      pointing angles.
-  desc: Camera for aliens before they spawn. Can be aimed by setting the "angles"
-    key or targeting an pointing to an aiming entity. Use one per level.
-  specials: {}
-- name: info_human_intermission
-  deprecated: y
-  color: ff00ff
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
-  flags: []
-  props:
-    angles: alternate "pitch, yaw, roll" angles method of aiming intermission camera
-      (default 0 0 0).
-    target: point this to an info_notnull or target_position entity to set the camera's
-      pointing angles.
-  desc: Camera for humans before they spawn. Can be aimed by setting the "angles"
-    key or targeting an pointing to an aiming entity. Use one per level.
   specials: {}
 - name: misc_model
   deprecated: y
@@ -1205,10 +1204,10 @@
   flags: []
   props:
     # OK
-    origin: Position.
-    angles: Orientation.
-    target: Alternative way to set orientation.
-  desc: 'Point where camera will hang when player awaits spawn as alien. There can be many of them, game makes random choice.'
+    origin: &Inter_pos Position.
+    angles: &Inter_ang Orientation.
+    target: &Inter_target Alternative way to set orientation.
+  desc: &Inter_desc 'Point where camera will hang when player awaits spawn as alien. There can be many of them, game makes random choice.'
   specials: {}
 - name: pos_human_intermission
   color: 0033ff
@@ -1217,10 +1216,12 @@
   flags: []
   props:
     # OK
-    origin: Position.
-    angles: Orientation.
-    target: Alternative way to set orientation.
-  desc: 'Point where camera will hang when player awaits spawn as human. There can be many of them, game makes random choice.'
+    origin: *Inter_pos
+    angles: *Inter_ang
+    target: *Inter_target
+  desc: *Inter_desc
+  descreplace:
+    'as alien': as human
   specials: {}
 - name: pos_player_intermission
   color: 7f7f7f
@@ -1229,10 +1230,12 @@
   flags: []
   props:
     # OK
-    origin: Position.
-    angles: Orientation.
-    target: Alternative way to set orientation.
-  desc: 'Point where camera will hang when player choosing team. There can be many of them, game makes random choice.'
+    origin: *Inter_pos
+    angles: *Inter_ang
+    target: *Inter_target
+  desc: *Inter_desc
+  descreplace:
+    'awaits spawn as alien': is choosing team
   specials: {}
 - name: pos_location
   color: '000000'
@@ -2090,4 +2093,46 @@
   flags: []
   props: {}
   desc: ''
+  specials: {}
+- name: info_player_intermission
+  deprecated: y
+  color: ff00ff
+  size_min: [-8.0, -8.0, -8.0]
+  size_max: [8.0, 8.0, 8.0]
+  flags: []
+  props:
+    angles: alternate "pitch, yaw, roll" angles method of aiming intermission camera
+      (default 0 0 0).
+    target: point this to an info_notnull or target_position entity to set the camera's
+      pointing angles.
+  desc: Camera for intermission screen between matches. Can be aimed by setting the
+    "angles" key or targeting an pointing to an aiming entity. Use only one per level.
+  specials: {}
+- name: info_alien_intermission
+  deprecated: y
+  color: ff00ff
+  size_min: [-8.0, -8.0, -8.0]
+  size_max: [8.0, 8.0, 8.0]
+  flags: []
+  props:
+    angles: alternate "pitch, yaw, roll" angles method of aiming intermission camera
+      (default 0 0 0).
+    target: point this to an info_notnull or target_position entity to set the camera's
+      pointing angles.
+  desc: Camera for aliens before they spawn. Can be aimed by setting the "angles"
+    key or targeting an pointing to an aiming entity. Use one per level.
+  specials: {}
+- name: info_human_intermission
+  deprecated: y
+  color: ff00ff
+  size_min: [-8.0, -8.0, -8.0]
+  size_max: [8.0, 8.0, 8.0]
+  flags: []
+  props:
+    angles: alternate "pitch, yaw, roll" angles method of aiming intermission camera
+      (default 0 0 0).
+    target: point this to an info_notnull or target_position entity to set the camera's
+      pointing angles.
+  desc: Camera for humans before they spawn. Can be aimed by setting the "angles"
+    key or targeting an pointing to an aiming entity. Use one per level.
   specials: {}

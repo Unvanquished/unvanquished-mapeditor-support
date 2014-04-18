@@ -4,11 +4,11 @@ alias: string
 alpha: vec3_float
 amount: int
 angle: &yaw float (yaw)
-angles: vec3_float (yaw pitch roll TODO check)
+angles: vec3_float (yaw pitch roll)
 animation: vec4_float
 bounce: float
 classname: string
-delay: &time vec2_float (time variance)
+delay: &time time_2float (time [variance])
 dmg: int
 health: int
 message: string
