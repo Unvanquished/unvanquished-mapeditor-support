@@ -1,3 +1,12 @@
+# any InitMover has options:
+# -model2 (requires origin specified)
+# -light (float, default 100)
+# -color (vec3_float, default 1 1 1)
+# -group (deprecated team)
+#
+# any reset_moverspeed has options:
+# -speed (float)
+#
 - name: light
 # Marked as deprecated in code.
 # src/gamelogic/game/g_spawn.c:368
@@ -30,6 +39,7 @@
     _sun: Set this key to 1 on a spotlight to make an infinite sun light.
     _samples: '' # look in q3
     _deviance: ''
+    # GtkRadiant generates useless q3map2_shader there
     style: If not default, makes wave noise shader causing whole map to blink. Values variate blink function.
     # OK:
     origin: Position.
@@ -89,13 +99,6 @@
     The -skyscale argument affects brightness of entity sun lights.
   specials: {}
 - name: func_bobbing
-# doesn't work, requires fix https://github.com/Unvanquished/Unvanquished/pull/295
-#
-# TODO:
-#// if the "model2" key is set, use a separate model
-#// for drawing, but clip against the brushes
-# all movers have 
-# "group" (= deprecated "team")
   color: 007fcc
   flags: # ALL OK
   - X_AXIS: entity will bob along the X axis.
@@ -120,15 +123,10 @@
     _shader OR shader: 'Path to the metashader used to assign textures to the terrain
       entity. Note: Omit the "textures/" prefix.'
     _targetname: Used to attach a misc_model entity to this entity.
-    color: constantLight color of .md3 model included with entity. Has no effect on
-      the entity's brushes (default 1 1 1).
-    light: constantLight radius of .md3 model included with entity. Has no effect
-      on the entity's brushes (default 0).
-    model2: 'path/name of model to include (eg: models/mapobjects/jets/jets01.md3).'
     noise: path/name of .wav file to play. Use looping sounds only (eg. sound/world/drone6.wav
       - See Notes).
-    origin: alternate method of setting XYZ origin of sound and .md3 model included
-      with entity (See Notes).
+    # found in code
+    model: '' # todo: SetBrushModel, no effect found
     # OK
     speed: Amount of time in seconds for one complete oscillation cycle.
     height: Amount of travel of the oscillation movement.
@@ -138,15 +136,25 @@
     # src/gamelogic/game/g_spawn_mover.c:370
     # player squashed instantly
     phase: Sets the start offset of the oscillation cycle.
+    model2: &InitMover_model2 Path to custom model attached to entity. Don't forget to set origin.
+    color: &SP_ConstantLightField_color Colour of emitted light.
+      Emission activated by either color or light set. Don't forget to set origin.
+    light: &SP_ConstantLightField_light Light emitting intensity.
+      Emission activated by either color or light set. Don't forget to set origin.
+    origin: &InitMover_origin Entity position point.
+    group: &InitMover_group Name of entity group. Allows to activate all entities of group at once.
   proptypes:
     height: float
     phase: float
     dmg: int
+    light: float
+    color: vec3_float
   propdefaults:
     height: 32
     phase: 0
     dmg: 2
     speed: 4
+    light: 100
   propranges:
     phase: [0, 1]
   desc: 'Solid entity that oscillates back and forth in a linear motion.
@@ -189,14 +197,10 @@
     _shader OR shader: 'Path to the metashader used to assign textures to the terrain
       entity. Note: Omit the "textures/" prefix.'
     _targetname: Used to attach a misc_model entity to this entity.
-    color: constantLight color of .md3 model included with entity. Has no effect on
-      the entity's brushes (default 1 1 1).
-    light: constantLight radius of .md3 model included with entity. Has no effect
-      on the entity's brushes (default 0).
-    model2: 'path/name of model to include (eg: models/mapobjects/pipe/pipe02.md3).'
-    origin: ''
     sound1to2: the sound played when the door, platform or button moves from state
       1 to state 2.
+    # found in code
+    model: ''
     # OK:
     target: All entities with a matching targetname will be triggered. If not set
       button will not appear.
@@ -207,6 +211,11 @@
     angle: &brush_angle 'Determines moving direction of brush (around Z axis:
       0=+x, 90=+y, 180=-x, 270=-y; special values: up = -1, down = -2).'
     health: &brush_health If set, the brush must take damage (any amount) to activate.
+    model2: *InitMover_model2
+    light: *SP_ConstantLightField_light
+    color: *SP_ConstantLightField_color
+    group: *InitMover_group
+    origin: *InitMover_origin
   propreplace:
     speed: &Rbutt {brush: button}
     lip: *Rbutt
@@ -240,9 +249,10 @@
   - INDESTRUCTABLE: '' # todo: causes object to disappear. for what? (trap_LinkEntity skipped to call)
   color: 007fcc
   props:
-    model: '' # todo:
     origin: '' # todo: sets restingPosition, but no noticeable difference in game (maybe it's for custom "model"?)
     angles: '' # todo: look like applies only for custom "model"
+    # found in code
+    model: ''
     # OK:
     health: Amount of damage needed to destroy this.
     damage: Splash damage caused when destroyed.
@@ -285,19 +295,14 @@
     _shader OR shader: 'Path to the metashader used to assign textures to the terrain
       entity. Note: Omit the "textures/" prefix.'
     _targetname: Used to attach a misc_model entity to this entity.
-    color: constantLight color of .md3 model included with entity. Has no effect on
-      the entity's brushes (default 1 1 1).
-    light: constantLight radius of .md3 model included with entity. Has no effect
-      on the entity's brushes (default 0).
-    model2: 'path/name of model to include (eg: models/mapobjects/pipe/pipe02.md3).'
-    origin: alternate method of setting XYZ origin of .md3 model included with entity
-      (See Notes).
     sound1to2: the sound played when the door, platform or button moves from state
       1 to state 2.
     sound2to1: the sound played when the door or platform moves from from state 2
       to state 1.
     soundPos1: the sound played when the door or platform reaches state 1.
     soundPos2: the sound played when the door or platform reaches state 2.
+    # found in code:
+    model: ''
     # OK:
     targetname: If set, a func_button or trigger is required to activate the door.
       Overrides activation by damage.
@@ -313,7 +318,11 @@
       Door will reverse direction when blocked unless CRUSHER spawnflag is set.
       # bug: cannot set 0 dmg
     health: *brush_health
-    team: Assign the same team name to multiple doors that should operate together.
+    model2: *InitMover_model2
+    light: *SP_ConstantLightField_light
+    color: *SP_ConstantLightField_color
+    group: *InitMover_group
+    origin: *InitMover_origin
   propreplace:
     speed: &Rdoor {brush: door}
     lip: *Rdoor
@@ -431,19 +440,12 @@
     _shader OR shader: 'Path to the metashader used to assign textures to the terrain
       entity. Note: Omit the "textures/" prefix.'
     _targetname: Used to attach a misc_model entity to this entity.
-    color: constantLight color of .md3 model included with entity. Has no effect on
-      the entity's brushes (default 1 1 1).
-    light: constantLight radius of .md3 model included with entity. Has no effect
-      on the entity's brushes (default 0).
-    model2: 'path/name of model to include (eg: models/mapobjects/pipe/pipe02.md3).'
     sound1to2: the sound played when the door, platform or button moves from state
       1 to state 2.
     sound2to1: the sound played when the door or platform moves from from state 2
       to state 1.
     soundPos1: the sound played when the door or platform reaches state 1.
     soundPos2: the sound played when the door or platform reaches state 2.
-    team: assign the same team name to multiple doors that should operate together
-      (see Notes).
     # OK
     wait: *brush_wait
       # bug: bad -1 value, it makes annoying sound cascade (opens/closes every frame)
@@ -452,6 +454,11 @@
     health: *brush_health
     origin: Sets the rotation axis position. # TODO: check it sets .md3 position
     targetname: If set, a func_button or trigger is required to activate the door.
+    model2: *InitMover_model2
+    light: *SP_ConstantLightField_light
+    color: *SP_ConstantLightField_color
+    group: *InitMover_group
+    origin: *InitMover_origin
   proptypes:
     wait: float # variance not used
     rotatorAngle: float
@@ -486,9 +493,14 @@
     by default.  You can check either the X_AXIS or Y_AXIS box to change that.'
   specials: {}
 - name: func_dynamic
+# TODO: apply InitMover ?????
+# TODO: apply reset_moverspeed ?????
   color: 007fcc
   flags: []
-  props: {}
+  props:
+    # InitMover
+    # reset_moverspeed
+    model: ''
   desc: ''
   specials: {}
 - name: func_group
@@ -530,7 +542,6 @@
     refer to the Terrain Construction documentation.'
   specials: {}
 - name: func_pendulum
-# doesn't work, requires fix https://github.com/Unvanquished/Unvanquished/pull/295
 # bug: instakill in very big touching angle. It should just rub, not squish.
   color: 007fcc
   flags: []
@@ -554,11 +565,6 @@
     _shader OR shader: 'Path to the metashader used to assign textures to the terrain
       entity. Note: Omit the "textures/" prefix.'
     _targetname: Used to attach a misc_model entity to this entity.
-    color: constantLight color of .md3 model included with entity. Has no effect on
-      the entity's brushes (default 1 1 1).
-    light: constantLight radius of .md3 model included with entity. Has no effect
-      on the entity's brushes (default 0).
-    model2: 'path/name of model to include (eg: models/mapobjects/jets/jets01.md3).'
     noise: path/name of .wav file to play. Use looping sounds only (eg. sound/world/drone6.wav).
     # found:
     # OK
@@ -576,6 +582,11 @@
     targetname: ''
     # bug: when signalled via button: stops and never resumes
     # bug: when stopped position resets hardly, instantly moving to origin
+    model2: *InitMover_model2
+    light: *SP_ConstantLightField_light
+    color: *SP_ConstantLightField_color
+    group: *InitMover_group
+    origin: *InitMover_origin
   proptypes:
     phase: float
     speed: float
@@ -637,13 +648,6 @@
     _shader OR shader: 'Path to the metashader used to assign textures to the terrain
       entity. Note: Omit the "textures/" prefix.'
     _targetname: Used to attach a misc_model entity to this entity.
-    color: constantLight color of .md3 model included with entity. Has no effect on
-      the entity's brushes (default 1 1 1).
-    light: constantLight radius of .md3 model included with entity. Has no effect
-      on the entity's brushes (default 0).
-    model2: 'path/name of model to include (eg: models/mapobjects/pipe/pipe02.md3).'
-    origin: alternate method of setting XYZ origin of .md3 model included with entity
-      (See Notes).
     sound1to2: the sound played when the door, platform or button moves from state
       1 to state 2.
     sound2to1: the sound played when the door or platform moves from from state 2
@@ -660,6 +664,11 @@
     targetname: If set, the trigger that points to this will raise the plat each time
       it fires. The plat raises and comes back down a second later if no player is
       on it.
+    model2: *InitMover_model2
+    light: *SP_ConstantLightField_light
+    color: *SP_ConstantLightField_color
+    group: *InitMover_group
+    origin: *InitMover_origin
   propreplace:
     lip: {brush: plat, 'move.': 'move. Can be overridden by "height". If you use lip
       place your plat near the bottom point.'}
@@ -730,24 +739,25 @@
     _shader OR shader: 'Path to the metashader used to assign textures to the terrain
       entity. Note: Omit the "textures/" prefix.'
     _targetname: Used to attach a misc_model entity to this entity.
-    color: constantLight color of .md3 model included with entity. Has no effect on
-      the entity's brushes (default 1 1 1).
-    light: constantLight radius of .md3 model included with entity. Has no effect
-      on the entity's brushes (default 0).
-    model2: 'path/name of model to include (eg: models/mapobjects/bitch/fembotbig.md3).'
     noise: path/name of .wav file to play. Use looping sounds only (eg. sound/world/drone6.wav).
     # OK
     speed: determines how fast entity rotates (default 100).
-    origin: Sets the rotation axis position. # TODO: check it sets .md3 position
     dmg: Damage dealt when blocked.
     # bug: parsed, but not used. No damage dealt
     # bug: trembling when blocked
+    model2: *InitMover_model2
+    light: *SP_ConstantLightField_light
+    color: *SP_ConstantLightField_color
+    group: *InitMover_group
+    origin: *InitMover_origin
   proptypes:
     speed: float
     dmg: int
   propdefaults:
     speed: 400
     dmg: 2
+  propreplace:
+    origin: {'point.': 'point. Sets the rotation axis position.'}
   desc: 'Solid entity that rotates continuously. Rotates on the Z axis by default
     and requires an origin brush. It will always start on in the game and is not targetable.
 
@@ -773,19 +783,13 @@
   desc: ''
   specials: {}
 - name: func_static
+# TODO: apply InitMover ?????
+# TODO: apply reset_moverspeed ?????
   color: 007fcc
   flags: []
   props:
-    ? When using the model2 key, the origin point of the model will correspond to
-      the origin point defined by either the origin brush or the origin coordinate
-      value. If a model is included with a targeted func_static, the brush(es) of
-      the entity will be removed from the game but the .md3 model won't
-    : 'it will automatically be moved to the (0 0 0) world origin so you should NOT
-      include an .md3 model to a targeted func_static.
-
-
-      Target this entity with a misc_model to have the model attached to the entity
-      (set the model''s "target" key to the same value as this entity''s "targetname").'
+    # InitMover
+    # reset_moverspeed
     _celshader: 'Sets the cel shader used for this geometry. Note: omit the "textures/"
       prefix.'
     _cs OR _castshadows: Allows per-entity control over shadow casting. Defaults to
@@ -818,6 +822,7 @@
     reverbEffect: ''
     reverbDistance: ''
     reverbIntensity: ''
+    model: ''
     # OK
     gradingTexture: If set, there is the grading effect fluently appears when player comes closer.
     gradingDistance: Distance where grading effect appears.
@@ -831,14 +836,23 @@
     gradingDistance: 250
     reverbDistance: 250
     reverbIntensity: 1
-  desc: Static non-solid bspmodel. Can be used for conditional walls and models.
+  desc: 'Static non-solid bspmodel. Can be used for conditional walls and models.
+    When using the model2 key, the origin point of the model will correspond to
+    the origin point defined by either the origin brush or the origin coordinate
+    value. If a model is included with a targeted func_static, the brush(es) of
+    the entity will be removed from the game but the .md3 model wont
+    it will automatically be moved to the (0 0 0) world origin so you should NOT
+    include an .md3 model to a targeted func_static.
+
+    Target this entity with a misc_model to have the model attached to the entity
+    (set the model''s "target" key to the same value as this entity''s "targetname").'
   specials: {}
 - name: func_timer
   color: 007fcc
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
-  flags:
-  - START_ON: Timer will start on in the game and continuously fire its targets. # OK
+  flags: # ALL OK
+  - START_ON: Timer will start on in the game and continuously fire its targets.
   props:
     # OK:
     wait: Delay in seconds between each triggering of its targets.
@@ -857,7 +871,7 @@
 # bug: can watch through train when it pushes player
   color: 007fcc
   flags: # ALL OK
-  - START_OFF: the train will spawn in the off state
+  - START_OFF: The train will spawn in the off state
   - BLOCK_STOPS: Train simply stops if blocked, instead of killing.
   props:
     _celshader: 'Sets the cel shader used for this geometry. Note: omit the "textures/"
@@ -879,17 +893,18 @@
     _shader OR shader: 'Path to the metashader used to assign textures to the terrain
       entity. Note: Omit the "textures/" prefix.'
     _targetname: Used to attach a misc_model entity to this entity.
-    color: constantLight color of .md3 model included with entity. Has no effect on
-      the entity's brushes (default 1 1 1).
-    light: constantLight radius of .md3 model included with entity. Has no effect
-      on the entity's brushes (default 0).
-    model2: 'path/name of model to include (eg: models/mapobjects/pipe/pipe02.md3).'
     # found in code
     dmg: '' # seems to be parsed but unused.
-    origin: Required. Base position of train brush or .md3 model.
-    speed: *brush_speed
-    target: This points to the first path_corner of the path which is also the spawn
+    # OK
+    target: This points to the first path_corner of the path which is also
       location of the train's origin.
+    origin: Required, if you omit this, train will not appear. Base position of train.
+    speed: *brush_speed
+    targetname: Entity name.
+    model2: *InitMover_model2
+    light: *SP_ConstantLightField_light
+    color: *SP_ConstantLightField_color
+    group: *InitMover_group
   proptypes:
     dmg: int
   propdefaults:
@@ -1169,37 +1184,57 @@
   size_max: [8.0, 8.0, 8.0]
   flags: []
   props:
-    speed: speed of func_train while moving to the next path corner. This will override
-      the speed value of the train.
-    target: point to next path_corner in the path.
-    targetname: the train following the path or the previous path_corner in the path
-      points to this.
-    wait: number of seconds func_train will pause on path corner before moving to
+    # OK
+    target: Point to next path_corner in the path.
+    targetname: Entity name.
+    wait: Number of seconds func_train will pause on path corner before moving to
       next path corner (default 0 - see Notes).
+    speed: Speed of func_train while moving to the next path corner. This will override
+      the speed value of the train.
+  propdefaults:
+    wait: 0
   desc: 'Path corner entity that func_trains can be made to follow.
 
     Setting the wait key to -1 will not make the train stop on the path corner, it
     will simply default to 0.'
   specials: {}
 - name: pos_alien_intermission
-  color: '000000'
+  color: ff3300
+  size_min: [-8.0, -8.0, -8.0]
+  size_max: [8.0, 8.0, 8.0]
   flags: []
-  props: {}
-  desc: ''
+  props:
+    # OK
+    origin: Position.
+    angles: Orientation.
+    target: Alternative way to set orientation.
+  desc: 'Point where camera will hang when player awaits spawn as alien. There can be many of them, game makes random choice.'
   specials: {}
 - name: pos_human_intermission
-  color: '000000'
+  color: 0033ff
+  size_min: [-8.0, -8.0, -8.0]
+  size_max: [8.0, 8.0, 8.0]
   flags: []
-  props: {}
-  desc: ''
-  specials: {}
-- name: pos_location
-  color: '000000'
-  flags: []
-  props: {}
-  desc: ''
+  props:
+    # OK
+    origin: Position.
+    angles: Orientation.
+    target: Alternative way to set orientation.
+  desc: 'Point where camera will hang when player awaits spawn as human. There can be many of them, game makes random choice.'
   specials: {}
 - name: pos_player_intermission
+  color: 7f7f7f
+  size_min: [-8.0, -8.0, -8.0]
+  size_max: [8.0, 8.0, 8.0]
+  flags: []
+  props:
+    # OK
+    origin: Position.
+    angles: Orientation.
+    target: Alternative way to set orientation.
+  desc: 'Point where camera will hang when player choosing team. There can be many of them, game makes random choice.'
+  specials: {}
+- name: pos_location
   color: '000000'
   flags: []
   props: {}
@@ -1953,9 +1988,17 @@
   desc: ''
   specials: {}
 - name: gfx_animated_model
+  size_min: [-8.0, -8.0, -8.0]
+  size_max: [8.0, 8.0, 8.0]
   color: '000000'
-  flags: []
-  props: {}
+  flags:
+  - '-': ''
+  - ANIM_STOP: Spawn with animation stopped.
+  props:
+    model: Path to a model.
+    animation: ''
+  propeg:
+    model: 'models/mapobjects/plant_life/grass.md3'
   desc: ''
   specials: {}
 - name: gfx_light_flare
