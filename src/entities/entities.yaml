@@ -7,6 +7,23 @@
 # any reset_moverspeed has options:
 # -speed (float)
 #
+# NOT FOUND IN UNV SOURCE
+# _celshader
+# _cs or _castshadows
+# _indexmap OR alphamap
+# _layers or layers
+# _lightmapscale
+# _rs or _receiveshadows
+#
+# NOT FOUND IN q3map2 of GTKRADIANT
+# _castshadows
+# _receiveshadows
+#
+# but found: _castShadows, _receiveShadows
+#
+# NETRADIANT q3map2: same as gtkradiant
+#
+#
 - name: light
 # Marked as deprecated in code.
 # src/gamelogic/game/g_spawn.c:368
@@ -22,19 +39,19 @@
   - NOGRIDLIGHT: Do not affect the lightgrid (dynamic entity lighting).
   props:
     # todo: source/engine/renderer/tr_bsp.cpp:5700
-    light_center: '' # todo:
-    light_radius: '' # todo:
-    light_target: '' # todo:
-    light_right: '' # todo:
-    light_up: '' # todo:
-    light_start: '' # todo:
-    light_end: '' # todo:
-    light_scale: '' # todo:
+    light_center: '' # 3float
+    light_radius: '' # 3float
+    light_target: '' # 3float
+    light_right: '' # 3float
+    light_up: '' # 3float
+    light_start: '' # 3float
+    light_end: '' # 3float
+    light_scale: '' # float
     texture: '' # todo:
-    rotation: or light_rotation # todo:
-    noshadows: only possible value 1 # todo:
-    noradiosity: only possible value 1 # todo:
-    parallel: only possible value 1 # todo:
+    rotation: or light_rotation # 9float
+    noshadows: only possible value 1 # bool 0/1
+    noradiosity: only possible value 1 # bool 0/1
+    parallel: only possible value 1 # bool 0/1
     # from q3map2
     _sun: Set this key to 1 on a spotlight to make an infinite sun light.
     _samples: '' # look in q3
@@ -70,12 +87,15 @@
     _deviance: 0
     _samples: 1
     radius: 64
-  desc: Non-displayed point light source. The -pointscale and -scale arguments to
+  desc: Non-displayed point light source. # OK
+
+    The -pointscale and -scale arguments to
     Q3Map2 affect the brightness of these lights. The -skyscale argument affects brightness
     of entity sun lights.
   specials: {}
 - name: lightJunior
-# todo: seems to be q3map2-only
+# enlightens only weapon in hands
+# TODO: property list
   color: 00b34c
   size_min: [-6.0, -6.0, -6.0]
   size_max: [6.0, 6.0, 6.0]
@@ -122,9 +142,6 @@
       shadows ONLY from corresponding keyed entities.
     _shader OR shader: 'Path to the metashader used to assign textures to the terrain
       entity. Note: Omit the "textures/" prefix.'
-    _targetname: Used to attach a misc_model entity to this entity.
-    noise: path/name of .wav file to play. Use looping sounds only (eg. sound/world/drone6.wav
-      - See Notes).
     # found in code
     model: '' # todo: SetBrushModel, no effect found
     # OK
@@ -143,6 +160,9 @@
       Emission activated by either color or light set. Don't forget to set origin.
     origin: &InitMover_origin Entity position point.
     group: &InitMover_group Name of entity group. Allows to activate all entities of group at once.
+    noise: Sound played when activated via targetname. Emitted at origin.
+    # bug: should it emit noise always, not just when activated? When activated, it's better to call
+    # property "sound".
   proptypes:
     height: float
     phase: float
@@ -157,22 +177,8 @@
     color: [1, 1, 1]
   propranges:
     phase: [0, 1]
-  desc: 'Solid entity that oscillates back and forth in a linear motion.
+  desc: Solid entity that oscillates back and forth in a linear motion.
     Entity bobs on the Z axis (up-down) by default. # OK
-
-    It can also emit sound if the "noise" key is set. Will crush the player
-    when blocked.
-
-    In order for the sound to be emitted from the entity, it is recommended to include
-    a brush with an origin shader at its center, otherwise the sound will not follow
-    the entity as it moves. Setting the origin key is simply an alternate method to
-    using an origin brush. When using the model2 key, the origin point of the model
-    will correspond to the origin point defined by either the origin brush or the
-    origin coordinate value.
-
-
-    Target this entity with a misc_model to have the model attached to the entity
-    (set the model''s "target" key to the same value as this entity''s "targetname").'
   specials: {}
 - name: func_button
   color: 007fcc
@@ -196,9 +202,6 @@
       shadows ONLY from corresponding keyed entities.
     _shader OR shader: 'Path to the metashader used to assign textures to the terrain
       entity. Note: Omit the "textures/" prefix.'
-    _targetname: Used to attach a misc_model entity to this entity.
-    sound1to2: the sound played when the door, platform or button moves from state
-      1 to state 2.
     # found in code
     model: ''
     # OK:
@@ -216,6 +219,7 @@
     color: *SP_ConstantLightField_color
     group: *InitMover_group
     origin: *InitMover_origin
+    sound1to2: Activation sound.
   propreplace:
     speed: &Rbutt {brush: button}
     lip: *Rbutt
@@ -231,21 +235,17 @@
     health: false
     light: 100
     color: [1, 1, 1]
+    sound1to2: sound/movers/switches/button1.wav
   boolvalues:
     health: [0, 1]
   propranges:
     angle: [-2, 360]
-  desc: 'When a button is touched by a player, it moves in the direction set by the
+  propeg:
+    sound1to2: 'sound/dum.ogg'
+  desc: When a button is touched by a player, it moves in the direction set by the
     "angle" key, triggers all its targets, stays pressed by an amount of time set
-    by the "wait" key, then returns to it''s original position where it can be operated
+    by the "wait" key, then returns to it's original position where it can be operated
     again. # OK
-
-    Setting the origin key is simply an alternate method to using an origin brush.
-    When using the model2 key, the origin point of the model will correspond to the
-    origin point defined by either the origin brush or the origin coordinate value.
-
-    Target this entity with a misc_model to have the model attached to the entity
-    (set the model''s "target" key to the same value as this entity''s "targetname").'
   specials: {}
 - name: func_destructable
 # bug: object just disappers without any explosion effect or sound.
@@ -268,7 +268,8 @@
     damage: 0
     radius: 0
     health: 100
-  desc: 'Destructable object. Does not cause splash damage to builables.'
+  desc: Destructable object. You can destroy this object in game. When destructed deals splash damage
+    to everyone near it. Does not cause splash damage to builables. # OK
   specials: {}
 - name: func_door
   color: 007fcc
@@ -298,7 +299,6 @@
       shadows ONLY from corresponding keyed entities.
     _shader OR shader: 'Path to the metashader used to assign textures to the terrain
       entity. Note: Omit the "textures/" prefix.'
-    _targetname: Used to attach a misc_model entity to this entity.
     sound1to2: the sound played when the door, platform or button moves from state
       1 to state 2.
     sound2to1: the sound played when the door or platform moves from from state 2
@@ -382,7 +382,6 @@
       shadows ONLY from corresponding keyed entities.
     _shader OR shader: 'Path to the metashader used to assign textures to the terrain
       entity. Note: Omit the "textures/" prefix.'
-    _targetname: Used to attach a misc_model entity to this entity.
     targetname: if set, a func_button or trigger is required to activate the door.
     team: assign the same team name to multiple doors that should operate together
       (see Notes).
@@ -427,6 +426,7 @@
     speed: 200
     light: 100
     color: [1, 1, 1]
+    noise: ''
   desc: 'A model based door entity. By default, the door will activate when player
     walks close to it. The opening and closing of the door is provided by an animation
     in the model itself.
@@ -467,7 +467,6 @@
       shadows ONLY from corresponding keyed entities.
     _shader OR shader: 'Path to the metashader used to assign textures to the terrain
       entity. Note: Omit the "textures/" prefix.'
-    _targetname: Used to attach a misc_model entity to this entity.
     sound1to2: the sound played when the door, platform or button moves from state
       1 to state 2.
     sound2to1: the sound played when the door or platform moves from from state 2
@@ -596,7 +595,6 @@
       shadows ONLY from corresponding keyed entities.
     _shader OR shader: 'Path to the metashader used to assign textures to the terrain
       entity. Note: Omit the "textures/" prefix.'
-    _targetname: Used to attach a misc_model entity to this entity.
     noise: path/name of .wav file to play. Use looping sounds only (eg. sound/world/drone6.wav).
     # found:
     # OK
@@ -681,7 +679,6 @@
       shadows ONLY from corresponding keyed entities.
     _shader OR shader: 'Path to the metashader used to assign textures to the terrain
       entity. Note: Omit the "textures/" prefix.'
-    _targetname: Used to attach a misc_model entity to this entity.
     sound1to2: the sound played when the door, platform or button moves from state
       1 to state 2.
     sound2to1: the sound played when the door or platform moves from from state 2
@@ -774,7 +771,6 @@
       shadows ONLY from corresponding keyed entities.
     _shader OR shader: 'Path to the metashader used to assign textures to the terrain
       entity. Note: Omit the "textures/" prefix.'
-    _targetname: Used to attach a misc_model entity to this entity.
     noise: path/name of .wav file to play. Use looping sounds only (eg. sound/world/drone6.wav).
     # OK
     speed: determines how fast entity rotates (default 100).
@@ -846,7 +842,6 @@
       shadows ONLY from corresponding keyed entities.
     _shader OR shader: 'Path to the metashader used to assign textures to the terrain
       entity. Note: Omit the "textures/" prefix.'
-    _targetname: Used to attach a misc_model entity to this entity.
     color: constantLight color of .md3 model included with entity. Has no effect on
       the entity's brushes (default 1 1 1).
     light: constantLight radius of .md3 model included with entity. Has no effect
@@ -930,7 +925,6 @@
       shadows ONLY from corresponding keyed entities.
     _shader OR shader: 'Path to the metashader used to assign textures to the terrain
       entity. Note: Omit the "textures/" prefix.'
-    _targetname: Used to attach a misc_model entity to this entity.
     # found in code
     dmg: '' # seems to be parsed but unused.
     # OK
@@ -1051,7 +1045,9 @@
       (default 1.0 1.0 1.0).
     target: Used to attach the misc_model to a brush entity, where its "targetname"
       key is the same value.
-  desc: Generic placeholder for inserting MD3 models in game. Requires compilation
+  desc: DOES NOT WORK # OK
+
+    Generic placeholder for inserting MD3 models in game. Requires compilation
     of map geometry to be added to level. If the map is compiled with Q3Map2, then
     ASE, 3DS, OBJ and other model formats are supported.
   specials: {}
@@ -2090,8 +2086,19 @@
   specials: {}
 - name: sfx_speaker
   color: '000000'
-  flags: []
-  props: {}
+  flags:
+    # found in code
+    - LOOP_SOUND: ''
+    - '-': ''
+    - BROADCAST: ''
+    - ACTIVATOR_SPEAKER: ''
+  props:
+    # found in code
+    noise: ''
+    wait: ''
+    origin: ''
+  propdefaults:
+    noise: NOSOUND
   desc: ''
   specials: {}
 - name: info_player_intermission
