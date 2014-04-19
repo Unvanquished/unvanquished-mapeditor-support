@@ -1960,10 +1960,23 @@
   desc: ''
   specials: {}
 - name: env_afx_ammo
-  color: '000000'
-  flags: []
-  props: {}
-  desc: ''
+  color: 88af47
+  flags: # ALL OK
+    - EVERY_SECOND: Act every second instead of every frame.
+    - DISABLE_ENERGO: Disable recharging energetic weapons.
+    - DISABLE_NON_ENERGO: Disable recharging non-energetic weapons.
+  props:
+    # found in code
+    model: ''
+    angles: SetMovedir
+    # OK
+    ammo: Amount of ammo. Values < 1 corrected to 1.
+  proptypes:
+    ammo: int
+  propdefaults:
+    ammo: 1
+  desc:
+    Gives ammo to players. # OK
   specials: {}
 - name: env_afx_gravity
   color: '000000'
@@ -1972,16 +1985,49 @@
   desc: ''
   specials: {}
 - name: env_afx_heal
-  color: '000000'
-  flags: []
-  props: {}
-  desc: ''
+  color: 4cbd88
+  flags:
+    - SPAWN_DISABLED: Disabled by default. # OK
+    - EVERY_SECOND: Heal every second instead of every frame. # OK
+  props:
+    # found in code
+    model: ''
+    angles: SetMovedir
+    # OK
+    heal: Amount of heal. Values < 1 corrected to 1.
+  proptypes:
+    heal: int
+  propdefaults:
+    heal: 5
+  desc: >
+    Heals players. # OK
+
+    Setting healer as target allows to toggle its activity. # OK
   specials: {}
 - name: env_afx_hurt
-  color: '000000'
-  flags: []
-  props: {}
-  desc: ''
+# bug: can't customize sound
+# it is always sound/misc/electro.wav
+  color: bd4c4c
+  flags:
+    - SPAWN_DISABLED: Disabled by default. # OK
+    - '-': ''
+    - NO_SOUND: No sound played. # OK
+    - DAMAGE_FLAG: Damage no protection. # such as friendly fire??? TODO
+    - EVERY_SECOND: Damage every second instead of every frame. # OK
+  props:
+    # found in code
+    model: ''
+    angles: SetMovedir
+    # OK
+    dmg: Damage dealt. Values <= 0 corrected to default value.
+  proptypes:
+    dmg: int
+  propdefaults:
+    dmg: 5
+  desc: >
+    Hurts players or buildings. # OK
+
+    Setting hurter as target allows to toggle its activity. # OK
   specials: {}
 - name: env_afx_push
   color: '000000'
@@ -1990,7 +2036,7 @@
   desc: ''
   specials: {}
 - name: env_afx_teleport
-  color: 007f00
+  color: bd8f4c
   flags: # ALL OK
     - SPECTATORS_ONLY: Affect only spectators.
     - SPAWN_DISABLED: Teleport disabled by default.
