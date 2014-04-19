@@ -616,7 +616,7 @@
     # src/gamelogic/game/g_spawn_mover.c:370
     # player squashed instantly
     angles: Orienting pendulum.
-    targetname: ''
+    targetname: &TN Entity name.
     # bug: when signalled via button: stops and never resumes
     # bug: when stopped position resets hardly, instantly moving to origin
     model2: *InitMover_model2
@@ -941,7 +941,7 @@
       location of the train's origin.
     origin: Required, if you omit this, train will not appear. Base position of train.
     speed: *brush_speed
-    targetname: Entity name.
+    targetname: *TN
     model2: *InitMover_model2
     light: *SP_ConstantLightField_light
     color: *SP_ConstantLightField_color
@@ -1197,7 +1197,7 @@
   props:
     # OK
     target: Point to next path_corner in the path.
-    targetname: Entity name.
+    targetname: *TN
     wait: Number of seconds func_train will pause on path corner before moving to
       next path corner.
     speed: Speed of func_train while moving to the next path corner. This will override
@@ -1960,7 +1960,7 @@
   desc: ''
   specials: {}
 - name: env_afx_ammo
-  color: 88af47
+  color: 5b7c2d
   flags: # ALL OK
     - EVERY_SECOND: Act every second instead of every frame.
     - DISABLE_ENERGO: Disable recharging energetic weapons.
@@ -1971,6 +1971,7 @@
     angles: SetMovedir
     # OK
     ammo: Amount of ammo. Values < 1 corrected to 1.
+    targetname: *TN
   proptypes:
     ammo: int
   propdefaults:
@@ -1985,7 +1986,7 @@
   desc: ''
   specials: {}
 - name: env_afx_heal
-  color: 4cbd88
+  color: 2d7c50
   flags:
     - SPAWN_DISABLED: Disabled by default. # OK
     - EVERY_SECOND: Heal every second instead of every frame. # OK
@@ -1995,6 +1996,7 @@
     angles: SetMovedir
     # OK
     heal: Amount of heal. Values < 1 corrected to 1.
+    targetname: *TN
   proptypes:
     heal: int
   propdefaults:
@@ -2007,7 +2009,7 @@
 - name: env_afx_hurt
 # bug: can't customize sound
 # it is always sound/misc/electro.wav
-  color: bd4c4c
+  color: c81111
   flags:
     - SPAWN_DISABLED: Disabled by default. # OK
     - '-': ''
@@ -2020,6 +2022,7 @@
     angles: SetMovedir
     # OK
     dmg: Damage dealt. Values <= 0 corrected to default value.
+    targetname: *TN
   proptypes:
     dmg: int
   propdefaults:
@@ -2036,7 +2039,7 @@
   desc: ''
   specials: {}
 - name: env_afx_teleport
-  color: bd8f4c
+  color: '754928'
   flags: # ALL OK
     - SPECTATORS_ONLY: Affect only spectators.
     - SPAWN_DISABLED: Teleport disabled by default.
@@ -2046,6 +2049,7 @@
     # OK
     target: Name of the target. You can set same targetname to many positions.
     speed: Player speed after teleportation.
+    targetname: *TN
   propdefaults:
     speed: 400
   desc: >
@@ -2198,6 +2202,7 @@
     noise: Path to played sound.
     wait: ''
     origin: Position.
+    targetname: *TN
   propdefaults:
     noise: NOSOUND
   propeg:
