@@ -140,7 +140,7 @@ def print_common_desc(e):
 
 
 def print_specials(e):
-    if e['specials']:
+    if 'specials' in e and e['specials']:
         for k, v in e['specials'].items():
             print('{}="{}"'.format(k, v))
 
@@ -203,10 +203,10 @@ def val_fields_exist(e):
         'props' in e
     )
 
-required_fields = {'name', 'color', 'flags', 'props', 'desc', 'specials'}
+required_fields = {'name', 'color', 'flags', 'props', 'desc'}
 required_fields2 = required_fields | {'size_min', 'size_max'}
 additional_fields = {'propreplace', 'proptypes', 'propdefaults', 'propranges', 'boolvalues', 'propeg'}
-all_fields = required_fields2 | additional_fields | {'deprecated', 'descreplace'}
+all_fields = required_fields2 | additional_fields | {'deprecated', 'descreplace', 'specials'}
 
 def validate_entity(e, dt):
     r = []
