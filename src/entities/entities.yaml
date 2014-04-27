@@ -131,7 +131,7 @@
   size_max: [8.0, 8.0, 8.0]
   flags:
   - LINEAR: Use a linear falloff. Default is inverse distance squared (more realistic). # OK
-  # found in code
+  # found in code (q3map2)
   - NOANGLE: Ignore angle attenuation.
   - DARKLIGHT: ''
   - DARKLIGHT: ''
@@ -201,7 +201,7 @@
   size_min: [-6.0, -6.0, -6.0]
   size_max: [6.0, 6.0, 6.0]
   flags:
-  # found in code
+  # found in code (q3map2)
   - LINEAR: Use a linear falloff. Default is inverse distance squared (more realistic).
   - NOANGLE: Ignore angle attenuation.
   - UNUSED1: ''
@@ -1061,53 +1061,14 @@
     (set the model's "target" key to the same value as this entity's "targetname").
   specials: {}
 - name: misc_model
-# TODO: SP_RemoveSelf
   deprecated: y
   color: ff7f3f
   size_min: [-16.0, -16.0, -16.0]
   size_max: [16.0, 16.0, 16.0]
-  flags:
-  - CASTSHADOW: Toggles the model casting shadows on the map surfaces.
-  - AUtOCLIP: ''
-  - FORCEMETA: Sets the forcemeta spawnflag, automatically adding q3map_forcemeta
-      to any shaders used by the model (which, in turn, allows the model to become
-      lightmapped). This, effectively, is the "lightmapped model" spawnflag.
-  props:
-    AUTOCLIP: Sets the autoclipping spawnflag, automatically assigning q3map_clipmodel
-      to any shaders used by the model. Use of Q3Map2 autoclipping for models is only
-      recommended for large models with relatively few triangles in their mesh (i.e.
-      terrain). The Q3Map2 autoclipping algorithm is a bit of a hack, and can hurt
-      in-game performance (as well as produce erroneous clipping results) when used
-      on small, dense models.
-    _celshader: 'Sets the cel shader used for this geometry. Note: omit the "textures/"
-      prefix.'
-    _cs OR _castshadows: Allows per-entity control over shadow casting. Defaults to
-      0 on entities, 1 on world. 0 = no shadow casting. 1 = cast shadows on world.
-      > 1 = cast shadows on entities with _rs (or _receiveshadows) with the corresponding
-      value, AND world. Negative values imply same, but DO NOT cast shadows on world.
-    _lightmapscale: Floating point value scaling the resolution of lightmaps on this
-      model (if model is using lightmapped shaders) (default 1.0).
-    _remap: Used to remap textures/shaders in the model. To remap all shaders to a
-      given shader, use "*;models/mymodel/mytexture". To remap a specific shader,
-      use "models/mymodel/old;models/mymodel/new".
-    _rs OR _receiveshadows: Allows per-entity control over shadow reception. Defaults
-      to 1 on everything (world shadows). 0 = receives NO shadows. > 1 = receive shadows
-      only from corresponding keyed entities (see above) and world. < 1 = receive
-      shadows ONLY from corresponding keyed entities.
-    angle: direction in which model will be oriented.
-    angles: Individual control of PITCH, YAW, and ROLL (default 0 0 0).
-    model: 'path/name of model to use (eg: models/mapobjects/teleporter/teleporter.md3).'
-    modelscale: Floating-point value used to scale a model up or down (default 1.0).
-    modelscale_vec: Floating-point vector used to scale a model's axes individually
-      (default 1.0 1.0 1.0).
-    target: Used to attach the misc_model to a brush entity, where its "targetname"
-      key is the same value.
-  desc: >
-    DOES NOT WORK # OK
-
-    Generic placeholder for inserting MD3 models in game. Requires compilation
-    of map geometry to be added to level. If the map is compiled with Q3Map2, then
-    ASE, 3DS, OBJ and other model formats are supported.
+  flags: []
+  props: {}
+  desc: > # OK
+    DOES NOT WORK, USE gfx_animated_model
   specials: {}
 - name: path_corner
 # TODO: SP_Nothing
@@ -1133,7 +1094,7 @@
   specials: {}
 - name: pos_alien_intermission
 # TODO: SP_Nothing
-  color: ff3300
+  color: &alienColor ff3300
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
   flags: []
@@ -1149,7 +1110,7 @@
 - name: info_alien_intermission
 # TODO: pos_alien_intermission
   deprecated: y
-  color: ff00ff
+  color: *alienColor
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
   flags: []
@@ -1164,7 +1125,7 @@
   specials: {}
 - name: pos_human_intermission
 # TODO: SP_Nothing
-  color: 0033ff
+  color: &humanColor 0033ff
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
   flags: []
@@ -1180,7 +1141,7 @@
 - name: info_human_intermission
 # TODO: pos_human_intermission
   deprecated: y
-  color: ff00ff
+  color: *humanColor
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
   flags: []
@@ -1195,7 +1156,7 @@
   specials: {}
 - name: pos_player_intermission
 # TODO: SP_Nothing
-  color: 7f7f7f
+  color: ff00ff
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
   flags: []
@@ -1305,11 +1266,6 @@
     targetname: the activating trigger points to this.
   desc: This will kill the player who activates the trigger that fires this target.
   specials: {}
-    (jump pads) in particular.
-
-    To make a jump pad, place this entity at the highest point of the jump and target
-    it with a trigger_push entity.
-  specials: {}
 - name: info_notnull
 # TODO: pos_target alias
   deprecated: y
@@ -1355,9 +1311,9 @@
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
   flags:
-  - HUMAN_TEAM: Only the human team players will see the message. # TODO check net game
-  - ALIEN_TEAM: Only the alien team players will see the message. # TODO check net game
-  - PRIVATE: Only the player that activates the target will see the message. # TODO check net game
+  - HUMAN_TEAM: Only the human team players will see the message. # OK, but TODO check net game
+  - ALIEN_TEAM: Only the alien team players will see the message. # OK, but TODO check net game
+  - PRIVATE: Only the player that activates the target will see the message. # OK, but TODO check net game
   props:
     message: text string to print on screen. # OK
     targetname: the activating trigger points to this. # OK
@@ -1371,18 +1327,20 @@
   color: 7f7f7f
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
-  flags:
-  - BOUNCEPAD: if set, trigger will play bounce noise instead of beep noise when activated
-      (recommended).
-  - NOSOUND: if set, no sound is played at all
+  flags: []
   props:
+    # found in code
     angles: this sets the pitch and yaw aiming angles of push entity (default 0 0).
       The roll angle does not apply.
     speed: speed of push (default 1000). Has no effect if entity targets an aiming
       entity.
-    target: this points to the aiming entity to which the player will jump.
-    targetname: the activating trigger points to this. Push originates from the location
+    origin: ''
+    # OK
+    target: This points to the aiming entity to which the player will jump.
+    targetname: The activating trigger points to this. Push originates from the location
       of the trigger.
+  propdefaults:
+    speed: 1000
   desc: >
     This can be used to create jump pads and launch ramps. The direction of push
     can be set by the "angles" key or pointing to a target_position or info_notnull
@@ -1420,7 +1378,7 @@
   desc: When triggered, this hurts the entity that caused the trigger.
   specials: {}
 - name: team_human_spawn
-  color: 0033ff
+  color: *humanColor
   size_min: [-40.0, -40.0, -4.0]
   size_max: [40.0, 40.0, 4.0]
   flags: []
@@ -1428,7 +1386,7 @@
   desc: The human spawn point.
   specials: {model: models/buildables/telenode/telenode.md3}
 - name: team_human_armoury
-  color: 0033ff
+  color: *humanColor
   size_min: [-40.0, -40.0, -13.0]
   size_max: [40.0, 40.0, 50.0]
   flags: []
@@ -1436,7 +1394,7 @@
   desc: The human armoury.
   specials: {model: models/buildables/arm/arm.md3}
 - name: team_human_drill
-  color: 0033ff
+  color: *humanColor
   size_min: [-15.0, -15.0, -15.0]
   size_max: [15.0, 15.0, 25.0]
   flags: []
@@ -1444,7 +1402,7 @@
   desc: The human drill.
   specials: {model: models/buildables/drill/drill.md3}
 - name: team_human_medistat
-  color: 0033ff
+  color: *humanColor
   size_min: [-35.0, -35.0, -7.0]
   size_max: [35.0, 35.0, 7.0]
   flags: []
@@ -1452,7 +1410,7 @@
   desc: The human medical station.
   specials: {model: models/buildables/medistat/medistat.md3}
 - name: team_human_mgturret
-  color: 0033ff
+  color: *humanColor
   size_min: [-25.0, -25.0, -20.0]
   size_max: [25.0, 25.0, 20.0]
   flags: []
@@ -1460,7 +1418,7 @@
   desc: The human machinegun turret.
   specials: {model: models/buildables/mgturret/mgturret.md3}
 - name: team_human_reactor
-  color: 0033ff
+  color: *humanColor
   size_min: [-50.0, -50.0, -15.0]
   size_max: [50.0, 50.0, 95.0]
   flags: []
@@ -1468,7 +1426,7 @@
   desc: The human reactor.
   specials: {model: models/buildables/reactor/reactor.md3}
 - name: team_human_repeater
-  color: 0033ff
+  color: *humanColor
   size_min: [-15.0, -15.0, -15.0]
   size_max: [15.0, 15.0, 25.0]
   flags: []
@@ -1476,7 +1434,7 @@
   desc: The human repeater.
   specials: {model: models/buildables/repeater/repeater.md3}
 - name: team_human_tesla
-  color: 0033ff
+  color: *humanColor
   size_min: [-22.0, -22.0, -40.0]
   size_max: [22.0, 22.0, 40.0]
   flags: []
@@ -1484,7 +1442,7 @@
   desc: The human tesla generator.
   specials: {model: models/buildables/tesla/tesla.md3}
 - name: team_alien_spawn
-  color: ff3300
+  color: *alienColor
   size_min: [-15.0, -15.0, -15.0]
   size_max: [15.0, 15.0, 15.0]
   flags: []
@@ -1492,7 +1450,7 @@
   desc: The alien spawn point.
   specials: {model: models/buildables/eggpod/eggpod.md3}
 - name: team_alien_acid_tube
-  color: ff3300
+  color: *alienColor
   size_min: [-25.0, -25.0, -25.0]
   size_max: [25.0, 25.0, 25.0]
   flags: []
@@ -1500,7 +1458,7 @@
   desc: The alien acid tube.
   specials: {model: models/buildables/acid_tube/acid_tube.md3}
 - name: team_alien_barricade
-  color: ff3300
+  color: *alienColor
   size_min: [-35.0, -35.0, -15.0]
   size_max: [35.0, 35.0, 60.0]
   flags: []
@@ -1508,7 +1466,7 @@
   desc: The alien barricade.
   specials: {model: models/buildables/barricade/barricade.md3}
 - name: team_alien_booster
-  color: ff3300
+  color: *alienColor
   size_min: [-26.0, -26.0, -9.0]
   size_max: [26.0, 26.0, 9.0]
   flags: []
@@ -1516,7 +1474,7 @@
   desc: The alien booster.
   specials: {model: models/buildables/booster/booster.md3}
 - name: team_alien_overmind
-  color: ff3300
+  color: *alienColor
   size_min: [-45.0, -45.0, -15.0]
   size_max: [45.0, 45.0, 95.0]
   flags: []
@@ -1524,7 +1482,7 @@
   desc: The alien overmind.
   specials: {model: models/buildables/overmind/overmind.md3}
 - name: team_alien_trapper
-  color: ff3300
+  color: *alienColor
   size_min: [-15.0, -15.0, -15.0]
   size_max: [15.0, 15.0, 15.0]
   flags: []
@@ -1532,7 +1490,7 @@
   desc: The alien trapper.
   specials: {model: models/buildables/trapper/trapper.md3}
 - name: team_alien_hive
-  color: ff3300
+  color: *alienColor
   size_min: [-35.0, -35.0, -25.0]
   size_max: [35.0, 35.0, 25.0]
   flags: []
@@ -1540,7 +1498,7 @@
   desc: The alien hive.
   specials: {model: models/buildables/hive/hive.md3}
 - name: team_alien_leech
-  color: ff3300
+  color: *alienColor
   size_min: [-56.0, -40.0, -20.0]
   size_max: [56.0, 40.0, 20.0]
   flags: []
@@ -1551,7 +1509,7 @@
   color: '000000'
   flags:
   # found in code
-  - SPAWN_DISABLED: *Spawn_disabled
+  - SPAWN_DISABLED: &Spawn_disabled Disabled by default.
   props:
     # found in code
     amount: Possible activations count.
@@ -1563,8 +1521,10 @@
   specials: {}
 - name: ctrl_relay
 # TODO: check can be toggled
-  color: '000000'
-  flags:
+  color: 00b3b3
+  size_min: [-8.0, -8.0, -8.0]
+  size_max: [8.0, 8.0, 8.0]
+  flags: &ctrl_relay_flags
   # found in code
   - NO_HUMANS: Disable activation by human. | or SPAWN_DISABLED conflict
   - NO_ALIENS: Disable activation by alien.
@@ -1581,10 +1541,7 @@
   color: 00b3b3
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
-  flags:
-  - HUMAN_ONLY: only human team players can activate trigger.
-  - ALIEN_ONLY: only alien team players can activate trigger.
-  - RANDOM: one one of the targeted entities will be triggered at random.
+  flags: *ctrl_relay_flags # TODOflags: check after ctrl_relay
   props:
     target: this points to entities to activate when this entity is triggered.
     targetname: activating trigger points to this.
@@ -1598,12 +1555,8 @@
   color: 00b3b3
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
-  flags: []
+  flags: [] # TODOflags: must be the same as ctrl_relay
   props:
-    ? When the random key is set, its value is used to calculate a minimum and a maximum
-      delay. The final time delay will be a random value anywhere between the minimum
-      and maximum values
-    : (min delay = wait - random) (max delay = wait + random).
     delay: same as wait? replaces it? WTF?...I'm confused now.
     random: random time variance in seconds added or subtracted from "wait" delay
       (default 0 - see Notes).
@@ -1614,10 +1567,14 @@
   desc: >
     Time delay trigger intermediary. Like a target_relay, this can only be fired
     by other triggers which will cause it in turn to fire its own targets.
+
+    When the random key is set, its value is used to calculate a minimum and a maximum
+    delay. The final time delay will be a random value anywhere between the minimum
+    and maximum values: (min delay = wait - random) (max delay = wait + random).
   specials: {}
 - name: env_afx_ammo
   color: 5b7c2d
-  flags: # ALL OK
+  flags: &env_afx_ammo_flags # ALL OK
   - EVERY_SECOND: Act every second instead of every frame.
   - DISABLE_ENERGO: Disable recharging energetic weapons.
   - DISABLE_NON_ENERGO: Disable recharging non-energetic weapons.
@@ -1641,10 +1598,7 @@
 # TODO: SP_env_afx_ammo
   deprecated: y
   color: 7f7f7f
-  flags:
-  - SLOW: changes the ammo rate to once per second.
-  - NOENERGY: disables this entity for energy weapons.
-  - NOCASE: disables this entity for case based weapons.
+  flags: *env_afx_ammo_flags # TODOflags: check after env_afx_ammo
   props:
     ammo: Amount of ammo to give (default 1)
   desc: >
@@ -1671,7 +1625,7 @@
   specials: {}
 - name: env_afx_heal
   color: 2d7c50
-  flags: # ALL OK
+  flags: &env_afx_heal_flags # ALL OK
     - SPAWN_DISABLED: *Spawn_disabled
     - EVERY_SECOND: Heal every second instead of every frame.
   props:
@@ -1694,9 +1648,7 @@
 # TODO: SP_env_afx_heal
   deprecated: y
   color: 7f7f7f
-  flags:
-  - START_OFF: needs to be triggered (toggle) to activate.
-  - SLOW: changes the heal rate to once per second.
+  flags: *env_afx_heal_flags # TODOflags: check after env_afx_heal
   props:
     heal: Health points to heal (default 5)
   desc: >
@@ -1707,11 +1659,12 @@
 # bug: can't customize sound
 # it is always sound/misc/electro.wav
   color: c81111
-  flags:
-    - SPAWN_DISABLED: *Spawn_disabled
+  flags: &env_afx_hurt_flags
+    - SPAWN_DISABLED: *Spawn_disabled # OK
     - '-': ''
     - NO_SOUND: No sound played. # OK
-    - DAMAGE_FLAG: Damage no protection. # such as friendly fire??? TODO
+    - NO_PROTECTION: Player will be hurt regardless of protection. # found in code, check, TODO
+    # this flag intended for invulnerability power-up, is it actual in unv?
     - EVERY_SECOND: Damage every second instead of every frame. # OK
   props:
     # found in code
@@ -1733,12 +1686,7 @@
 # TODO: SP_env_afx_hurt
   deprecated: y
   color: 7f7f7f
-  flags:
-  - START_OFF: ''
-  - '-': ''
-  - SILENT: supresses the sizzling sound while player is being hurt.
-  - NO_PROTECTION: player will be hurt regardless of protection (see Notes).
-  - SLOW: changes the damage rate to once per second.
+  flags: *env_afx_hurt_flags # TODOflags check after env_afx_hurt
   props:
     dmg: number of points of damage inflicted to player per server frame (default
       5 - integer values only).
@@ -1776,8 +1724,11 @@
   specials: {}
 - name: env_afx_teleport
   color: '754928'
-  flags: # ALL OK
-    - SPECTATORS_ONLY: Affect only spectators.
+  flags: &env_afx_teleport_flags # ALL OK
+    - SPECTATORS_ONLY: >
+        Affect only spectators.
+        Spectator teleporters are not normally placed in the editor, but are created
+        automatically near doors to allow spectators to move through them.
     - SPAWN_DISABLED: Teleport disabled by default.
   props:
     # found in code
@@ -1800,13 +1751,7 @@
 # TODO: SP_env_afx_teleport
   deprecated: y
   color: 7f7f7f
-  flags:
-  - SPECTATOR: 'only spectators can use this teleport.
-
-      Spectator teleporters are not normally placed in the editor, but are created
-
-      automatically near doors to allow spectators to move through them'
-  - SPAWN_DISABLED: ''
+  flags: *env_afx_teleport_flags # TODOflags: check after env_afx_teleport
   props:
     target: this must point to a misc_teleporter_dest entity.
   desc: >
@@ -1907,9 +1852,9 @@
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
   color: '000000'
-  flags:
+  flags: &gfx_animated_model_flags
   # found in code
-  - TOGGLE_NODRAW: ''
+  - TOGGLE_NODRAW: Toggle entity visibility instead of animation.
   - ANIM_STOP: Spawn with animation stopped.
   props:
     # found in code
@@ -1925,9 +1870,7 @@
   color: ff7f3f
   size_min: [-16.0, -16.0, -16.0]
   size_max: [16.0, 16.0, 16.0]
-  flags:
-  - TRIGGER_TOGGLE: With this set triggering the entity disables the model altogether
-      as opposed to the regular behaviour of toggling the animation.
+  flags: *gfx_animated_model_flags # TODOflags: check
   props:
     angle: direction in which model will be oriented.
     animation: The guts of the entity. This is identical to an entry in an animation.cfg
@@ -1944,7 +1887,7 @@
   color: a6a6ff
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
-  flags: # ALL OK
+  flags: &gfx_light_flare_flags # ALL OK
     - SPAWN_DISABLED: *Spawn_disabled
   props:
     # found in code
@@ -1968,8 +1911,7 @@
   color: a6a6ff
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
-  flags:
-  - SPAWN_DISABLED: *Spawn_disabled
+  flags: *gfx_light_flare_flags # TODOflags: check
   props:
     angles: This reflects which direction the flare points. It is not important unless
       the second component of the radius key is employed. angles is a vector of PITCH
@@ -2004,7 +1946,7 @@
   color: ff7f3f
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
-  flags: # ALL OK
+  flags: &gfx_particle_system_flags # ALL OK
     - SPAWN_DISABLED: *Spawn_disabled
   props:
     # found in code
@@ -2032,8 +1974,7 @@
   color: ff7f3f
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
-  flags:
-  - SPAWN_DISABLED: &Spawn_disabled Disabled by default.
+  flags: *gfx_particle_system_flags # TODOflags: check
   props:
     psName: The name of the particle system to spawn at this entity.
   desc: >
@@ -2045,10 +1986,10 @@
   color: ff7f3f
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
-  flags:
+  flags: &gfx_portal_camera_flags
     # found in code
-    - FRAME25: ''
-    - FRAME75: ''
+    - FRAME25: Slow rotation.
+    - FRAME75: Fast rotation.
     - NO_ROTATION: ''
   props: {}
   desc: ''
@@ -2059,9 +2000,7 @@
   color: ff7f3f
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
-  flags:
-  - SLOWROTATE: makes the portal camera rotate slowly along the roll axis.
-  - FASTROTATE: makes the portal camera rotate faster along the roll axis.
+  flags: *gfx_portal_camera_flags # TODOflags: check
   props:
     angles: this sets the pitch and yaw aiming angles of the portal camera (default
       0 0). Use "roll" key to set roll angle.
@@ -2127,9 +2066,7 @@
 # TODO: SP_sensor_buildable
   deprecated: y
   color: 7f7f7f
-  flags:
-  - SPAWN_DISABLED: needs to be triggered (toggle) to activate.
-  - NEGATE: negate the trigger condition.
+  flags: *Some_sensors_flags # TODOflags: check
   props:
     NOT THROUGHLY TESTED: please report whether or not this works for you.
     buildables: a comma delimited list of buildables which will trigger this entity.
@@ -2179,9 +2116,7 @@
 # TODO: SP_sensor_player
   deprecated: y
   color: 7f7f7f
-  flags:
-  - SPAWN_DISABLED: needs to be triggered (toggle) to activate.
-  - NEGATE: negate the trigger condition.
+  flags: *Some_sensors_flags # TODOflags: check
   props:
     NOT THROUGHLY TESTED: please report whether or not this works for you.
     classes: a comma delimited list of classes which will trigger this entity.
@@ -2198,9 +2133,7 @@
 # TODO: SP_sensor_player
   deprecated: y
   color: 7f7f7f
-  flags:
-  - SPAWN_DISABLED: needs to be triggered (toggle) to activate.
-  - NEGATE: negate the trigger condition.
+  flags: *Some_sensors_flags # TODOflags: check
   props:
     NOT THROUGHLY TESTED: please report whether or not this works for you.
     equipment: a comma delimited list of equipment which will trigger this entity.
@@ -2221,7 +2154,7 @@
   deprecated: y
   color: 7f7f7f
   flags:
-  # found in code, seems to be deprecated, makes warning when entitydebug is on
+  # found in code, seems to be deprecated, should make warning when entitydebug is on, TODO
   - HUMANS: (if none of HUMANS,ALIENS or both set assume ALL)
   - ALIENS: ''
   props:
@@ -2259,7 +2192,7 @@
   color: 7f7f7f
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
-  flags: []
+  flags: *Some_sensors_flags # TODOflags: check
   props:
     NOT THROUGHLY TESTED: please report whether or not this works for you.
     stage: the stage at which this entity is triggered; 1 for stage 2, 2 for stage
@@ -2320,19 +2253,19 @@
   color: 007fcc
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
-  flags: *Sensor_timer_flags
-  props: *Sensor_timer_props
-  desc: *Sensor_timer_desc
+  flags: *Sensor_timer_flags # TODOflags: check
+  props: *Sensor_timer_props # TODO: check
+  desc: *Sensor_timer_desc # TODO: check
   specials: {}
 - name: sfx_speaker
   color: 7f7f7f
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
-  flags:
+  flags: &sfx_speaker_flags
     - PRESTARTED_LOOP: Same as LOOP, but speaker is active by default. # OK
     - LOOP: Makes infinite loop. Can be toggled via targetname. # OK
     - BROADCAST: Makes sound global, sound volume is maximal everywhere on map. Doesn't work with LOOPs. # OK
-    - ACTIVATOR_SPEAKER: looks like it plays sound only for person who activated it # TODO
+    - ACTIVATOR_SPEAKER: looks like it plays sound only for person who activated it # found in code, TODO
   props:
     # found in code
     noise: Path to played sound.
@@ -2351,13 +2284,7 @@
   color: 00b3b3
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
-  flags:
-  - LOOPED_ON: sound will loop and initially start on in level (will toggle on/off
-      when triggered).
-  - LOOPED_OFF: sound will loop and initially start off in level (will toggle on/off
-      when triggered).
-  - GLOBAL: sound will play full volume throughout the level.
-  - ACTIVATOR: sound will play only for the player that activated the target.
+  flags: *sfx_speaker_flags # TODOflags: check
   props:
     noise: path/name of .wav file to play (eg. sound/world/growl1.wav - see Notes).
     random: random time variance in seconds added or subtracted from "wait" delay
