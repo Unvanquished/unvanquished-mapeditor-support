@@ -26,8 +26,9 @@
 #
 # TODO: add targetname for every entity that can be activated
 # TODO: rename targetname -> name
-#
-# TODO: q3map2 requires patching to replace "misc_model" name
+# TODO: grep q3map2 for light and misc_model props/flags
+# TODO: make size aliases
+# TODO: entity aliases
 - name: worldspawn
   color: '000000'
   flags: []
@@ -160,7 +161,7 @@
     # GtkRadiant generates useless q3map2_shader there
     style: If not default, makes wave noise shader causing whole map to blink. Values variate blink function.
     # OK:
-    origin: Position.
+    origin: &origin Position.
     light: Intensity.
     _color: Weighted RGB value of light color.
     _filterradius: No attenuation within _filterradius sphere.
@@ -713,7 +714,7 @@
     # src/gamelogic/game/g_spawn_mover.c:370
     # player squashed instantly
     angles: Orienting pendulum.
-    targetname: &TN Entity name.
+    targetname: *toggleable
     # bug: when signalled via button: stops and never resumes
     # bug: when stopped position resets hardly, instantly moving to origin
     model2: *InitMover_model2
@@ -1014,7 +1015,7 @@
       location of the train's origin.
     origin: Required, if you omit this, train will not appear. Base position of train.
     speed: *brush_speed
-    targetname: *TN
+    targetname: *toggleable
     model2: *InitMover_model2
     light: *SP_ConstantLightField_light
     color: *SP_ConstantLightField_color
@@ -1048,15 +1049,6 @@
 
     Target this entity with a misc_model to have the model attached to the entity
     (set the model's "target" key to the same value as this entity's "targetname").
-- name: misc_model
-  deprecated: y
-  color: ff7f3f
-  size_min: [-16.0, -16.0, -16.0]
-  size_max: [16.0, 16.0, 16.0]
-  flags: []
-  props: {}
-  desc: > # OK
-    DOES NOT WORK, USE gfx_animated_model
 - name: path_corner
 # TODO: SP_Nothing
   color: 7f4c00
@@ -1066,7 +1058,7 @@
   props:
     # OK
     target: Point to next path_corner in the path.
-    targetname: *TN
+    targetname: &TN Entity name.
     wait: Number of seconds func_train will pause on path corner before moving to
       next path corner.
     speed: Speed of func_train while moving to the next path corner. This will override
@@ -1516,15 +1508,13 @@
     angles: SetMovedir
     # OK
     ammo: Amount of ammo. Values < 1 corrected to 1.
-    targetname: *TN
+    targetname: *toggleable
   proptypes: &env_afx_ammo_types
     ammo: int
   propdefaults: &env_afx_ammo_defaults
     ammo: 1
   desc: &env_afx_ammo_desc >
     Gives ammo to players. # OK
-
-    Setting this as target allows to toggle its activity. # OK
 - name: trigger_ammo
   deprecated: y
   color: *env_afx_ammo_color
@@ -1560,15 +1550,13 @@
     angles: SetMovedir
     # OK
     heal: Amount of heal. Values < 1 corrected to 1.
-    targetname: *TN
+    targetname: *toggleable
   proptypes: &env_afx_heal_types
     heal: int
   propdefaults: &env_afx_heal_defaults
     heal: 5
   desc: &env_afx_heal_desc >
     Heals players touching entity. # OK
-
-    Setting healer as target allows to toggle its activity. # OK
 - name: trigger_heal
   deprecated: y
   color: *env_afx_heal_color
@@ -1594,15 +1582,13 @@
     angles: SetMovedir
     # OK
     dmg: Damage dealt. Values <= 0 corrected to default value.
-    targetname: *TN
+    targetname: *toggleable
   proptypes: &env_afx_hurt_types
     dmg: int
   propdefaults: &env_afx_hurt_defaults
     dmg: 5
   desc: &env_afx_hurt_desc >
     Hurts players or buildings touching entity. # OK
-
-    Setting hurter as target allows to toggle its activity. # OK
 - name: trigger_hurt
   deprecated: y
   color: *env_afx_hurt_color
@@ -1740,40 +1726,57 @@
     this. A spawn location entity like info_player_* or CTF respawn points can target
     this entity to give points to the player when he spawns in the game. Or a trigger
     can also be used to activate this. The activator of the trigger will get the points.
-- name: gfx_animated_model
+- name: gfx_animated_model # OK
   color: &gfx_animated_model_color ff7f3f
-  size_min: [-16.0, -16.0, -16.0]
-  size_max: [16.0, 16.0, 16.0]
+  size_min: [-12.0, -12.0, -12.0]
+  size_max: [12.0, 12.0, 12.0]
   flags: &gfx_animated_model_flags
-  # found in code
-  - TOGGLE_NODRAW: Toggle entity visibility instead of animation.
-  - ANIM_STOP: Spawn with animation stopped.
+  - TOGGLE_VISIBILITY: Toggle entity visibility instead of animation.
+  - SPAWN_STOPPED: Spawn with animation stopped.
   props: &gfx_animated_model_props
-    # old props
-    angle: direction in which model will be oriented.
+    model: Path to a model.
     animation: The guts of the entity. This is identical to an entry in an animation.cfg
-      - Start Frame, Number of frames, Looping Frames, Frame rate. For example 0 30
-      30 20 will play frames 0 through 30 continously at 20 fps.
-    model: 'path/name of model to use (eg: models/mapobjects/teleporter/teleporter.md3).'
+      - Start Frame, Number of frames, Looping Frames, Frame rate.
+    angles: Orientation.
     radius: The scale of the model compared to its original size. Defaults to 1.0.
-    # found in code
-    #model: Path to a model.
-    #animation: ''
+    targetname: &toggleable Give it a name to be able to toggle activity.
+  proptypes: &gfx_animated_model_types
+    radius: float
   propeg: &gfx_animated_model_eg
-    model: 'models/mapobjects/plant_life/grass.md3'
+    model: 'models/mapobjects/teleporter/teleporter.md3'
+    animation: '0 30 30 20 = frames 0 through 30 continously at 20 fps'
+    radius: 1
   desc: &gfx_animated_model_desc >
-    A little like misc_model except that it is a game entity and does not become
-    part of the map geometry. An instance of this entity will draw an arbituary md3
-    in the world with an arbituary frame or with an animation.
-- name: misc_anim_model
+    Animated model entity. Not baked info level geometry.
+    Can be walked through.
+- name: misc_anim_model # OK
   deprecated: y
   color: *gfx_animated_model_color
-  size_min: [-16.0, -16.0, -16.0]
-  size_max: [16.0, 16.0, 16.0]
+  size_min: [-12.0, -12.0, -12.0]
+  size_max: [12.0, 12.0, 12.0]
   flags: *gfx_animated_model_flags
   props: *gfx_animated_model_props
+  proptypes: *gfx_animated_model_types
   propeg: *gfx_animated_model_eg
   desc: *gfx_animated_model_desc
+- name: misc_model
+  deprecated: y
+  color: *gfx_animated_model_color
+  size_min: [-12.0, -12.0, -12.0]
+  size_max: [12.0, 12.0, 12.0]
+  flags: []
+  props:
+    # OK
+    origin: *origin
+    model: Path to a custom model.
+    _frame: Animation frame to pick. This differs from gfx_animated_model.animation!
+  proptypes:
+    _frame: int
+  propeg:
+    _frame: 5
+  desc: > # OK
+    Static model baked into level geometry by q3map2.
+    Can be walked through. Not animated, but you can choose one of the frames.
 - name: gfx_light_flare
   color: &gfx_light_flare_color a6a6ff
   size_min: [-8.0, -8.0, -8.0]

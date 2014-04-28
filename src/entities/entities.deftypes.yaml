@@ -5,7 +5,7 @@ alpha: vec3_float
 amount: int
 angle: &yaw float (yaw)
 angles: vec3_float (yaw pitch roll)
-animation: vec4_float
+animation: vec4_float (start num loop rate)
 bounce: float
 classname: string
 delay: &time time_2float (time [variance])
