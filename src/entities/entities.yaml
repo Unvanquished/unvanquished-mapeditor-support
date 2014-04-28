@@ -28,7 +28,6 @@
 # TODO: rename targetname -> name
 # TODO: grep q3map2 for light and misc_model props/flags
 # TODO: make size aliases
-# TODO: remove unneccessary yaml aliases
 # TODO: list all deprecated, check if they're aliasof or not
 - name: worldspawn
   color: '000000'
@@ -1080,7 +1079,7 @@
     origin: &Inter_pos Position.
     angles: &Inter_ang Orientation.
     target: &Inter_target Alternative way to set orientation.
-    onSpawn: &Inter_spawn Name of the target fired when player comes to the intermission view.
+    onSpawn: Name of the target fired when player comes to the intermission view.
   desc: &Inter_desc >
     Point where camera will hang when player awaits spawn as alien.
     There can be many of them, game makes random choice.
@@ -1100,16 +1099,16 @@
   aliasof: pos_human_intermission
   deprecated: y
 - name: pos_player_intermission # OK
-  color: &spectator_inter_color ff00ff
+  color: ff00ff
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
   flags: []
-  props: &Spectator_inter_props
+  props:
     origin: *Inter_pos
     angles: *Inter_ang
     target: *Inter_target
   desc: *Inter_desc
-  descreplace: &Spectator_inter_replace
+  descreplace:
     'awaits spawn as alien': is choosing team
 - name: info_player_intermission
   aliasof: pos_player_intermission
@@ -1395,8 +1394,6 @@
   props:
     # found in code
     amount: Possible activations count.
-  proptypes:
-    amount: int
   propdefaults:
     amount: 1
   desc: ''
@@ -1417,10 +1414,8 @@
   desc: &relay_desc >
     When activated waits amount of time then activates its own targets.
 - name: target_relay
+  aliasof: ctrl_relay
   deprecated: y
-  color: 00b3b3
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
   flags: &target_relay_flags # ALL OK
   - ONLY_HUMANS: Can be activated only by a human.
   - ONLY_ALIENS: Can be activated only by an alien.
@@ -1432,12 +1427,9 @@
     wait: *relay_wait
   propdefaults:
     wait: 0
-  desc: *relay_desc
 - name: target_delay
+  aliasof: ctrl_relay
   deprecated: y
-  color: 00b3b3
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
   flags: *target_relay_flags # ALL OK
   props:
     # OK
@@ -1446,7 +1438,6 @@
     wait: *relay_wait
   propdefaults:
     wait: 1
-  desc: *relay_desc
 - name: env_afx_ammo
   color: 5b7c2d
   flags: # ALL OK
@@ -1482,22 +1473,22 @@
   aliasof: env_afx_gravity
   deprecated: y
 - name: env_afx_heal
-  color: &env_afx_heal_color 2d7c50
-  flags: &env_afx_heal_flags # ALL OK
+  color: 2d7c50
+  flags: # ALL OK
   - SPAWN_DISABLED: *Spawn_disabled
   - EVERY_SECOND: Heal every second instead of every frame.
-  props: &env_afx_heal_props
+  props:
     # found in code
     model: ''
     angles: SetMovedir
     # OK
     heal: Amount of heal. Values < 1 corrected to 1.
     targetname: *toggleable
-  proptypes: &env_afx_heal_types
+  proptypes:
     heal: int
-  propdefaults: &env_afx_heal_defaults
+  propdefaults:
     heal: 5
-  desc: &env_afx_heal_desc >
+  desc: >
     Heals players touching entity. # OK
 - name: trigger_heal
   aliasof: env_afx_heal
@@ -1505,26 +1496,24 @@
 - name: env_afx_hurt
 # bug: can't customize sound
 # it is always sound/misc/electro.wav
-  color: &env_afx_hurt_color c81111
-  flags: &env_afx_hurt_flags
+  color: c81111
+  flags:
   - SPAWN_DISABLED: *Spawn_disabled # OK
   - '-': ''
   - NO_SOUND: No sound played. # OK
   - NO_PROTECTION: Player will be hurt regardless of protection (invulnerability power-up). # found in code, check, TODO
   # this flag intended for invulnerability power-up, is it actual in unv?
   - EVERY_SECOND: Damage every second instead of every frame. # OK
-  props: &env_afx_hurt_props
+  props:
     # found in code
     model: ''
     angles: SetMovedir
     # OK
     dmg: Damage dealt. Values <= 0 corrected to default value.
     targetname: *toggleable
-  proptypes: &env_afx_hurt_types
-    dmg: int
-  propdefaults: &env_afx_hurt_defaults
+  propdefaults:
     dmg: 5
-  desc: &env_afx_hurt_desc >
+  desc: >
     Hurts players or buildings touching entity. # OK
 - name: trigger_hurt
   aliasof: env_afx_hurt
@@ -1545,23 +1534,23 @@
   aliasof: env_afx_push
   deprecated: y
 - name: env_afx_teleport
-  color: &env_afx_teleport_color '754928'
-  flags: &env_afx_teleport_flags # ALL OK
+  color: '754928'
+  flags: # ALL OK
   - SPECTATORS_ONLY: >
       Affect only spectators.
       Spectator teleporters are not normally placed in the editor, but are created
       automatically near doors to allow spectators to move through them.
   - SPAWN_DISABLED: Teleport disabled by default.
-  props: &env_afx_teleport_props
+  props:
     # found in code
     model: ''
     # OK
     target: Name of the target. You can set same targetname to many positions.
     speed: Player speed after teleportation.
     targetname: *TN
-  propdefaults: &env_afx_teleport_defaults
+  propdefaults:
     speed: 400
-  desc: &env_afx_teleport_desc >
+  desc: >
     Teleports player touching entity. Target chosen randomly among many positions bound via targetname. # OK
 
     Set "angles" property on target to define player direction after teleportation. # OK
@@ -1592,8 +1581,6 @@
   flags: []
   props:
     team: None - 0, Aliens - 1, Humans - 2. # TODO: check all conditions
-  proptypes:
-    team: int
   desc: When triggered, this causes an unconditional win for the team.
 - name: target_alien_win
   aliasof: game_end
@@ -1647,24 +1634,25 @@
   color: &gfx_animated_model_color ff7f3f
   size_min: [-12.0, -12.0, -12.0]
   size_max: [12.0, 12.0, 12.0]
-  flags: &gfx_animated_model_flags
+  flags:
   - TOGGLE_VISIBILITY: Toggle entity visibility instead of animation.
   - SPAWN_STOPPED: Spawn with animation stopped.
-  props: &gfx_animated_model_props
+  props:
     model: Path to a model.
-    animation: The guts of the entity. This is identical to an entry in an animation.cfg
+    animation: >
+      The guts of the entity. This is identical to an entry in an animation.cfg
       - Start Frame, Number of frames, Looping Frames, Frame rate.
     angles: Orientation.
     radius: The scale of the model compared to its original size.
     targetname: *toggleable
-  proptypes: &gfx_animated_model_types
+  proptypes:
     radius: float
   propdefaults:
     radius: 1
-  propeg: &gfx_animated_model_eg
+  propeg:
     model: 'models/mapobjects/teleporter/teleporter.md3'
-    animation: '0 30 30 20 = frames 0 through 30 continously at 20 fps'
-  desc: &gfx_animated_model_desc >
+    animation: [0, 30, 30, 20]
+  desc: >
     Animated model entity. Not baked info level geometry.
     Can be walked through.
 - name: misc_anim_model
@@ -1689,12 +1677,12 @@
     Static model baked into level geometry by q3map2.
     Can be walked through. Not animated, but you can choose one of the frames.
 - name: gfx_light_flare
-  color: &gfx_light_flare_color a6a6ff
+  color: a6a6ff
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
-  flags: &gfx_light_flare_flags # ALL OK
+  flags: # ALL OK
   - SPAWN_DISABLED: *Spawn_disabled
-  props: &gfx_light_flare_props
+  props:
     # old props
     angles: This reflects which direction the flare points. It is not important unless
       the second component of the radius key is employed. angles is a vector of PITCH
@@ -1728,12 +1716,12 @@
     #radius: ''
     #angles: ''
     # TODO: merge with misc_light_flare
-  proptypes: &gfx_light_flare_types
+  proptypes:
     mindist: int
-  propdefaults: &gfx_light_flare_defaults
+  propdefaults:
     mindist: 0
     speed: 200
-  desc: &gfx_light_flare_desc >
+  desc: >
     A light flare entity.
 
     Triggering this entity toggles it.
@@ -1741,12 +1729,12 @@
   aliasof: gfx_light_flare
   deprecated: y
 - name: gfx_particle_system
-  color: &gfx_particle_system_color ff7f3f
+  color: ff7f3f
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
-  flags: &gfx_particle_system_flags # ALL OK
+  flags: # ALL OK
   - SPAWN_DISABLED: *Spawn_disabled
-  props: &gfx_particle_system_props
+  props:
     # found in code
     angles: ''
     # OK
@@ -1756,14 +1744,14 @@
     wait: Wait after toggle, then toggle again. Disabled if value <= 0.
     targetname: *TN
     origin: Position.
-  proptypes: &gfx_particle_system_types
+  proptypes:
     psName: string
     wait: float # variance not used
-  propdefaults: &gfx_particle_system_defaults
+  propdefaults:
     psName: ''
-  propeg: &gfx_particle_system_eg
+  propeg:
     psName: firebomb_subPS
-  desc: &gfx_particle_system_desc >
+  desc: >
     Particle system entity.
 
     Setting this as target allows to toggle its activity. # OK
@@ -1771,15 +1759,15 @@
   aliasof: gfx_particle_system
   deprecated: y
 - name: gfx_portal_camera
-  color: &gfx_portal_camera_color ff7f3f
+  color: ff7f3f
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
-  flags: &gfx_portal_camera_flags
+  flags:
   # found in code
   - FRAME25: Slow rotation.
   - FRAME75: Fast rotation.
   - NO_ROTATION: ''
-  props: &gfx_portal_camera_props
+  props:
     # old props
     angles: this sets the pitch and yaw aiming angles of the portal camera (default
       0 0). Use "roll" key to set roll angle.
@@ -1787,7 +1775,7 @@
       the player's view.
     target: point this to a target_position entity to set the camera's pointing direction.
     targetname: a misc_portal_surface portal surface indicator must point to this.
-  desc: &gfx_portal_camera_desc >
+  desc: >
     Portal camera. This camera is used to project its view onto a portal surface
     in the level through the intermediary of a misc_portal_surface entity. Use the
     "angles" key or target a target_position or info_notnull entity to set the camera''s
@@ -1801,15 +1789,15 @@
   aliasof: gfx_portal_camera
   deprecated: y
 - name: gfx_portal_surface
-  color: &gfx_portal_surface_color ff7f3f
+  color: ff7f3f
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
   flags: []
-  props: &gfx_portal_surface_props
+  props:
     # old props
     target: point this to a misc_portal_camera that "sees" the view you want to display
       on the portal.
-  desc: &gfx_portal_surface_desc
+  desc:
     Portal surface indicator. This will "lock on" the brush face closest to it
     and identify as a portal. The view displayed on the portal surface is the view
     of the misc_portal_camera that this entity targets. Also used for mirrors (see
@@ -1827,12 +1815,12 @@
   props: {}
   desc: ''
 - name: sensor_buildable
-  color: &sensor_builable_color 7f7f7f
+  color: 7f7f7f
   flags: &Some_sensors_flags
   # found in code
   - SPAWN_DISABLED: *Spawn_disabled
   - NEGATE: Negate sensor signal.
-  props: &sensor_builable_props
+  props:
     # old props
     buildables: a comma delimited list of buildables which will trigger this entity.
     random: random time variance in seconds added or subtracted from "wait" delay
@@ -1840,7 +1828,7 @@
     target: this points to the entity to activate.
     wait: time in seconds until trigger becomes re-triggerable after it's been touched
       (default 0.2, -1 = trigger once).
-  desc: &sensor_builable_desc >
+  desc: >
     Triggered by a buildable or subset of buildables. If no buildables key is
     supplied every buildable will trigger this entity.
 
@@ -1867,9 +1855,9 @@
   aliasof: sensor_end
   deprecated: y
 - name: sensor_player
-  color: &sensor_player_color 7f7f7f
+  color: 7f7f7f
   flags: *Some_sensors_flags
-  props: &sensor_player_props
+  props:
     # old props
     classes: a comma delimited list of classes which will trigger this entity.
     random: random time variance in seconds added or subtracted from "wait" delay
@@ -1878,7 +1866,7 @@
     wait: time in seconds until trigger becomes re-triggerable after it's been touched
       (default 0.2, -1 = trigger once).
     equipment: a comma delimited list of equipment which will trigger this entity.
-  desc: &sensor_player_desc >
+  desc: >
     Triggered by a specific class or subset of classes. If no classes key is supplied
     every class will trigger this entity.
 
@@ -1923,17 +1911,17 @@
   props: {}
   desc: ''
 - name: sensor_stage
-  color: &sensor_stage_color 7f7f7f
+  color: 7f7f7f
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
   flags: *Some_sensors_flags
-  props: &sensor_stage_props
+  props:
     # old props
     stage: the stage at which this entity is triggered; 1 for stage 2, 2 for stage
       3
     target: this points to the entity to activate.
     team: the team which triggers this entity; 1 for aliens, 2 for humans
-  desc: &sensor_stage_desc >
+  desc: >
     Fires its targets when the team key reaches stage key.
 - name: trigger_stage
   aliasof: sensor_stage
@@ -1960,18 +1948,18 @@
   props: {}
   desc: ''
 - name: sensor_timer
-  color: &sensor_timer_color 007fcc
+  color: 007fcc
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
-  flags: &Sensor_timer_flags # ALL OK
+  flags: # ALL OK
   - START_ON: Timer will start on in the game and continuously fire its targets.
-  props: &Sensor_timer_props
+  props:
     # OK:
     wait: Delay in seconds between each triggering of its targets.
     target: This points to the entities to trigger.
     targetname: A func_button or trigger that points to this will toggle the timer
       on/off when activated.
-  desc: &Sensor_timer_desc >
+  desc: >
     Time delay trigger that will continuously fire its targets after a preset
     time delay. The time delay can also be randomized. When triggered, the timer will
     toggle on/off.
@@ -1983,15 +1971,15 @@
 # maybe bug: not marked as deprecated in source code
   aliasof: sensor_timer
 - name: sfx_speaker
-  color: &sfx_speaker_color 00b3b3
+  color: 00b3b3
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
-  flags: &sfx_speaker_flags
+  flags:
   - PRESTARTED_LOOP: Same as LOOP, but speaker is active by default. # OK
   - LOOP: Makes infinite loop. Can be toggled via targetname. # OK
   - BROADCAST: Makes sound global, sound volume is maximal everywhere on map. Doesn't work with LOOPs. # OK
   - ACTIVATOR_SPEAKER: looks like it plays sound only for person who activated it # found in code, TODO
-  props: &sfx_speaker_props
+  props:
     # old props
     #noise: path/name of .wav file to play (eg. sound/world/growl1.wav - see Notes).
     #targetname: the activating button or trigger points to this.
@@ -2006,7 +1994,7 @@
     noise: NOSOUND
   propeg:
     noise: 'sound/noise.wav'
-  desc: &sfx_speaker_desc >
+  desc: >
     Sound generating entity that plays .wav files. Normal non-looping sounds
     play each time the target_speaker is triggered. Looping sounds can be set to play
     by themselves (no activating trigger) or be toggled on/off by a trigger.

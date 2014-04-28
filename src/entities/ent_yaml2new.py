@@ -180,7 +180,7 @@ def _validate_vec3_float(v):
     return isinstance(v, (list, tuple)) and len(v) == 3 and all(_validate_float(x) for x in v)
 
 def _validate_vec4_float(v):
-    return isinstance(v, (list, tuple)) and len(v) == 3 and all(_validate_float(x) for x in v)
+    return isinstance(v, (list, tuple)) and len(v) == 4 and all(_validate_float(x) for x in v)
 
 def _validate_time_2float(v):
     if isinstance(v, (list, tuple)):
