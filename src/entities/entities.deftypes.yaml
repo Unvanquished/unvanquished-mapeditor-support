@@ -16,16 +16,16 @@ model: string
 model2: string
 name: string
 noise: string (sound)
-onAct: string (calltarget)
-onDie: string (calltarget)
-onDisable: string (calltarget)
-onEnable: string (calltarget)
-onFree: string (calltarget)
-onReach: string (calltarget)
-onReset: string (calltarget)
-onSpawn: string (calltarget)
-onTouch: string (calltarget)
-onUse: string (calltarget)
+onAct: string (target)
+onDie: string (target)
+onDisable: string (target)
+onEnable: string (target)
+onFree: string (target)
+onReach: string (target)
+onReset: string (target)
+onSpawn: string (target)
+onTouch: string (target)
+onUse: string (target)
 origin: vec3_float
 period: *time
 radius: vec3_float

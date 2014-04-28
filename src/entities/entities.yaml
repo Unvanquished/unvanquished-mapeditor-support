@@ -26,10 +26,8 @@
 #
 # TODO: add targetname for every entity that can be activated
 # TODO: rename targetname -> name
-# TODO: rename target -> onAct
 #
-# TODO: grep G_EventFireEntity for custom events
-# TODO: grep spawnflags in q3map2
+# TODO: q3map2 requires patching to replace "misc_model" name
 - name: worldspawn
   color: '000000'
   flags: []
@@ -369,6 +367,7 @@
     health: Amount of damage needed to destroy this.
     damage: Splash damage caused when destroyed.
     radius: Splash damage radius.
+    onDie: Name of the target fired when destroyed.
   proptypes:
     damage: int
     radius: int
@@ -1079,93 +1078,66 @@
 
     Setting the wait key to -1 will not make the train stop on the path corner, it
     will simply default to 0.
-- name: pos_alien_intermission
-# TODO: SP_Nothing
+- name: pos_alien_intermission # OK
   color: &alienColor ff3300
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
   flags: []
-  props:
-    # OK
+  props: &Inter_props
     origin: &Inter_pos Position.
     angles: &Inter_ang Orientation.
     target: &Inter_target Alternative way to set orientation.
+    onSpawn: &Inter_spawn Name of the target fired when player comes to the intermission view.
   desc: &Inter_desc >
     Point where camera will hang when player awaits spawn as alien.
     There can be many of them, game makes random choice.
-- name: info_alien_intermission
-# TODO: pos_alien_intermission
+- name: info_alien_intermission # OK
   deprecated: y
   color: *alienColor
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
   flags: []
-  props:
-    angles: alternate "pitch, yaw, roll" angles method of aiming intermission camera
-      (default 0 0 0).
-    target: point this to an info_notnull or target_position entity to set the camera's
-      pointing angles.
-  desc: >
-    Camera for aliens before they spawn. Can be aimed by setting the "angles"
-    key or targeting an pointing to an aiming entity. Use one per level.
-- name: pos_human_intermission
-# TODO: SP_Nothing
+  props: *Inter_props
+  desc: *Inter_desc
+- name: pos_human_intermission # OK
   color: &humanColor 0033ff
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
   flags: []
-  props:
-    # OK
-    origin: *Inter_pos
-    angles: *Inter_ang
-    target: *Inter_target
+  props: *Inter_props
   desc: *Inter_desc
-  descreplace:
+  descreplace: &human_intermission_replace
     'as alien': as human
-- name: info_human_intermission
-# TODO: pos_human_intermission
+- name: info_human_intermission # OK
   deprecated: y
   color: *humanColor
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
   flags: []
-  props:
-    angles: alternate "pitch, yaw, roll" angles method of aiming intermission camera
-      (default 0 0 0).
-    target: point this to an info_notnull or target_position entity to set the camera's
-      pointing angles.
-  desc: >
-    Camera for humans before they spawn. Can be aimed by setting the "angles"
-    key or targeting an pointing to an aiming entity. Use one per level.
-- name: pos_player_intermission
-# TODO: SP_Nothing
-  color: ff00ff
+  props: *Inter_props
+  desc: *Inter_desc
+  descreplace: *human_intermission_replace
+- name: pos_player_intermission # OK
+  color: &spectator_inter_color ff00ff
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
   flags: []
-  props:
-    # OK
+  props: &Spectator_inter_props
     origin: *Inter_pos
     angles: *Inter_ang
     target: *Inter_target
   desc: *Inter_desc
-  descreplace:
+  descreplace: &Spectator_inter_replace
     'awaits spawn as alien': is choosing team
-- name: info_player_intermission
-# TODO: pos_player_intermission
+- name: info_player_intermission # OK
   deprecated: y
-  color: ff00ff
+  color: *spectator_inter_color
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
   flags: []
-  props:
-    angles: alternate "pitch, yaw, roll" angles method of aiming intermission camera
-      (default 0 0 0).
-    target: point this to an info_notnull or target_position entity to set the camera's
-      pointing angles.
-  desc: >
-    Camera for intermission screen between matches. Can be aimed by setting the
-    "angles" key or targeting an pointing to an aiming entity. Use only one per level.
+  props: *Spectator_inter_props
+  desc: *Inter_desc
+  descreplace: *Spectator_inter_replace
 - name: pos_location
   color: '000000'
   flags: []
