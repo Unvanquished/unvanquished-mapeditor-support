@@ -28,7 +28,8 @@
 # TODO: rename targetname -> name
 # TODO: grep q3map2 for light and misc_model props/flags
 # TODO: make size aliases
-# TODO: entity aliases
+# TODO: remove unneccessary yaml aliases
+# TODO: list all deprecated, check if they're aliasof or not
 - name: worldspawn
   color: '000000'
   flags: []
@@ -714,7 +715,7 @@
     # src/gamelogic/game/g_spawn_mover.c:370
     # player squashed instantly
     angles: Orienting pendulum.
-    targetname: *toggleable
+    targetname: &toggleable Give it a name to be able to toggle activity.
     # bug: when signalled via button: stops and never resumes
     # bug: when stopped position resets hardly, instantly moving to origin
     model2: *InitMover_model2
@@ -1083,14 +1084,9 @@
   desc: &Inter_desc >
     Point where camera will hang when player awaits spawn as alien.
     There can be many of them, game makes random choice.
-- name: info_alien_intermission # OK
+- name: info_alien_intermission
+  aliasof: pos_alien_intermission
   deprecated: y
-  color: *alienColor
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
-  flags: []
-  props: *Inter_props
-  desc: *Inter_desc
 - name: pos_human_intermission # OK
   color: &humanColor 0033ff
   size_min: [-8.0, -8.0, -8.0]
@@ -1098,17 +1094,11 @@
   flags: []
   props: *Inter_props
   desc: *Inter_desc
-  descreplace: &human_intermission_replace
+  descreplace:
     'as alien': as human
-- name: info_human_intermission # OK
+- name: info_human_intermission
+  aliasof: pos_human_intermission
   deprecated: y
-  color: *humanColor
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
-  flags: []
-  props: *Inter_props
-  desc: *Inter_desc
-  descreplace: *human_intermission_replace
 - name: pos_player_intermission # OK
   color: &spectator_inter_color ff00ff
   size_min: [-8.0, -8.0, -8.0]
@@ -1121,28 +1111,23 @@
   desc: *Inter_desc
   descreplace: &Spectator_inter_replace
     'awaits spawn as alien': is choosing team
-- name: info_player_intermission # OK
+- name: info_player_intermission
+  aliasof: pos_player_intermission
   deprecated: y
-  color: *spectator_inter_color
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
-  flags: []
-  props: *Spectator_inter_props
-  desc: *Inter_desc
-  descreplace: *Spectator_inter_replace
 - name: pos_location
-  color: '000000'
-  flags: []
-  props: {}
-  desc: ''
-- name: target_location
-# TODO: SP_pos_location alias
-  deprecated: y
   color: 007f00
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
   flags: []
   props:
+    # old props
+    count: color of the location text displayed in parentheses during team chat. Set
+      to 0-7 for color.
+    message: name of the location (text string). Displayed in parentheses in front
+      of all team chat and order messages.
+  desc: >
+    Location marker used for team chats. The closest target_location in sight
+    is used for the location. If none is in sight, the closest in distance is used.
     '0': white (default)
     '1': red
     '2': green
@@ -1151,74 +1136,51 @@
     '5': cyan
     '6': magenta
     '7': white
-    count: color of the location text displayed in parentheses during team chat. Set
-      to 0-7 for color.
-    message: name of the location (text string). Displayed in parentheses in front
-      of all team chat and order messages.
-  desc: >
-    Location marker used for team chats. The closest target_location in sight
-    is used for the location. If none is in sight, the closest in distance is used.
+- name: target_location
+  aliasof: pos_location
+  deprecated: y
 - name: pos_player_spawn
-  color: '000000'
+  color: ff00ff
   flags: []
   props: {}
   desc: ''
 - name: info_player_deathmatch
-# TODO: SP_pos_player_spawn
+  aliasof: pos_player_spawn
   deprecated: y
-  color: ff00ff
-  flags: []
-  props: {}
-  desc: ''
 - name: info_player_start
-# TODO: SP_pos_player_spawn
+  aliasof: pos_player_spawn
   deprecated: y
-  color: ff00ff
-  flags: []
-  props: {}
-  desc: ''
 - name: pos_target
-  color: '000000'
-  flags: []
-  props: {}
-  desc: ''
-- name: target_position
-# TODO: pos_target alias
-  deprecated: y
   color: 007f00
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
   flags: []
   props:
+    # old prop misc_teleporter_dest
+    angle: direction in which player will look when teleported.
     # OK:
     targetname: Name of this position.
   desc: >
     Aiming target for entities like light, misc_portal_camera and trigger_push
-- name: target_kill
-# TODO: SP_game_kill
-  deprecated: y
-  color: 007f00
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
-  flags: []
-  props:
-    targetname: the activating trigger points to this.
-  desc: This will kill the player who activates the trigger that fires this target.
-- name: info_notnull
-# TODO: pos_target alias
-  deprecated: y
-  color: 007f00
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
-  flags: []
-  props:
-    targetname: must match the target key of entity that uses this for pointing.
-  desc: >
+
     Used as a positional target for entities that can use directional pointing.
     A target_position can be used instead of this but was kept in Q3A for legacy purposes.
+
+    Teleport destination location point for trigger_teleporter entities.
+- name: target_position
+  aliasof: pos_target
+  deprecated: y
+- name: info_notnull
+  aliasof: pos_target
+  deprecated: y
+- name: misc_teleporter_dest
+  aliasof: pos_target
+  deprecated: y
+  color: ff7f3f
+  size_min: [-32.0, -32.0, -24.0]
+  size_max: [32.0, 32.0, -16.0]
 - name: info_null
 # TODO: SP_RemoveSelf
-# TODO: another pos_target alias?
   deprecated: y
   color: 007f00
   size_min: [-8.0, -8.0, -8.0]
@@ -1229,17 +1191,6 @@
   desc: >
     Used as a positional target for light entities to create a spotlight effect.
     A target_position can be used instead of this but was kept in Q3A for legacy purposes.
-- name: misc_teleporter_dest
-# TODO: looks like complete SP_pos_target alias
-  deprecated: y
-  color: ff7f3f
-  size_min: [-32.0, -32.0, -24.0]
-  size_max: [32.0, 32.0, -16.0]
-  flags: []
-  props:
-    angle: direction in which player will look when teleported.
-    targetname: make the trigger_teleporter point to this.
-  desc: Teleport destination location point for trigger_teleporter entities.
 - name: target_print
   deprecated: y
   color: 007f00
@@ -1497,48 +1448,39 @@
     wait: 1
   desc: *relay_desc
 - name: env_afx_ammo
-  color: &env_afx_ammo_color 5b7c2d
-  flags: &env_afx_ammo_flags # ALL OK
+  color: 5b7c2d
+  flags: # ALL OK
   - EVERY_SECOND: Act every second instead of every frame.
   - DISABLE_ENERGO: Disable recharging energetic weapons.
   - DISABLE_NON_ENERGO: Disable recharging non-energetic weapons.
-  props: &env_afx_ammo_props
+  props:
     # found in code
     model: ''
     angles: SetMovedir
     # OK
     ammo: Amount of ammo. Values < 1 corrected to 1.
     targetname: *toggleable
-  proptypes: &env_afx_ammo_types
+  proptypes:
     ammo: int
-  propdefaults: &env_afx_ammo_defaults
+  propdefaults:
     ammo: 1
-  desc: &env_afx_ammo_desc >
+  desc: >
     Gives ammo to players. # OK
 - name: trigger_ammo
+  aliasof: env_afx_ammo
   deprecated: y
-  color: *env_afx_ammo_color
-  flags: *env_afx_ammo_flags
-  props: *env_afx_ammo_props
-  proptypes: *env_afx_ammo_types
-  propdefaults: *env_afx_ammo_defaults
-  desc: *env_afx_ammo_desc
 - name: env_afx_gravity
-  color: '000000'
-  flags: []
-  props: {}
-  desc: ''
-- name: trigger_gravity
-# TODO: SP_env_afx_gravity
-  deprecated: y
   color: 7f7f7f
   flags: []
   props:
-    NOT THROUGHLY TESTED: please report whether or not this works for you.
+    # old props
     gravity: The gravity within this trigger (default 800).
   desc: >
     The gravity (for players) within this trigger is determined by the gravity
     key. Targetting this entity toggles its effects.
+- name: trigger_gravity
+  aliasof: env_afx_gravity
+  deprecated: y
 - name: env_afx_heal
   color: &env_afx_heal_color 2d7c50
   flags: &env_afx_heal_flags # ALL OK
@@ -1558,13 +1500,8 @@
   desc: &env_afx_heal_desc >
     Heals players touching entity. # OK
 - name: trigger_heal
+  aliasof: env_afx_heal
   deprecated: y
-  color: *env_afx_heal_color
-  flags: *env_afx_heal_flags
-  props: *env_afx_heal_props
-  proptypes: *env_afx_heal_types
-  propdefaults: *env_afx_heal_defaults
-  desc: *env_afx_heal_desc
 - name: env_afx_hurt
 # bug: can't customize sound
 # it is always sound/misc/electro.wav
@@ -1590,24 +1527,13 @@
   desc: &env_afx_hurt_desc >
     Hurts players or buildings touching entity. # OK
 - name: trigger_hurt
+  aliasof: env_afx_hurt
   deprecated: y
-  color: *env_afx_hurt_color
-  flags: *env_afx_hurt_flags
-  props: *env_afx_hurt_props
-  proptypes: *env_afx_hurt_types
-  propdefaults: *env_afx_hurt_defaults
-  desc: *env_afx_hurt_desc
 - name: env_afx_push
-  color: '000000'
-  flags: []
-  props: {}
-  desc: ''
-- name: trigger_push
-# TODO: SP_env_afx_push
-  deprecated: y
   color: 7f7f7f
   flags: []
   props:
+    # old props
     target: this points to the target_position to which the player will jump.
   desc: >
     This is used to create jump pads and launch ramps. It MUST point to a target_position
@@ -1615,6 +1541,9 @@
 
     To make a jump pad or launch ramp, place the target_position/info_notnull entity
     at the highest point of the jump and target it with this entity.
+- name: trigger_push
+  aliasof: env_afx_push
+  deprecated: y
 - name: env_afx_teleport
   color: &env_afx_teleport_color '754928'
   flags: &env_afx_teleport_flags # ALL OK
@@ -1640,85 +1569,70 @@
     Setting teleport as target allows to toggle its activity. # OK
   # bug: stepping into disabled teleport continuously shows flashing screen effect.
 - name: trigger_teleport
+  aliasof: env_afx_teleport
   deprecated: y
-  color: *env_afx_teleport_color
-  flags: *env_afx_teleport_flags
-  props: *env_afx_teleport_props
-  propdefaults: *env_afx_teleport_defaults
-  desc: *env_afx_teleport_desc
 - name: fx_rumble
-  color: '000000'
-  flags: []
-  props: {}
-  desc: ''
-- name: target_rumble
-# TODO: SP_fx_rumble
-  deprecated: y
   color: ff0000
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
   flags: []
   props:
+    # old props
     count: 'duration of the quake (default: 10)'
     speed: 'severity of the quake (default: 100)'
   desc: >
     When triggered, this initiates a level-wide rumble effect. All players are affected.
+- name: target_rumble
+  aliasof: fx_rumble
+  deprecated: y
 - name: game_end
-  color: '000000'
+  color: ff0000
+  size_min: [-8.0, -8.0, -8.0]
+  size_max: [8.0, 8.0, 8.0]
   flags: []
-  props: {}
-  desc: ''
+  props:
+    team: None - 0, Aliens - 1, Humans - 2. # TODO: check all conditions
+  proptypes:
+    team: int
+  desc: When triggered, this causes an unconditional win for the team.
 - name: target_alien_win
-# TODO: SP_game_end
+  aliasof: game_end
   deprecated: y
-  color: ff0000
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
-  flags: []
+  color: *alienColor
   props: {}
-  desc: When triggered, this causes an unconditional win for the alien team.
+  proptypes: {}
+  descreplace: {'the team': 'the alien team'}
 - name: target_human_win
-# TODO: SP_game_end
+  aliasof: game_end
   deprecated: y
-  color: ff0000
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
-  flags: []
+  color: *humanColor
   props: {}
-  desc: When triggered, this causes an unconditional win for the human team.
+  proptypes: {}
+  descreplace: {'the team': 'the human team'}
 - name: game_funds
   color: '000000'
   flags: []
   props: {}
   desc: ''
 - name: game_kill
-  color: '000000'
-  flags: []
-  props: {}
-  desc: ''
-- name: target_kill
-# TODO: SP_game_kill
-  deprecated: y
   color: 007f00
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
   flags: []
   props:
+    # old props
     targetname: the activating trigger points to this.
   desc: This will kill the player who activates the trigger that fires this target.
-- name: game_score
-  color: '000000'
-  flags: []
-  props: {}
-  desc: ''
-- name: target_score
-# TODO: SP_game_score
+- name: target_kill
+  aliasof: game_kill
   deprecated: y
+- name: game_score
   color: 007f00
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
   flags: []
   props:
+    # old props
     count: number of frag points to give to player (default 1).
     targetname: ativating entity points to this.
   desc: >
@@ -1726,6 +1640,9 @@
     this. A spawn location entity like info_player_* or CTF respawn points can target
     this entity to give points to the player when he spawns in the game. Or a trigger
     can also be used to activate this. The activator of the trigger will get the points.
+- name: target_score
+  aliasof: game_score
+  deprecated: y
 - name: gfx_animated_model # OK
   color: &gfx_animated_model_color ff7f3f
   size_min: [-12.0, -12.0, -12.0]
@@ -1738,27 +1655,21 @@
     animation: The guts of the entity. This is identical to an entry in an animation.cfg
       - Start Frame, Number of frames, Looping Frames, Frame rate.
     angles: Orientation.
-    radius: The scale of the model compared to its original size. Defaults to 1.0.
-    targetname: &toggleable Give it a name to be able to toggle activity.
+    radius: The scale of the model compared to its original size.
+    targetname: *toggleable
   proptypes: &gfx_animated_model_types
     radius: float
+  propdefaults:
+    radius: 1
   propeg: &gfx_animated_model_eg
     model: 'models/mapobjects/teleporter/teleporter.md3'
     animation: '0 30 30 20 = frames 0 through 30 continously at 20 fps'
-    radius: 1
   desc: &gfx_animated_model_desc >
     Animated model entity. Not baked info level geometry.
     Can be walked through.
-- name: misc_anim_model # OK
+- name: misc_anim_model
+  aliasof: gfx_animated_model
   deprecated: y
-  color: *gfx_animated_model_color
-  size_min: [-12.0, -12.0, -12.0]
-  size_max: [12.0, 12.0, 12.0]
-  flags: *gfx_animated_model_flags
-  props: *gfx_animated_model_props
-  proptypes: *gfx_animated_model_types
-  propeg: *gfx_animated_model_eg
-  desc: *gfx_animated_model_desc
 - name: misc_model
   deprecated: y
   color: *gfx_animated_model_color
@@ -1827,16 +1738,8 @@
 
     Triggering this entity toggles it.
 - name: misc_light_flare
-# TODO: SP_gfx_light_flare
+  aliasof: gfx_light_flare
   deprecated: y
-  color: *gfx_light_flare_color
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
-  flags: *gfx_light_flare_flags
-  props: *gfx_light_flare_props
-  proptypes: *gfx_light_flare_types
-  propdefaults: *gfx_light_flare_defaults
-  desc: *gfx_light_flare_desc
 - name: gfx_particle_system
   color: &gfx_particle_system_color ff7f3f
   size_min: [-8.0, -8.0, -8.0]
@@ -1865,16 +1768,8 @@
 
     Setting this as target allows to toggle its activity. # OK
 - name: misc_particle_system
+  aliasof: gfx_particle_system
   deprecated: y
-  color: *gfx_particle_system_color
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
-  flags: *gfx_particle_system_flags
-  props: *gfx_particle_system_props
-  proptypes: *gfx_particle_system_types
-  propdefaults: *gfx_particle_system_defaults
-  propeg: *gfx_particle_system_eg
-  desc: *gfx_particle_system_desc
 - name: gfx_portal_camera
   color: &gfx_portal_camera_color ff7f3f
   size_min: [-8.0, -8.0, -8.0]
@@ -1903,13 +1798,8 @@
     cases, the "roll" key must be used to set the roll angle. If either the SLOWROTATE
     or FASTROTATE spawnflag is set, then the "roll" value is irrelevant.
 - name: misc_portal_camera
+  aliasof: gfx_portal_camera
   deprecated: y
-  color: *gfx_portal_camera_color
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
-  flags: *gfx_portal_camera_flags
-  props: *gfx_portal_camera_props
-  desc: *gfx_portal_camera_desc
 - name: gfx_portal_surface
   color: &gfx_portal_surface_color ff7f3f
   size_min: [-8.0, -8.0, -8.0]
@@ -1929,19 +1819,14 @@
     onto it. To make a mirror, apply the common/mirror shader to the surface, place
     this entity near it but don't target a misc_portal_camera.
 - name: misc_portal_surface
+  aliasof: gfx_portal_surface
   deprecated: y
-  color: *gfx_portal_surface_color
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
-  flags: []
-  props: *gfx_portal_surface_props
-  desc: *gfx_portal_surface_desc
 - name: gfx_shader_mod
   color: '000000'
   flags: []
   props: {}
   desc: ''
-- name: sensor_builable
+- name: sensor_buildable
   color: &sensor_builable_color 7f7f7f
   flags: &Some_sensors_flags
   # found in code
@@ -1961,33 +1846,26 @@
 
     Targetting this entity toggles it.
 - name: trigger_buildable
+  aliasof: sensor_buildable
   deprecated: y
-  color: *sensor_builable_color
-  flags: *Some_sensors_flags
-  props: *sensor_builable_props
-  desc: *sensor_builable_desc
 - name: sensor_creep
   color: '000000'
   flags: []
   props: {}
   desc: ''
 - name: sensor_end
-  color: '000000'
-  flags: *Some_sensors_flags
-  props: {}
-  desc: ''
-- name: trigger_win
-# TODO: SP_sensor_end
-  deprecated: y
   color: 7f7f7f
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
-  flags: []
+  flags: *Some_sensors_flags
   props:
-    NOT THROUGHLY TESTED: please report whether or not this works for you.
+    # old props
     target: this points to the entity to activate.
     team: the team which triggers this entity; 1 for aliens, 2 for humans
   desc: Fires its targets when the team key wins.
+- name: trigger_win
+  aliasof: sensor_end
+  deprecated: y
 - name: sensor_player
   color: &sensor_player_color 7f7f7f
   flags: *Some_sensors_flags
@@ -2009,19 +1887,13 @@
 
     Targetting this entity toggles it.
 - name: trigger_class
+  aliasof: sensor_player
   deprecated: y
-  color: *sensor_player_color
-  flags: *Some_sensors_flags
-  props: *sensor_player_props
-  desc: *sensor_player_desc
 - name: trigger_equipment
+  aliasof: sensor_player
   deprecated: y
-  color: *sensor_player_color
-  flags: *Some_sensors_flags
-  props: *sensor_player_props
-  desc: *sensor_player_desc
 - name: trigger_multiple
-# TODO: SP_sensor_player, but have separate code
+# TODO: SP_sensor_player, but have separate code, make aliasof there for deprecation hint
 # src/gamelogic/game/g_spawnsensor.c:510
   deprecated: y
   color: 7f7f7f
@@ -2052,6 +1924,8 @@
   desc: ''
 - name: sensor_stage
   color: &sensor_stage_color 7f7f7f
+  size_min: [-8.0, -8.0, -8.0]
+  size_max: [8.0, 8.0, 8.0]
   flags: *Some_sensors_flags
   props: &sensor_stage_props
     # old props
@@ -2062,30 +1936,22 @@
   desc: &sensor_stage_desc >
     Fires its targets when the team key reaches stage key.
 - name: trigger_stage
+  aliasof: sensor_stage
   deprecated: y
-  color: *sensor_stage_color
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
-  flags: *Some_sensors_flags
-  props: *sensor_stage_props
-  desc: *sensor_stage_desc
 - name: sensor_start
-  color: '000000'
-  flags: []
-  props: {}
-  desc: ''
-- name: trigger_always
-# TODO: SP_sensor_start
-  deprecated: y
   color: 7f7f7f
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
   flags: []
   props:
+    # old props
     target: this points to the entity to activate.
   desc: >
     Automatic trigger. It will fire the entities it targets as soon as it spawns
     in the game.
+- name: trigger_always
+  aliasof: sensor_start
+  deprecated: y
 - name: sensor_support
   color: '000000'
   flags:
@@ -2114,12 +1980,8 @@
     delay. The final time delay will be a random value anywhere between the minimum
     and maximum values (min delay = wait - random) (max delay = wait + random).
 - name: func_timer
-  color: *sensor_timer_color
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
-  flags: *Sensor_timer_flags
-  props: *Sensor_timer_props
-  desc: *Sensor_timer_desc
+# maybe bug: not marked as deprecated in source code
+  aliasof: sensor_timer
 - name: sfx_speaker
   color: &sfx_speaker_color 00b3b3
   size_min: [-8.0, -8.0, -8.0]
@@ -2166,10 +2028,5 @@
     The final time delay will be a random value anywhere between the minimum and
     maximum values: (min delay = wait - random) (max delay = wait + random).
 - name: target_speaker
+  aliasof: sfx_speaker
   deprecated: y
-  color: *sfx_speaker_color
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
-  flags: *sfx_speaker_flags
-  props: *sfx_speaker_props
-  desc: *sfx_speaker_desc

@@ -5,6 +5,7 @@ import re
 import sys
 import os.path
 import argparse
+from copy import deepcopy
 
 
 bad_token_re = re.compile(r'[}{)(\':\s]', re.M)
@@ -149,6 +150,8 @@ def print_entity(e, dt, pr_types=False, pr_defaults=False, pr_ranges=False, pr_e
     print_entity_head(e)
     if e.get('deprecated'):
         print('DEPRECATED! DEPRECATED! DEPRECATED!')
+        if e.get('aliasof'):
+            print('RECOMMENDED TO USE: {}'.format(e.get('aliasof')))
     print_flag_desc(e)
     print_prop_desc(e, dt, pr_types, pr_defaults, pr_ranges, pr_eg)
     print_common_desc(e)
@@ -206,7 +209,7 @@ def val_fields_exist(e):
 required_fields = {'name', 'color', 'flags', 'props', 'desc'}
 required_fields2 = required_fields | {'size_min', 'size_max'}
 additional_fields = {'propreplace', 'proptypes', 'propdefaults', 'propranges', 'boolvalues', 'propeg'}
-all_fields = required_fields2 | additional_fields | {'deprecated', 'descreplace', 'specials'}
+all_fields = required_fields2 | additional_fields | {'deprecated', 'descreplace', 'specials', 'aliasof'}
 
 def validate_entity(e, dt):
     r = []
@@ -366,9 +369,21 @@ def load_main_file(name):
     with open(name, 'r') as f:
         text = f.read()
         elist = yaml.load(text)
-        # autofix data
-        for e in elist:
-            e['flags'] = list_of_dicts_to_list_of_tuples(e['flags'])
+    # autofix data
+    for i, e in enumerate(elist):
+        if 'flags' not in e and 'aliasof' in e:
+            continue
+        e['flags'] = list_of_dicts_to_list_of_tuples(e['flags'])
+    for i, e in enumerate(elist):
+        if 'aliasof' not in e:
+            continue
+        try:
+            tmp = next(t_ for t_ in elist if t_['name'] == e['aliasof'])
+        except StopIteration:
+            raise Exception('Invalid aliasof: {}'.format(e['aliasof']))
+        tmp = deepcopy(tmp)
+        tmp.update(e)
+        elist[i], e = tmp, tmp
     return elist
 
 def get_deftypes_name(mainname):
