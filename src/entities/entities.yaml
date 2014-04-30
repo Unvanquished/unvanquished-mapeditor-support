@@ -1581,59 +1581,71 @@
 - name: target_rumble
   aliasof: fx_rumble
   deprecated: y
-- name: game_end
-  color: ff0000
+- name: game_end # OK
+# improvement: make it able to end game in draw with team=0 or omitted
+  color: &game_color ff0000
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
   flags: []
   props:
-    team: &Team_number 1 for aliens, 2 for humans. # TODO: check all conditions, 0, -1
+    team: &Team_number 1 for aliens, 2 for humans.
+    targetname: *TN
   desc: When triggered, this causes an unconditional win for the team.
-- name: target_alien_win
+- name: target_alien_win # OK
   aliasof: game_end
   deprecated: y
   color: *alienColor
-  props: {}
+  props:
+    targetname: *TN
   proptypes: {}
   descreplace: {'the team': 'the alien team'}
-- name: target_human_win
+- name: target_human_win # OK
   aliasof: game_end
   deprecated: y
   color: *humanColor
-  props: {}
+  props:
+    targetname: *TN
   proptypes: {}
   descreplace: {'the team': 'the human team'}
-- name: game_funds
-  color: '000000'
-  flags: []
-  props: {}
-  desc: ''
-- name: game_kill
-  color: 007f00
+- name: game_funds # OK
+  color: *game_color
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
   flags: []
   props:
-    # old props
-    targetname: the activating trigger points to this.
-  desc: This will kill the player who activates the trigger that fires this target.
+    amount: Amount of funds. 1 = 1 credit = 0.01 evo.
+    targetname: *TN
+  propdefaults:
+    amount: 0
+  desc: &game_desc Gives funds to the player who activates it (e.g. via button).
+- name: game_kill # OK
+  color: *game_color
+  size_min: [-8.0, -8.0, -8.0]
+  size_max: [8.0, 8.0, 8.0]
+  flags: []
+  props:
+    targetname: *TN
+  desc: *game_desc
+  descreplace:
+    'Gives funds to': 'Instantly kills'
 - name: target_kill
   aliasof: game_kill
   deprecated: y
-- name: game_score
-  color: 007f00
+- name: game_score # OK
+# possible improvement: measure amount directly in score points
+  color: *game_color
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
   flags: []
   props:
-    # old props
-    count: number of frag points to give to player (default 1).
-    targetname: ativating entity points to this.
-  desc: >
-    This is used to automatically give frag points to the player who activates
-    this. A spawn location entity like info_player_* or CTF respawn points can target
-    this entity to give points to the player when he spawns in the game. Or a trigger
-    can also be used to activate this. The activator of the trigger will get the points.
+    amount: Amount of score points. 50 = 1 score, calculated as quantity of funds
+      game gives you when you earn amount of score.
+    targetname: *TN
+  propdefaults:
+    amount: 1
+  desc: *game_desc
+  descreplace:
+    'funds': 'score points'
 - name: target_score
   aliasof: game_score
   deprecated: y
