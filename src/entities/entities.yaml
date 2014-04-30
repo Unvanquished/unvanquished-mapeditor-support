@@ -1056,27 +1056,25 @@
 
     Target this entity with a misc_model to have the model attached to the entity
     (set the model's "target" key to the same value as this entity's "targetname").
-- name: path_corner
-# TODO: SP_Nothing
+- name: path_corner # OK
   color: 7f4c00
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
   flags: []
   props:
-    # OK
     target: Point to next path_corner in the path.
     targetname: &TN Entity name.
     wait: Number of seconds func_train will pause on path corner before moving to
       next path corner.
     speed: Speed of func_train while moving to the next path corner. This will override
       the speed value of the train.
+  proptypes:
+    wait: float
+    # possible improvement: add usual wait variance
   propdefaults:
     wait: 0
   desc: >
     Path corner entity that func_trains can be made to follow.
-
-    Setting the wait key to -1 will not make the train stop on the path corner, it
-    will simply default to 0.
 - name: pos_alien_intermission # OK
   color: &alienColor ff3300
   size_min: [-8.0, -8.0, -8.0]
