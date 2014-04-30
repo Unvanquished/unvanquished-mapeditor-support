@@ -1552,17 +1552,20 @@
 - name: trigger_teleport
   aliasof: env_afx_teleport
   deprecated: y
-- name: fx_rumble
+- name: fx_rumble # OK
+# bug: this is not an earthquake, this is jumping
   color: ff0000
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
   flags: []
   props:
-    # old props
-    count: 'duration of the quake (default: 10)'
-    speed: 'severity of the quake (default: 100)'
-  desc: >
-    When triggered, this initiates a level-wide rumble effect. All players are affected.
+    amount: Duration of the quake.
+    speed: Severity of the quake.
+    targetname: *TN
+  propdefaults:
+    amount: 10
+    speed: 100
+  desc: When triggered, this initiates a level-wide rumble effect. All players are affected.
 - name: target_rumble
   aliasof: fx_rumble
   deprecated: y
