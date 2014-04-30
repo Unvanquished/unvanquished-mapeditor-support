@@ -28,7 +28,9 @@
 # TODO: rename targetname -> name
 # TODO: grep q3map2 for light and misc_model props/flags
 # TODO: make size aliases
-# TODO: list all deprecated, check if they're aliasof or not
+# TODO: make [required] mark based on src/gamelogic/game/g_spawn.c:247
+# TODO: make yaml-aliased string for target
+# TODO: make same colors for all entity groups
 - name: worldspawn
   color: '000000'
   flags: []
@@ -97,13 +99,13 @@
     music: Path/name of looping .wav or .ogg file used for level's music.
       # bug: music doesn't loop, plays only once
     gravity: Gravity of level.
-    disabledEquipment: A comma delimited list of human weapons or upgrades to disable
-      for this map. (rifle,psaw,shotgun,lgun,mdriver,chaingun,flamer,prifle,lcannon,
+    disabledEquipment: &Humanequip_list A comma delimited list of human weapons or upgrades.
+      (rifle,psaw,shotgun,lgun,mdriver,chaingun,flamer,prifle,lcannon,
       larmour,marmour,bsuit,radar,battpack,jetpack,gren,firebomb)
-    disabledClasses: A comma delimited list of alien classes to disable for this map.
+    disabledClasses: &Alienclass_list A comma delimited list of alien classes.
       (builder,builderupg,level0,level1,level2,level2upg,level3,level3upg,level4)
       # bug: disable classes works, but shows warnings
-    disabledBuildables: A comma delimited list of buildables to disable for this map.
+    disabledBuildables: &Buildable_list A comma delimited list of buildables.
       (eggpod,overmind,barricade,acid_tube,trapper,booster,hive,leech,telenode,mgturret,
       tesla,arm,medistat,drill,reactor,repeater)
       # bug: disable buildables works, but shows warnings
@@ -123,6 +125,10 @@
   propeg:
     colorGrade: gfx/cgrading/red-only
     music: music/sonic5.wav
+  propreplace:
+    disabledBuildables: {'of buildables': 'of buildables to disable for this map'}
+    disabledEquipment: {'weapons or upgrades': 'weapons or upgrades to disable for this map'}
+    disabledClasses: {'alien classes': 'alien classes to disable for this map'}
   desc: Only used for the world.
 - name: light
 # Marked as deprecated in code.
@@ -588,6 +594,7 @@
     health: *brush_health
     origin: Sets the rotation axis position. # TODO: check it sets .md3 position
     targetname: If set, a func_button or trigger is required to activate the door.
+      # bug: if health and targetname are set, still can be activated by building explosion near it
     model2: *InitMover_model2
     light: *SP_ConstantLightField_light
     color: *SP_ConstantLightField_color
@@ -714,7 +721,7 @@
     # src/gamelogic/game/g_spawn_mover.c:370
     # player squashed instantly
     angles: Orienting pendulum.
-    targetname: &toggleable Give it a name to be able to toggle activity.
+    targetname: &toggleable Give it a name to be able to toggle its activity.
     # bug: when signalled via button: stops and never resumes
     # bug: when stopped position resets hardly, instantly moving to origin
     model2: *InitMover_model2
@@ -1580,7 +1587,7 @@
   size_max: [8.0, 8.0, 8.0]
   flags: []
   props:
-    team: None - 0, Aliens - 1, Humans - 2. # TODO: check all conditions
+    team: &Team_number 1 for aliens, 2 for humans. # TODO: check all conditions, 0, -1
   desc: When triggered, this causes an unconditional win for the team.
 - name: target_alien_win
   aliasof: game_end
@@ -1729,6 +1736,9 @@
   aliasof: gfx_light_flare
   deprecated: y
 - name: gfx_particle_system
+# bug: if player toggles entity twice quickly (->ON->OFF),
+# after "wait" delay it toggles once again (->ON)
+# and becomes constantly visible
   color: ff7f3f
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
@@ -1814,159 +1824,177 @@
   flags: []
   props: {}
   desc: ''
-- name: sensor_buildable
-  color: 7f7f7f
+- name: sensor_buildable # OK
+  color: &sensor_color 43aa00
   flags: &Some_sensors_flags
-  # found in code
   - SPAWN_DISABLED: *Spawn_disabled
-  - NEGATE: Negate sensor signal.
+  - NEGATE: Negate sensor condition.
   props:
-    # old props
-    buildables: a comma delimited list of buildables which will trigger this entity.
-    random: random time variance in seconds added or subtracted from "wait" delay
-      (default 0 - see Notes).
-    target: this points to the entity to activate.
-    wait: time in seconds until trigger becomes re-triggerable after it's been touched
-      (default 0.2, -1 = trigger once).
+    target: &target Name of the entity to activate.
+    wait: &sensor_wait Time in seconds until trigger becomes re-triggerable after it's been touched.
+    buildables: *Buildable_list
+    targetname: *toggleable
+  propdefaults:
+    wait: [0.5, 0]
+  propreplace:
+    buildables:
+      'of buildables.': 'of buildables which will trigger this entity. If omitted matches all buildables.'
   desc: >
-    Triggered by a buildable or subset of buildables. If no buildables key is
-    supplied every buildable will trigger this entity.
+    Triggered by a buildable or subset of buildables.
 
-    Targetting this entity toggles it.
+    If condition is satisfied fires targets continuously with "wait" period.
+
+    If NEGATE used, sensor still needs to be touched to activate.
 - name: trigger_buildable
   aliasof: sensor_buildable
   deprecated: y
-- name: sensor_creep
-  color: '000000'
-  flags: []
-  props: {}
-  desc: ''
-- name: sensor_end
-  color: 7f7f7f
+- name: sensor_creep # OK
+# bug: cannot be toggled via targetname
+# possible improvement: "wait" triggering delay same as trigger_buildable
+  color: *sensor_color
+  size_min: [-8.0, -8.0, -8.0]
+  size_max: [8.0, 8.0, 8.0]
+  flags:
+  - SPAWN_DISABLED: *Spawn_disabled
+  props:
+    target: *target
+  desc: >
+    Detects creep, i.e. area where the building is allowed.
+
+    If condition is satisfied fires targets continuously.
+- name: sensor_end # OK
+  color: *sensor_color
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
   flags: *Some_sensors_flags
   props:
-    # old props
-    target: this points to the entity to activate.
-    team: the team which triggers this entity; 1 for aliens, 2 for humans
-  desc: Fires its targets when the team key wins.
+    target: *target
+    team: *Team_number
+    targetname: *toggleable
+  propreplace:
+    team: {'humans.': 'humans. 0 or omit to detect draw.'}
+  desc: >
+    Fires its targets when the team wins.
 - name: trigger_win
   aliasof: sensor_end
   deprecated: y
-- name: sensor_player
-  color: 7f7f7f
+- name: sensor_player # OK
+# bug: doesn't fire with minimum set of properties (target)
+# src/gamelogic/game/g_spawn_sensor.c:492 - set qtrue there?
+  color: *sensor_color
   flags: *Some_sensors_flags
   props:
-    # old props
-    classes: a comma delimited list of classes which will trigger this entity.
-    random: random time variance in seconds added or subtracted from "wait" delay
-      (default 0 - see Notes).
-    target: this points to the entity to activate.
-    wait: time in seconds until trigger becomes re-triggerable after it's been touched
-      (default 0.2, -1 = trigger once).
-    equipment: a comma delimited list of equipment which will trigger this entity.
+    equipment: *Humanequip_list
+    targetname: *toggleable
+    wait: *sensor_wait
+    team: *Team_number
+    target: *target
+    classes: *Alienclass_list
+  propdefaults:
+    wait: [0.5, 0]
+  propreplace:
+    team: {'humans.': 'humans. Omit if you don''t want to check the team. Not affected by NEGATE.'}
+    classes: {'alien classes': 'alien classes which will trigger this entity'}
+    equipment: {'weapons or upgrades': 'weapons or upgrades which will trigger this entity'}
   desc: >
     Triggered by a specific class or subset of classes. If no classes key is supplied
     every class will trigger this entity.
 
     Triggered by a player carrying some item (weapon or upgrade) or subset of
     items. If no equipment key is supplied every human will trigger this entity.
-
-    Targetting this entity toggles it.
 - name: trigger_class
   aliasof: sensor_player
   deprecated: y
 - name: trigger_equipment
   aliasof: sensor_player
   deprecated: y
-- name: trigger_multiple
-# TODO: SP_sensor_player, but have separate code, make aliasof there for deprecation hint
-# src/gamelogic/game/g_spawnsensor.c:510
+- name: trigger_multiple # OK
+  aliasof: sensor_player
   deprecated: y
-  color: 7f7f7f
+  color: *sensor_color
   flags:
-  # found in code, seems to be deprecated, should make warning when entitydebug is on, TODO
-  - HUMANS: (if none of HUMANS,ALIENS or both set assume ALL)
-  - ALIENS: ''
+  - HUMANS: Activated by humans.
+  - ALIENS: Activated by aliens.
   props:
-    random: random time variance in seconds added or subtracted from "wait" delay
-      (default 0 - see Notes).
-    target: this points to the entity to activate.
-    targetname: activating trigger points to this.
-    wait: time in seconds until trigger becomes re-triggerable after it's been touched
-      (default 0.2, -1 = trigger once).
+    wait: *sensor_wait
+    targetname: Can also be triggered as target.
+    target: *target
+  propreplace: {}
   desc: >
-    Variable size repeatable trigger. It will fire the entities it targets when
-    touched by player. Can be made to operate like a trigger_once entity by setting
-    the "wait" key to -1. It can also be activated by another trigger that targets
-    it.
-
-    When the random key is set, its value is used to calculate a minimum and a maximum
-    delay. The final time delay will be a random value anywhere between the minimum
-    and maximum values: (min delay = wait - random) (max delay = wait + random).
-- name: sensor_power
-  color: '000000'
-  flags: []
+    Triggered by a player.
+- name: sensor_power # OK
+# bug: sensor never triggers
+# src/gamelogic/game/g_spawn_sensor.c:590
+  color: *sensor_color
+  size_min: [-8.0, -8.0, -8.0]
+  size_max: [8.0, 8.0, 8.0]
+  flags:
+  - SPAWN_DISABLED: *Spawn_disabled
   props: {}
   desc: ''
-- name: sensor_stage
-  color: 7f7f7f
+- name: sensor_stage # OK
+# possible improvement: detect substages, stages down
+  color: *sensor_color
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
   flags: *Some_sensors_flags
   props:
-    # old props
-    stage: the stage at which this entity is triggered; 1 for stage 2, 2 for stage
-      3
-    target: this points to the entity to activate.
-    team: the team which triggers this entity; 1 for aliens, 2 for humans
+    target: *target
+    targetname: *toggleable
+    stage: &sensor_stage_stage The stage at which this entity is triggered. 2nd stage is 1, 3rd is 2.
+    team: *Team_number
+  propreplace:
+    team: {'humans.': 'humans. Omit if you don''t want to check the team.'}
   desc: >
-    Fires its targets when the team key reaches stage key.
-- name: trigger_stage
+    Triggers when the team reaches the stage. Stage down doesn't trigger.
+- name: trigger_stage # OK
   aliasof: sensor_stage
   deprecated: y
-- name: sensor_start
-  color: 7f7f7f
+  props:
+    target: *target
+    targetname: Can also be triggered as target.
+    stage: *sensor_stage_stage
+    team: *Team_number
+- name: sensor_start # OK
+  color: *sensor_color
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
   flags: []
   props:
-    # old props
-    target: this points to the entity to activate.
+    target: *target
   desc: >
-    Automatic trigger. It will fire the entities it targets as soon as it spawns
-    in the game.
+    Fires the targets at game start.
 - name: trigger_always
   aliasof: sensor_start
   deprecated: y
-- name: sensor_support
-  color: '000000'
-  flags:
-  # found in code
-  - SPAWN_DISABLED: *Spawn_disabled
-  props: {}
-  desc: ''
-- name: sensor_timer
-  color: 007fcc
+- name: sensor_support # OK
+# bug: cannot be toggled via targetname
+# bug: remove this entity? there is a sensor_creep already
+  color: *sensor_color
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
-  flags: # ALL OK
+  flags:
+  - SPAWN_DISABLED: *Spawn_disabled
+  props:
+    team: The only valuable value is 1, i.e. aliens. Make sure you set this.
+      # bug: remove this property?
+    target: *target
+  desc: >
+    Detects creep, i.e. area where the building is allowed.
+
+    If condition is satisfied fires targets continuously.
+- name: sensor_timer # OK
+  color: *sensor_color
+  size_min: [-8.0, -8.0, -8.0]
+  size_max: [8.0, 8.0, 8.0]
+  flags:
   - START_ON: Timer will start on in the game and continuously fire its targets.
   props:
-    # OK:
     wait: Delay in seconds between each triggering of its targets.
-    target: This points to the entities to trigger.
-    targetname: A func_button or trigger that points to this will toggle the timer
-      on/off when activated.
+    target: *target
+    targetname: *toggleable
   desc: >
-    Time delay trigger that will continuously fire its targets after a preset
-    time delay. The time delay can also be randomized. When triggered, the timer will
-    toggle on/off.
-
-    When the random key is set, its value is used to calculate a minimum and a maximum
-    delay. The final time delay will be a random value anywhere between the minimum
-    and maximum values (min delay = wait - random) (max delay = wait + random).
+    Entity continuously fires its targets after a preset time delay.
 - name: func_timer
 # maybe bug: not marked as deprecated in source code
   aliasof: sensor_timer
@@ -1981,14 +2009,13 @@
   - ACTIVATOR_SPEAKER: looks like it plays sound only for person who activated it # found in code, TODO
   props:
     # old props
-    #noise: path/name of .wav file to play (eg. sound/world/growl1.wav - see Notes).
-    #targetname: the activating button or trigger points to this.
     #wait: delay in seconds between each time the sound is played ("random" key must
     #  be set - see Notes).
     # found in code
-    noise: Path to played sound.
     wait: ''
+    # OK
     origin: Position.
+    noise: Path to played sound.
     targetname: *TN
   propdefaults:
     noise: NOSOUND
