@@ -1393,26 +1393,30 @@
   props: {}
   desc: The alien leech.
   specials: {model: models/buildables/leech/leech.md3}
-- name: ctrl_limited
-  color: '000000'
-  flags:
-  # found in code
-  - SPAWN_DISABLED: &Spawn_disabled Disabled by default.
-  props:
-    # found in code
-    amount: Possible activations count.
-  propdefaults:
-    amount: 1
-  desc: ''
-- name: ctrl_relay
-  color: 00b3b3
+- name: ctrl_limited # OK
+  color: &ctrl_color 00b3b3
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
-  flags: # ALL OK
+  flags:
+  - SPAWN_DISABLED: &Spawn_disabled Disabled by default.
+  # bug: no way to activate it in-game
+  props:
+    amount: Possible activation count.
+    target: &target Name of the entity to activate.
+    targetname: *TN
+  propdefaults:
+    amount: 1
+  desc: >
+    Can be triggered limited amount of times.
+    Every activation fires targets.
+- name: ctrl_relay # OK
+  color: *ctrl_color
+  size_min: [-8.0, -8.0, -8.0]
+  size_max: [8.0, 8.0, 8.0]
+  flags:
   - SPAWN_DISABLED: *Spawn_disabled
   # bug: can't enable entity later in game, remove spawn_disabled at all?
   props:
-    # OK
     onAct: &relay_target Name of the target to activate.
     targetname: *TN
     wait: &relay_wait Delay before target activation.
@@ -1420,26 +1424,24 @@
     wait: 0
   desc: &relay_desc >
     When activated waits amount of time then activates its own targets.
-- name: target_relay
+- name: target_relay # OK
   aliasof: ctrl_relay
   deprecated: y
-  flags: &target_relay_flags # ALL OK
+  flags: &target_relay_flags
   - ONLY_HUMANS: Can be activated only by a human.
   - ONLY_ALIENS: Can be activated only by an alien.
   - RANDOM: Ignore delay, activate random target.
   props:
-    # OK
     target: *relay_target
     targetname: *TN
     wait: *relay_wait
   propdefaults:
     wait: 0
-- name: target_delay
+- name: target_delay # OK
   aliasof: ctrl_relay
   deprecated: y
-  flags: *target_relay_flags # ALL OK
+  flags: *target_relay_flags
   props:
-    # OK
     target: *relay_target
     targetname: *TN
     wait: *relay_wait
@@ -1830,8 +1832,8 @@
   - SPAWN_DISABLED: *Spawn_disabled
   - NEGATE: Negate sensor condition.
   props:
-    target: &target Name of the entity to activate.
     wait: &sensor_wait Time in seconds until trigger becomes re-triggerable after it's been touched.
+    target: *target
     buildables: *Buildable_list
     targetname: *toggleable
   propdefaults:
