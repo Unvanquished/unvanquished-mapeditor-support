@@ -134,21 +134,18 @@
       file: file used for level's music
   desc: Only used for the world.
 - name: light
-# Marked as deprecated in code.
-# src/gamelogic/game/g_spawn.c:368
-# It's strange. Light is actually q3map2 workhorse.
-# TODO: SP_RemoveSelf
+# bug: marked as deprecated in code. src/gamelogic/game/g_spawn.c:368
   color: a6a6ff
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
-  flags:
+  flags: &light_flags
   - LINEAR: Use a linear falloff. Default is inverse distance squared (more realistic). # OK
-  # found in code (q3map2)
-  - NOANGLE: Ignore angle attenuation.
-  - DARKLIGHT: ''
-  - DARKLIGHT: ''
+  - ANGLE: Force angle attenuation. Useless, _anglescale implies this flag on.
+  - DARKLIGHT: Unused.
+  - DARKLIGHT: Unused.
+  # bug: makes the light disappear completely
   - NOGRIDLIGHT: Do not affect the lightgrid (dynamic entity lighting).
-  props:
+  props: &light_props
     # todo: source/engine/renderer/tr_bsp.cpp:5700
     light_center: '' # 3float
     light_radius: '' # 3float
@@ -163,12 +160,6 @@
     noshadows: only possible value 1 # bool 0/1
     noradiosity: only possible value 1 # bool 0/1
     parallel: only possible value 1 # bool 0/1
-    # from q3map2
-    _sun: Set this key to 1 on a spotlight to make an infinite sun light.
-    _samples: '' # look in q3
-    _deviance: ''
-    # GtkRadiant generates useless q3map2_shader there
-    style: If not default, makes wave noise shader causing whole map to blink. Values variate blink function.
     # OK:
     origin: &origin Position.
     light: Intensity.
@@ -179,6 +170,22 @@
     scale: >
       Scales intensity, from SOF2/JK2. Eg. light=300, scale=0.2 will result in light=60
     fade: Linear (only linear) light attenuation coefficient, less value - far the light goes.
+    _anglescale: Angle attenuation coefficient for spotlights (those having target).
+    _samples: >
+      Used for light jitter in pair with _deviance.
+      Number of lights created near each other instead of the sole light source.
+      Sum of all intensities equals to original light intensity.
+    _deviance: >
+      Used in pair with _samples. Jitter radius for array of lights.
+    _sun: >
+      Set this key to 1 on a spotlight to make an infinite sun light.
+      This can be used instead of q3map_skylight shader directive.
+      Properties remaining useful are target,_color,_deviance,_samples,style.
+    # bug: doesn't work with buttons.
+    targetname: Setting name implies dynamic light style set.
+    style: >
+      Used for dynamic blinking lights. Number used to choose proper worldspawn entity keys with formulas.
+      Key names are _style*rgbGen and _style*alphaGen where * is replaced by style number.
   proptypes:
     light: float
     _color: vec3_float
@@ -189,6 +196,7 @@
     _deviance: float
     _samples: int
     radius: float
+    _sun: bool
   propdefaults:
     light: 300
     _color: [1, 1, 1]
@@ -199,37 +207,23 @@
     _deviance: 0
     _samples: 1
     radius: 64
+  boolvalues:
+    _sun: [0, 1]
   desc: >
-    Non-displayed point light source. # OK
+    Non-displayed point light source.
 
-    The -pointscale and -scale arguments to
-    Q3Map2 affect the brightness of these lights. The -skyscale argument affects brightness
-    of entity sun lights.
-- name: lightJunior
-# enlightens only weapon in hands
-# TODO: property list
+    The -pointscale and -scale arguments to Q3Map2 affect the brightness of these lights.
+    The -skyscale argument affects brightness of entity sun lights.
+- name: lightJunior # OK
   color: 00b34c
   size_min: [-6.0, -6.0, -6.0]
   size_max: [6.0, 6.0, 6.0]
-  flags:
-  # found in code (q3map2)
-  - LINEAR: Use a linear falloff. Default is inverse distance squared (more realistic).
-  - NOANGLE: Ignore angle attenuation.
-  - UNUSED1: ''
-  - UNUSED2: ''
-  - NOGRIDLIGHT: Do not affect the lightgrid (dynamic entity lighting). Setting this
-      spawnflag will disable this light entirely.
-  props:
-    _color: weighted RGB value of light color (default white - 1.0 1.0 1.0).
-    _light OR light: overrides the default 300 intensity.
-    _sun: Set this key to 1 on a spotlight to make an infinite sun light.
-    fade: Fades light attenuation. Only affects linear lights.
-    radius: overrides the default 64 unit radius of a spotlight at the target point.
-    scale: Scales light attentation, from SOF2/JK2. Scales the "light" value.
-    target: Lights pointed at a target will be spotlights.
+  flags: *light_flags
+  props: *light_props
   desc: >
-    Non-displayed point light source THAT ONLY AFFECTS ENTITIES (lightgrid). The
-    -pointscale and -scale arguments to Q3Map2 affect the brightness of these lights.
+    Non-displayed point light source. Unlike usual light affects only entities (lightgrid).
+
+    The -pointscale and -scale arguments to Q3Map2 affect the brightness of these lights.
     The -skyscale argument affects brightness of entity sun lights.
 - name: func_bobbing
   color: 007fcc
@@ -1669,16 +1663,24 @@
   aliasof: gfx_animated_model
   deprecated: y
 - name: misc_model
+# bug: deprecated, but no replacement given
+# misc_model differs from gfx_animated_model: it handled by q3map2
   deprecated: y
   color: *gfx_animated_model_color
   size_min: [-12.0, -12.0, -12.0]
   size_max: [12.0, 12.0, 12.0]
   flags: []
   props:
+    # found in q3map2
+    _celshader: ''
+
     # OK
     origin: *origin
     model: Path to a custom model.
     _frame: Animation frame to pick. This differs from gfx_animated_model.animation!
+    angle: Simple model orientation.
+    angles: Full model orientation.
+    _lightmapscale: Value scaling the resolution of lightmaps. Lesser value gives bigger resolution.
   proptypes:
     _frame: int
   propeg:
@@ -2037,3 +2039,12 @@
 - name: target_speaker
   aliasof: sfx_speaker
   deprecated: y
+- name: _decal
+  color: 00ff00
+  flags: []
+  props:
+    target: Projection direction, pos_target.
+  desc: >
+    Compiler-only entity that specifies a decal to be projected.
+    Should contain 1 or more patch meshes (curves) and target an pos_target entity.
+    The distance between the center of the _decal entity and the target is the axis and distance of projection.
