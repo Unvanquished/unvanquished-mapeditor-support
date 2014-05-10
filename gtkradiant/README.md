@@ -9,27 +9,20 @@ Supported versions
 Installation
 ------------
 
-GtkRadiant automatically fetches gamepacks it supports.
-List of available games hardcoded, so you will need patching.
-(To get rid of patching sources, I've opened issue: https://github.com/TTimo/GtkRadiant/issues/259)
+GtkRadiant automatically fetches gamepacks it supports, you have no need to clone this repo.
 
-1. Apply `GtkRadiant.patch`.
-
-        cd GtkRadiant
-        patch -p1 < GtkRadiant.patch
-
-2. Compile radiant as usual. This will automatically take the rest of Unvanquished gamepack from repository.
+List of available games is hardcoded, so you will need patched version.
+Use my repo https://github.com/neumond/GtkRadiant
+It doesn't differ a lot, you'll get a version as close to official as possible.
+In future it can be merged to official repository.
 
 Using
 -----
 
-During the first start Radiant tries to install additional files into your game installation directory.
-If you have writing rights here, there will be no problem.
+During the first start Radiant tries to install additional files into your game directory.
+Make sure it's writable for you.
 
-If your system makes game installations read-only, you have to work around this. There are 2 possible ways here:
-temporarily grant writing to game directory, or start in any other directory and copy .pk3 files here.
-
-Keep in mind that inside game directory must be `pkg` directory (like `baseq3` was in Quake 3 dir).
+Keep in mind game directory must contain `pkg` directory (like `baseq3` was in Quake 3 dir).
 
 Unvanquished has advanced file layout for maps and resources. Every map resides in separate .pk3.
 Filename must obey the rule: `map-<mapname>_<mapversion>.pk3`, eg. `map-station_4.pk3`.
