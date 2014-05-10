@@ -54,8 +54,6 @@
       Omit the "textures/" prefix.
     _indexmap OR alphamap: Path/name for the art file used to guide the mapping of
       textures on the terrain surface.
-    _keeplights: Keep light entities in the BSP. Normally stripped out by the BSP
-      process and read from the .map file by the lighting phase.
     _layers OR layers: Integer value is the number unique root shaders that will be
       use on the terrain.
     _lightmapscale: Floating point value scaling the resolution of lightmaps on brushes/patches
@@ -110,6 +108,8 @@
       tesla,arm,medistat,drill,reactor,repeater)
       # bug: disable buildables works, but shows warnings
     colorGrade: or gradingTexture - Path of color grading effect
+    _keepLights: Keep light entities in the BSP. Normally stripped out by the BSP
+      process and read from the .map file by the lighting phase.
   proptypes:
     music: string
     disabledEquipment: string
@@ -118,13 +118,17 @@
     colorGrade: string
     gravity: float
     reverbIntensity: float
+    _keepLights: int
   propdefaults:
     gravity: 800
+    _keepLights: false
   propranges:
     reverbIntensity: [0.0, 2.0]
   propeg:
     colorGrade: gfx/cgrading/red-only
     music: music/sonic5.wav
+  boolvalues:
+    _keepLights: [0, 1]
   propreplace:
     disabledBuildables: {'of buildables': 'of buildables to disable for this map'}
     disabledEquipment: {'weapons or upgrades': 'weapons or upgrades to disable for this map'}
@@ -133,34 +137,21 @@
       'name of': 'name of looping'
       file: file used for level's music
   desc: Only used for the world.
-- name: light
+- name: light # OK
 # bug: marked as deprecated in code. src/gamelogic/game/g_spawn.c:368
   color: a6a6ff
   size_min: [-8.0, -8.0, -8.0]
   size_max: [8.0, 8.0, 8.0]
   flags: &light_flags
-  - LINEAR: Use a linear falloff. Default is inverse distance squared (more realistic). # OK
-  - ANGLE: Force angle attenuation. Useless, _anglescale implies this flag on.
+  - LINEAR: Use a linear falloff. Default is inverse distance squared (more realistic).
+  - ANGLE: Force angle attenuation. Useless, "_anglescale" implies this flag on.
   - DARKLIGHT: Unused.
   - DARKLIGHT: Unused.
   # bug: makes the light disappear completely
   - NOGRIDLIGHT: Do not affect the lightgrid (dynamic entity lighting).
-  props: &light_props
-    # todo: source/engine/renderer/tr_bsp.cpp:5700
-    light_center: '' # 3float
-    light_radius: '' # 3float
-    light_target: '' # 3float
-    light_right: '' # 3float
-    light_up: '' # 3float
-    light_start: '' # 3float
-    light_end: '' # 3float
-    light_scale: '' # float
-    texture: '' # todo:
-    rotation: or light_rotation # 9float
-    noshadows: only possible value 1 # bool 0/1
-    noradiosity: only possible value 1 # bool 0/1
-    parallel: only possible value 1 # bool 0/1
-    # OK:
+  props:
+    #light_center: [dynamic]: no effect
+    #_flare, _flareshader: no effect
     origin: &origin Position.
     light: Intensity.
     _color: Weighted RGB value of light color.
@@ -178,14 +169,40 @@
     _deviance: >
       Used in pair with _samples. Jitter radius for array of lights.
     _sun: >
-      Set this key to 1 on a spotlight to make an infinite sun light.
+      Set this key on a spotlight (those having "target") to make an infinite sun light.
       This can be used instead of q3map_skylight shader directive.
-      Properties remaining useful are target,_color,_deviance,_samples,style.
+      Properties remaining useful are "target", "_color", "_deviance", "_samples", "style".
     # bug: doesn't work with buttons.
     targetname: Setting name implies dynamic light style set.
     style: >
-      Used for dynamic blinking lights. Number used to choose proper worldspawn entity keys with formulas.
+      Used for blinking lights. Number used to choose proper worldspawn entity keys with formulas.
       Key names are _style*rgbGen and _style*alphaGen where * is replaced by style number.
+    noradiosity: >
+      [dynamic] Disable radiosity (lightmap) lighting. Setting this property makes the light dynamic.
+      This enables realtime shadows.
+    light_radius: >
+      [dynamic] Same as "light", but allows to use different radius per axis.
+      Dynamic lights treat "light" as radius.
+    noshadows: >
+      [dynamic] Disable casting shadows.
+    texture: >
+      [dynamic] Lighting texture.
+    light_target: >
+      [dynamic,projected] Direction vector. Length of vector defines frustum pyramid height.
+    light_right: >
+      [dynamic,projected] Right vector. Length of vector defines the size of far frustum pyramid edge.
+    light_up: >
+      [dynamic,projected] Up vector. Length of vector defines the size of far frustum pyramid edge.
+    light_start: >
+      [dynamic,projected] Point where light must start.
+    light_end: >
+      [dynamic,projected] Point where light must end. By default it is "light_target".
+    light_scale: >
+      [dynamic] Intensity multiplicator. Can't be bigger than r_lightScale cvar.
+    rotation: >
+      [dynamic] 3x3 rotation matrix for frustum box.
+    parallel: >
+      [dynamic,parallel] Make light parallel, similar to using orthogonal projection instead of usual frustum.
   proptypes:
     light: float
     _color: vec3_float
@@ -196,7 +213,18 @@
     _deviance: float
     _samples: int
     radius: float
-    _sun: bool
+    _sun: int
+    noshadows: int
+    noradiosity: int
+    parallel: int
+    light_radius: vec3_float
+    light_target: vec3_float
+    light_right: vec3_float
+    light_up: vec3_float
+    light_start: vec3_float
+    light_end: vec3_float
+    light_scale: float
+    rotation: vec9_float
   propdefaults:
     light: 300
     _color: [1, 1, 1]
@@ -207,19 +235,67 @@
     _deviance: 0
     _samples: 1
     radius: 64
+    light_start: [0, 0, 0]
+    parallel: false
+    noradiosity: false
+    noshadows: false
+    _sun: false
   boolvalues:
     _sun: [0, 1]
+    noshadows: [0, 1]
+    noradiosity: [0, 1]
+    parallel: [0, 1]
   desc: >
     Non-displayed point light source.
 
     The -pointscale and -scale arguments to Q3Map2 affect the brightness of these lights.
     The -skyscale argument affects brightness of entity sun lights.
+
+    Properties for dynamic realtime lights marked as [dynamic].
+    Any property marked as [projected] if set makes dynamic light projected.
+    Projected light requires most of its properties set, such as "light_target", "light_up", "light_right".
 - name: lightJunior # OK
   color: 00b34c
   size_min: [-6.0, -6.0, -6.0]
   size_max: [6.0, 6.0, 6.0]
-  flags: *light_flags
-  props: *light_props
+  flags:
+  - LINEAR: Use a linear falloff. Default is inverse distance squared (more realistic).
+  - ANGLE: Force angle attenuation. Useless, "_anglescale" implies this flag on.
+  props:
+    origin: *origin
+    light: Intensity.
+    _color: Weighted RGB value of light color.
+    _filterradius: No attenuation within _filterradius sphere.
+    target: Lights pointed at a target will be spotlights.
+    radius: Overrides the default 64 unit Radius of a spotlight at the target point.
+    scale: >
+      Scales intensity, from SOF2/JK2. Eg. light=300, scale=0.2 will result in light=60
+    fade: Linear (only linear) light attenuation coefficient, less value - far the light goes.
+    _anglescale: Angle attenuation coefficient for spotlights (those having target).
+    _samples: >
+      Used for light jitter in pair with _deviance.
+      Number of lights created near each other instead of the sole light source.
+      Sum of all intensities equals to original light intensity.
+    _deviance: >
+      Used in pair with _samples. Jitter radius for array of lights.
+  proptypes:
+    light: float
+    _color: vec3_float
+    fade: float
+    scale: float
+    _filterradius: float
+    _deviance: float
+    _samples: int
+    radius: float
+  propdefaults:
+    light: 300
+    _color: [1, 1, 1]
+    fade: 1
+    scale: 1
+    _filterradius: 0
+    _deviance: 0
+    _samples: 1
+    radius: 64
   desc: >
     Non-displayed point light source. Unlike usual light affects only entities (lightgrid).
 
@@ -1669,11 +1745,13 @@
   color: *gfx_animated_model_color
   size_min: [-12.0, -12.0, -12.0]
   size_max: [12.0, 12.0, 12.0]
-  flags: []
+  flags:
+  - RMGSHADER: ''
+  - CLIPMODELS: ''
+  - FORCEMETA: ''
   props:
     # found in q3map2
     _celshader: ''
-
     # OK
     origin: *origin
     model: Path to a custom model.
@@ -1681,8 +1759,15 @@
     angle: Simple model orientation.
     angles: Full model orientation.
     _lightmapscale: Value scaling the resolution of lightmaps. Lesser value gives bigger resolution.
+    modelscale: Scale factor.
+    modelscale_vec: Separate scale factor per axis.
   proptypes:
     _frame: int
+    modelscale: float
+    modelscale_vec: vec3_float
+  propdefaults:
+    modelscale: 1
+    modelscale_vec: [1, 1, 1]
   propeg:
     _frame: 5
   desc: > # OK

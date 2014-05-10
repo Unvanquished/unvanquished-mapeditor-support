@@ -59,6 +59,9 @@ def _output_vec3_float(v):
 def _output_vec4_float(v):
     return ' '.join(_output_float(vv) for vv in v)
 
+def _output_vec9_float(v):
+    return ' '.join(_output_float(vv) for vv in v)
+
 def outvalue(v, _type):
     func_name = '_output_' + _type
     if _type is None or func_name not in globals():
@@ -181,6 +184,9 @@ def _validate_vec3_float(v):
 
 def _validate_vec4_float(v):
     return isinstance(v, (list, tuple)) and len(v) == 4 and all(_validate_float(x) for x in v)
+
+def _validate_vec9_float(v):
+    return isinstance(v, (list, tuple)) and len(v) == 9 and all(_validate_float(x) for x in v)
 
 def _validate_time_2float(v):
     if isinstance(v, (list, tuple)):
