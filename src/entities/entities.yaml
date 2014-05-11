@@ -18,7 +18,6 @@
 - name: worldspawn
   extend: [indexmap2]
   color: '000000'
-  flags: []
   props:
     _ambient OR ambient: Adds a constant value to overall lighting. Use is not recommended.
       Ambient light will have a tendency to flatten out variations in light and shade.
@@ -310,7 +309,6 @@
     Entity bobs on the Z axis (up-down) by default. # OK
 - name: func_button
   extend: [brush,indexmap2]
-  flags: []
   props:
     # OK:
     target: All entities with a matching targetname will be triggered. If not set
@@ -452,7 +450,6 @@
     (set the model's "target" key to the same value as this entity''s "targetname").
 - name: func_door_model
   color: 007fcc
-  flags: []
   props:
     _indexmap OR alphamap: Path/name for the art file used to guide the mapping of
       textures on the terrain surface.
@@ -584,15 +581,12 @@
 # TODO: apply InitMover ?????
 # TODO: apply reset_moverspeed ?????
   color: 007fcc
-  flags: []
   props:
     # InitMover
     # reset_moverspeed
     model: ''
-  desc: ''
 - name: func_group # OK
   extend: [brush,indexmap]
-  flags: []
   desc: >
     This is not an entity as such. It is strictly an editor utility to group
     world brushes and patches together for convenience (selecting, moving, copying,
@@ -603,7 +597,6 @@
 - name: func_pendulum
 # bug: instakill in very big touching angle. It should just rub, not squish.
   extend: [brush,indexmap2]
-  flags: []
   props:
     noise: path/name of .wav file to play. Use looping sounds only (eg. sound/world/drone6.wav).
     # OK
@@ -784,12 +777,10 @@
   props:
     angles: ''
     model: ''
-  desc: ''
 - name: func_static
 # TODO: apply InitMover ?????
 # TODO: apply reset_moverspeed ?????
   extend: [brush,indexmap2]
-  flags: []
   props:
     # InitMover
     # reset_moverspeed
@@ -883,7 +874,6 @@
 - name: path_corner # OK
   extend: [point]
   color: 7f4c00
-  flags: []
   props:
     target: Point to next path_corner in the path.
     targetname: &TN Entity name.
@@ -901,7 +891,6 @@
 - name: pos_alien_intermission # OK
   extend: [point]
   color: &alienColor ff3300
-  flags: []
   props: &Inter_props
     angles: &Inter_ang Orientation.
     target: &Inter_target Alternative way to set orientation.
@@ -915,7 +904,6 @@
 - name: pos_human_intermission # OK
   extend: [point]
   color: &humanColor 0033ff
-  flags: []
   props: *Inter_props
   desc: *Inter_desc
   descreplace:
@@ -926,7 +914,6 @@
 - name: pos_player_intermission # OK
   extend: [point]
   color: ff00ff
-  flags: []
   props:
     angles: *Inter_ang
     target: *Inter_target
@@ -939,7 +926,6 @@
 - name: pos_location
   extend: [point]
   color: 007f00
-  flags: []
   props:
     # old props
     count: color of the location text displayed in parentheses during team chat. Set
@@ -962,9 +948,6 @@
   deprecated: y
 - name: pos_player_spawn
   color: ff00ff
-  flags: []
-  props: {}
-  desc: ''
 - name: info_player_deathmatch
   aliasof: pos_player_spawn
   deprecated: y
@@ -974,7 +957,6 @@
 - name: pos_target
   extend: [point]
   color: 007f00
-  flags: []
   props:
     # old prop misc_teleporter_dest
     angle: direction in which player will look when teleported.
@@ -1004,7 +986,6 @@
   deprecated: y
   extend: [point]
   color: 007f00
-  flags: []
   props:
     targetname: must match the target key of entity that uses this for pointing.
   desc: >
@@ -1030,7 +1011,6 @@
   deprecated: y
   extend: [point]
   color: 7f7f7f
-  flags: []
   props:
     # found in code
     angles: this sets the pitch and yaw aiming angles of push entity (default 0 0).
@@ -1058,7 +1038,6 @@
   deprecated: y
   extend: [point]
   color: 007f00
-  flags: []
   props:
     target: this must point to a misc_teleporter_dest entity.
     targetname: activating trigger points to this.
@@ -1070,7 +1049,6 @@
   deprecated: y
   extend: [point]
   color: ff0000
-  flags: []
   props:
     dmg: 'amount of damage to deal (default: 5)'
   desc: When triggered, this hurts the entity that caused the trigger.
@@ -1079,8 +1057,6 @@
   color: *humanColor
   size_min: [-40.0, -40.0, -4.0]
   size_max: [40.0, 40.0, 4.0]
-  flags: []
-  props: {}
   desc: The human spawn point.
   specials: {model: models/buildables/telenode/telenode.md3}
 - name: team_human_armoury
@@ -1088,8 +1064,6 @@
   color: *humanColor
   size_min: [-40.0, -40.0, -13.0]
   size_max: [40.0, 40.0, 50.0]
-  flags: []
-  props: {}
   desc: The human armoury.
   specials: {model: models/buildables/arm/arm.md3}
 - name: team_human_drill
@@ -1097,8 +1071,6 @@
   color: *humanColor
   size_min: [-15.0, -15.0, -15.0]
   size_max: [15.0, 15.0, 25.0]
-  flags: []
-  props: {}
   desc: The human drill.
   specials: {model: models/buildables/drill/drill.md3}
 - name: team_human_medistat
@@ -1106,8 +1078,6 @@
   color: *humanColor
   size_min: [-35.0, -35.0, -7.0]
   size_max: [35.0, 35.0, 7.0]
-  flags: []
-  props: {}
   desc: The human medical station.
   specials: {model: models/buildables/medistat/medistat.md3}
 - name: team_human_mgturret
@@ -1115,8 +1085,6 @@
   color: *humanColor
   size_min: [-25.0, -25.0, -20.0]
   size_max: [25.0, 25.0, 20.0]
-  flags: []
-  props: {}
   desc: The human machinegun turret.
   specials: {model: models/buildables/mgturret/mgturret.md3}
 - name: team_human_reactor
@@ -1124,8 +1092,6 @@
   color: *humanColor
   size_min: [-50.0, -50.0, -15.0]
   size_max: [50.0, 50.0, 95.0]
-  flags: []
-  props: {}
   desc: The human reactor.
   specials: {model: models/buildables/reactor/reactor.md3}
 - name: team_human_repeater
@@ -1133,8 +1099,6 @@
   color: *humanColor
   size_min: [-15.0, -15.0, -15.0]
   size_max: [15.0, 15.0, 25.0]
-  flags: []
-  props: {}
   desc: The human repeater.
   specials: {model: models/buildables/repeater/repeater.md3}
 - name: team_human_tesla
@@ -1142,8 +1106,6 @@
   color: *humanColor
   size_min: [-22.0, -22.0, -40.0]
   size_max: [22.0, 22.0, 40.0]
-  flags: []
-  props: {}
   desc: The human tesla generator.
   specials: {model: models/buildables/tesla/tesla.md3}
 - name: team_alien_spawn
@@ -1151,8 +1113,6 @@
   color: *alienColor
   size_min: [-15.0, -15.0, -15.0]
   size_max: [15.0, 15.0, 15.0]
-  flags: []
-  props: {}
   desc: The alien spawn point.
   specials: {model: models/buildables/eggpod/eggpod.md3}
 - name: team_alien_acid_tube
@@ -1160,8 +1120,6 @@
   color: *alienColor
   size_min: [-25.0, -25.0, -25.0]
   size_max: [25.0, 25.0, 25.0]
-  flags: []
-  props: {}
   desc: The alien acid tube.
   specials: {model: models/buildables/acid_tube/acid_tube.md3}
 - name: team_alien_barricade
@@ -1169,8 +1127,6 @@
   color: *alienColor
   size_min: [-35.0, -35.0, -15.0]
   size_max: [35.0, 35.0, 60.0]
-  flags: []
-  props: {}
   desc: The alien barricade.
   specials: {model: models/buildables/barricade/barricade.md3}
 - name: team_alien_booster
@@ -1178,8 +1134,6 @@
   color: *alienColor
   size_min: [-26.0, -26.0, -9.0]
   size_max: [26.0, 26.0, 9.0]
-  flags: []
-  props: {}
   desc: The alien booster.
   specials: {model: models/buildables/booster/booster.md3}
 - name: team_alien_overmind
@@ -1187,8 +1141,6 @@
   color: *alienColor
   size_min: [-45.0, -45.0, -15.0]
   size_max: [45.0, 45.0, 95.0]
-  flags: []
-  props: {}
   desc: The alien overmind.
   specials: {model: models/buildables/overmind/overmind.md3}
 - name: team_alien_trapper
@@ -1196,8 +1148,6 @@
   color: *alienColor
   size_min: [-15.0, -15.0, -15.0]
   size_max: [15.0, 15.0, 15.0]
-  flags: []
-  props: {}
   desc: The alien trapper.
   specials: {model: models/buildables/trapper/trapper.md3}
 - name: team_alien_hive
@@ -1205,8 +1155,6 @@
   color: *alienColor
   size_min: [-35.0, -35.0, -25.0]
   size_max: [35.0, 35.0, 25.0]
-  flags: []
-  props: {}
   desc: The alien hive.
   specials: {model: models/buildables/hive/hive.md3}
 - name: team_alien_leech
@@ -1214,8 +1162,6 @@
   color: *alienColor
   size_min: [-56.0, -40.0, -20.0]
   size_max: [56.0, 40.0, 20.0]
-  flags: []
-  props: {}
   desc: The alien leech.
   specials: {model: models/buildables/leech/leech.md3}
 - name: ctrl_limited # OK
@@ -1292,7 +1238,6 @@
 - name: env_afx_gravity # OK
 # bug: local negative (<0) gravity fights with level gravity causing player to tremble
   color: 7f7f7f
-  flags: []
   props:
     amount: The gravity within this entity.
     targetname: *toggleable
@@ -1381,7 +1326,6 @@
 # bug: this is not an earthquake, this is jumping
   extend: [point]
   color: ff0000
-  flags: []
   props:
     amount: Duration of the quake.
     speed: Severity of the quake.
@@ -1397,7 +1341,6 @@
 # improvement: make it able to end game in draw with team=0 or omitted
   extend: [point]
   color: &game_color ff0000
-  flags: []
   props:
     team: &Team_number 1 for aliens, 2 for humans.
     targetname: *TN
@@ -1421,7 +1364,6 @@
 - name: game_funds # OK
   extend: [point]
   color: *game_color
-  flags: []
   props:
     amount: Amount of funds. 1 = 1 credit = 0.01 evo.
     targetname: *TN
@@ -1431,7 +1373,6 @@
 - name: game_kill # OK
   extend: [point]
   color: *game_color
-  flags: []
   props:
     targetname: *TN
   desc: *game_desc
@@ -1444,7 +1385,6 @@
 # possible improvement: measure amount directly in score points
   extend: [point]
   color: *game_color
-  flags: []
   props:
     amount: Amount of score points. 50 = 1 score, calculated as quantity of funds
       game gives you when you earn amount of score.
@@ -1631,7 +1571,6 @@
 - name: gfx_portal_surface
   extend: [point]
   color: ff7f3f
-  flags: []
   props:
     # old props
     target: point this to a misc_portal_camera that "sees" the view you want to display
@@ -1650,9 +1589,6 @@
   deprecated: y
 - name: gfx_shader_mod
   color: '000000'
-  flags: []
-  props: {}
-  desc: ''
 - name: sensor_buildable # OK
   color: &sensor_color 43aa00
   flags: &Some_sensors_flags
@@ -1756,8 +1692,6 @@
   color: *sensor_color
   flags:
   - SPAWN_DISABLED: *Spawn_disabled
-  props: {}
-  desc: ''
 - name: sensor_stage # OK
 # possible improvement: detect substages, stages down
   extend: [point]
@@ -1783,7 +1717,6 @@
 - name: sensor_start # OK
   extend: [point]
   color: *sensor_color
-  flags: []
   props:
     target: *target
   desc: >
@@ -1856,7 +1789,6 @@
   deprecated: y
 - name: _decal
   color: 00ff00
-  flags: []
   props:
     target: Projection direction, pos_target.
   desc: >

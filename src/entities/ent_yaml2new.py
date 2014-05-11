@@ -81,7 +81,7 @@ def outvalue(v, _type):
 def print_entity_head(e):
     name = escape_token(e['name'])
     color = '({} {} {})'.format(*(fmt_float(f) for f in color_to_float_triple(e['color'])))
-    flags = [escape_token(k) for k, _ in e['flags']]
+    flags = [escape_token(k) for k, _ in e.get('flags', [])]
     if 'size_min' in e and 'size_max' in e:
         sizes = ' ({} {} {}) ({} {} {})'.format(*(fmt_float(f) for f in e['size_min'] + e['size_max']))
     else:
@@ -96,7 +96,7 @@ def print_entity_head(e):
 
 def print_flag_desc(e):
     flags = []
-    for k, v in e['flags']:
+    for k, v in e.get('flags', []):
         if k == '-' or not v:
             continue
         flags.append('{}: {}'.format(k, v))
@@ -160,7 +160,7 @@ def print_prop_desc(e, dt, pr_types, pr_defaults, pr_ranges, pr_eg):
 
 
 def print_common_desc(e):
-    if e['desc']:
+    if e.get('desc', '').strip():
         print(heading.format('DESCRIPTION'))
         v = e['desc']
         if 'descreplace' in e:
@@ -242,10 +242,10 @@ def val_fields_exist(e):
         'props' in e
     )
 
-required_fields = {'name', 'color', 'flags', 'props', 'desc'}
+required_fields = {'name', 'color'}
 required_fields2 = required_fields | {'size_min', 'size_max'}
 additional_fields = {'propreplace', 'proptypes', 'propdefaults', 'propranges', 'boolvalues', 'propeg'}
-all_fields = required_fields2 | additional_fields | {'deprecated', 'descreplace', 'specials', 'aliasof'}
+all_fields = required_fields2 | additional_fields | {'deprecated', 'descreplace', 'specials', 'aliasof', 'flags', 'props', 'desc'}
 
 def validate_entity(e, dt):
     r = []
@@ -445,8 +445,6 @@ def apply_baseclass_to_entity(base, ent):
     desc = (ent.get('desc', '') + '\n' + base.get('desc', '')).strip('\n ')
     if desc:
         tmp['desc'] = desc
-    if not tmp.get('desc'):
-        tmp['desc'] = ''
 
     if set(ent.keys()) - processed:
         raise Exception('Properties not processed: {}'.format(set(ent.keys()) - processed))
@@ -503,7 +501,7 @@ if args.validate:
         warns.extend(w)
 
     if not warns:
-        print('No warinings! File is OK.')
+        print('No warnings! File is OK.')
     else:
         for w in warns:
             print(w)
