@@ -8,6 +8,13 @@ import argparse
 from copy import deepcopy
 
 
+postscriptum = '''
+
+If you find any mistakes or want to improve descriptions, feel free to message me:
+#unvanquished-dev at irc.freenode.net nickname Neu
+'''
+
+
 bad_token_re = re.compile(r'[}{)(\':\s]', re.M)
 
 def escape_token(t):
@@ -62,6 +69,9 @@ def _output_vec4_float(v):
 def _output_vec9_float(v):
     return ' '.join(_output_float(vv) for vv in v)
 
+def _output_float_array(v):
+    return ' '.join(_output_float(vv) for vv in v)
+
 def outvalue(v, _type):
     func_name = '_output_' + _type
     if _type is None or func_name not in globals():
@@ -96,6 +106,22 @@ def print_flag_desc(e):
             print(v)
 
 
+label_re = re.compile(r'^\s*\[([\w\d\s,]+)\]')
+def sort_properties(props):
+    o = []
+    for key, desc in props.items():
+        m = label_re.findall(desc)
+        if not m:
+            o.append((1, '', key))
+            continue
+        if 'required' in m[0]:
+            o.append((0, m[0], key))
+        else:
+            o.append((1, m[0], key))
+    for _, _, key in sorted(o):
+        yield key, props[key]
+
+
 def print_prop_desc(e, dt, pr_types, pr_defaults, pr_ranges, pr_eg):
     if 'props' not in e or not e['props']:
         return
@@ -104,7 +130,7 @@ def print_prop_desc(e, dt, pr_types, pr_defaults, pr_ranges, pr_eg):
     proptypes, propdefaults, propranges, propreplace, propeg, boolvalues = \
         (e.get(k, {}) for k in ('proptypes', 'propdefaults', 'propranges', 'propreplace', 'propeg', 'boolvalues'))
 
-    for k, v in sorted(e['props'].items()):
+    for k, v in sort_properties(e['props']):
         _type = proptypes[k] if k in proptypes else (dt[k] if k in dt else None)
         _bool = k in boolvalues
         info = []
@@ -130,7 +156,7 @@ def print_prop_desc(e, dt, pr_types, pr_defaults, pr_ranges, pr_eg):
         if k in propreplace:
             for _from, _to in propreplace[k].items():
                 v = v.replace(_from, _to)
-        print('{}: {}{}'.format(k, v, info))
+        print('{}: {}{}'.format(k, v.rstrip(), info))
 
 
 def print_common_desc(e):
@@ -159,6 +185,7 @@ def print_entity(e, dt, pr_types=False, pr_defaults=False, pr_ranges=False, pr_e
     print_prop_desc(e, dt, pr_types, pr_defaults, pr_ranges, pr_eg)
     print_common_desc(e)
     print_specials(e)
+    print(postscriptum)
     print('*/')
     print()
 
@@ -187,6 +214,9 @@ def _validate_vec4_float(v):
 
 def _validate_vec9_float(v):
     return isinstance(v, (list, tuple)) and len(v) == 9 and all(_validate_float(x) for x in v)
+
+def _validate_float_array(v):
+    return isinstance(v, (list, tuple)) and all(_validate_float(x) for x in v)
 
 def _validate_time_2float(v):
     if isinstance(v, (list, tuple)):
@@ -371,47 +401,97 @@ def create_parser():
     parser.add_argument('-E', '--gexamples', action='store_true', help='Output example values')
     return parser
 
-def load_main_file(name):
-    with open(name, 'r') as f:
-        text = f.read()
-        elist = yaml.load(text)
-    # autofix data
-    for i, e in enumerate(elist):
-        if 'flags' not in e and 'aliasof' in e:
-            continue
-        e['flags'] = list_of_dicts_to_list_of_tuples(e['flags'])
-    for i, e in enumerate(elist):
-        if 'aliasof' not in e:
-            continue
-        try:
-            tmp = next(t_ for t_ in elist if t_['name'] == e['aliasof'])
-        except StopIteration:
-            raise Exception('Invalid aliasof: {}'.format(e['aliasof']))
-        tmp = deepcopy(tmp)
-        tmp.update(e)
-        elist[i], e = tmp, tmp
-    return elist
-
-def get_deftypes_name(mainname):
+def get_additional_file_name(mainname, f):
     d = os.path.dirname(mainname)
     fname = os.path.basename(mainname).split('.')
     if fname[-1] in ('yaml', 'yml'):
-        fname.insert(-1, 'deftypes')
+        fname.insert(-1, f)
     else:
-        fname.append('deftypes')
+        fname.append(f)
     return os.path.join(d, '.'.join(fname))
 
-def load_deftypes_file(name):
+def load_yaml_file(name):
     if not os.path.isfile(name):
         return {}
     with open(name, 'r') as f:
         text = f.read()
-        deftypes = yaml.load(text)
-    return deftypes
+        data = yaml.load(text)
+    return data
+
+def fix_flag_lists(data):
+    for i, e in enumerate(data):
+        if 'flags' not in e:
+            continue
+        e['flags'] = list_of_dicts_to_list_of_tuples(e['flags'])
+
+def apply_baseclass_to_entity(base, ent):
+    tmp = deepcopy(base)
+
+    processed = set()
+
+    for key in ('flags', 'color', 'aliasof', 'extend', 'size_min', 'size_max', 'name', 'deprecated'):
+        processed.add(key)
+        if key in ent:
+            tmp[key] = ent[key]
+
+    for key in ('props', 'proptypes', 'propreplace', 'boolvalues', 'propeg', 'propdefaults', 'descreplace', 'propranges', 'specials'):
+        processed.add(key)
+        if key in ent:
+            if key not in tmp:
+                tmp[key] = {}
+            tmp[key].update(ent[key])
+
+    processed.add('desc')
+    desc = (ent.get('desc', '') + '\n' + base.get('desc', '')).strip('\n ')
+    if desc:
+        tmp['desc'] = desc
+    if not tmp.get('desc'):
+        tmp['desc'] = ''
+
+    if set(ent.keys()) - processed:
+        raise Exception('Properties not processed: {}'.format(set(ent.keys()) - processed))
+
+    return tmp
+
+def apply_aliasof(data):
+    for i, e in enumerate(data):
+        if 'aliasof' not in e:
+            continue
+        try:
+            tmp = next(t_ for t_ in data if t_['name'] == e['aliasof'])
+        except StopIteration:
+            raise Exception('Invalid aliasof: {}'.format(e['aliasof']))
+        tmp = deepcopy(tmp)
+        tmp.update(e)
+        data[i] = tmp
+
+def apply_extend(data, common):
+    for i, e in enumerate(data):
+        if 'extend' not in e:
+            continue
+        result = e
+        for name in e['extend']:
+            if name not in common:
+                raise Exception('Unknown extend {} in {}'.format(name, e))
+            result = apply_baseclass_to_entity(common[name], result)
+        del result['extend']
+        data[i] = result
+
+def load_yamls(name):
+    data = load_yaml_file(args.yamlname)
+    deftypes = load_yaml_file(get_additional_file_name(args.yamlname, 'deftypes'))
+    common = load_yaml_file(get_additional_file_name(args.yamlname, 'common'))
+
+    fix_flag_lists(data)
+    fix_flag_lists(common)
+
+    apply_aliasof(data)
+    apply_extend(data, common)
+
+    return data, deftypes
 
 args = create_parser().parse_args()
-elist = load_main_file(args.yamlname)
-deftypes = load_deftypes_file(get_deftypes_name(args.yamlname))
+elist, deftypes = load_yamls(args.yamlname)
 
 dont_place_dummy_flag = not args.dummyflag
 

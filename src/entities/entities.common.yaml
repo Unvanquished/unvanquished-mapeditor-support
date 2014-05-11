@@ -1,0 +1,65 @@
+brush:
+  color: 007fcc
+  props:
+    _celshader: >
+      [q3map] Sets the cel shader used for this geometry. Note: omit the "textures/" prefix.
+      Example: http://q3map2.robotrenegade.com/docs/shader_manual/cel-shading.html
+    _cs: >
+      [q3map] or "_castShadows". Group number entity cast shadow to.
+      Negative value uses same group but disables world.
+      0 disables shadow casting.
+    _rs: >
+      [q3map] or "_receiveShadows". Group number entity receive shadow from.
+      Negative value uses same group but disables world.
+      0 disables shadow receiving.
+    _lightmapscale: >
+      [q3map] Value scaling the resolution of lightmaps. Lesser value gives bigger resolution.
+  proptypes:
+    _celshader: string
+    _cs: int
+    _rs: int
+    _lightmapscale: float
+  propdefaults:
+    _lightmapscale: 1
+  propeg:
+    _celshader: mymap/ink
+  desc:
+    For "_celshader" read http://q3map2.robotrenegade.com/docs/shader_manual/cel-shading.html
+indexmap:
+  props:
+    _indexmap: >
+      [terrain] Path to index-colour image representing placement of different textures.
+    _layers: >
+      [terrain] Count of terrain textures. Should be equal to count of colours in indexmap palette.
+    _shader: >
+      [terrain] Name of metashader. Template for indexed shader names. Note: omit the "textures/" prefix.
+    _offsets: >
+      [terrain] Height offset for each layer.
+  proptypes:
+    _indexmap: string
+    _layers: int
+    _shader: string
+    _offsets: float_array
+  propeg:
+    _indexmap: maps/indexmap.pcx
+    _layers: 3
+    _shader: mymap/terrain
+  desc: >
+    For [terrain] read http://icculus.org/gtkradiant/documentation/Terrain_Manual/start.html
+    [terrain] is done entirely by [q3map]. Don't forget to set q3map_indexmap in shader.
+indexmap2:
+  desc: >
+    Entity supports [terrain] properties. They're not so useful here, but you can refer to func_group for
+    descriptions.
+point:
+  size_min: [-8.0, -8.0, -8.0]
+  size_max: [8.0, 8.0, 8.0]
+  props:
+    origin: Position.
+#mover: # InitMover
+  #props:
+# -model2 (requires origin specified)
+# -light (float, default 100)
+# -color (vec3_float, default 1 1 1)
+# -group (deprecated team)
+

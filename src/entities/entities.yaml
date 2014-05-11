@@ -7,31 +7,16 @@
 # any reset_moverspeed has options:
 # -speed (float)
 #
-# NOT FOUND IN UNV SOURCE
-# _celshader
-# _cs or _castshadows
-# _indexmap OR alphamap
-# _layers or layers
-# _lightmapscale
-# _rs or _receiveshadows
-#
-# NOT FOUND IN q3map2 of GTKRADIANT
-# _castshadows
-# _receiveshadows
-#
-# but found: _castShadows, _receiveShadows
-#
-# NETRADIANT q3map2: same as gtkradiant
-#
-#
 # TODO: add targetname for every entity that can be activated
 # TODO: rename targetname -> name
-# TODO: grep q3map2 for light and misc_model props/flags
 # TODO: make size aliases
 # TODO: make [required] mark based on src/gamelogic/game/g_spawn.c:247
 # TODO: make yaml-aliased string for target
 # TODO: make same colors for all entity groups
+# TODO: remove default flags [] and default props {}
+# TODO: mark all [q3map] properties
 - name: worldspawn
+  extend: [indexmap2]
   color: '000000'
   flags: []
   props:
@@ -41,35 +26,17 @@
       Y=_blocksize*n. Default _blocksize value is 1024. Increase the blocksize using
       larger powers of 2 to reduce compile times on very large maps with a low structural
       brush density.
-    _celshader: 'Sets the cel shader used for this geometry. Note: omit the "textures/"
-      prefix. Overridable in entities.'
-    _cs OR _castshadows: Allows per-entity control over shadow casting. Defaults to
-      0 on entities, 1 on world. 0 = no shadow casting. 1 = cast shadows on world.
-      > 1 = cast shadows on entities with _rs (or _receiveshadows) with the corresponding
-      value, AND world. Negative values imply same, but DO NOT cast shadows on world.
     _farplanedist: Limit on how many units the vis phase of compilation can see. Used
       in combination with level-wide fog, it can help reduce r_speeds on large, open
       maps.
     _foghull: Shader to use for "fog hull." Foghull shader should be a sky shader.
       Omit the "textures/" prefix.
-    _indexmap OR alphamap: Path/name for the art file used to guide the mapping of
-      textures on the terrain surface.
-    _layers OR layers: Integer value is the number unique root shaders that will be
-      use on the terrain.
-    _lightmapscale: Floating point value scaling the resolution of lightmaps on brushes/patches
-      in the world. Can be overridden in func_group (or other entities) (default 1.0).
     _mingridlight: Minimum lightgrid (dynamic entity lighting) levelwide.
     _minlight: Minimum light value, levelwide. Uses the _color key to set color. Does
       not add unlike ambient.
     _minvertexlight: Minimum vertex lighting, levelwide.
     _noshadersun: Ignore q3map_sun/sun directives in sky shaders and ONLY use entity
       sun lights.
-    _rs OR _receiveshadows: Allows per-entity control over shadow reception. Defaults
-      to 1 on everything (world shadows). 0 = receives NO shadows. > 1 = receive shadows
-      only from corresponding keyed entities (see above) and world. < 1 = receive
-      shadows ONLY from corresponding keyed entities.
-    _shader OR shader: 'Path to the metashader used to assign textures to the terrain
-      entity. Note: Omit the "textures/" prefix.'
     gridsize: granularity of the lightgrid created by q3map. Value is three integers
       separated by spaces, representing number of units between grid points in X Y
       Z. Default gridsize value is 128 128 256. Use larger powers of 2 to reduce BSP
@@ -139,9 +106,8 @@
   desc: Only used for the world.
 - name: light # OK
 # bug: marked as deprecated in code. src/gamelogic/game/g_spawn.c:368
+  extend: [point]
   color: a6a6ff
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
   flags: &light_flags
   - LINEAR: Use a linear falloff. Default is inverse distance squared (more realistic).
   - ANGLE: Force angle attenuation. Useless, "_anglescale" implies this flag on.
@@ -152,7 +118,6 @@
   props:
     #light_center: [dynamic]: no effect
     #_flare, _flareshader: no effect
-    origin: &origin Position.
     light: Intensity.
     _color: Weighted RGB value of light color.
     _filterradius: No attenuation within _filterradius sphere.
@@ -176,7 +141,7 @@
     targetname: Setting name implies dynamic light style set.
     style: >
       Used for blinking lights. Number used to choose proper worldspawn entity keys with formulas.
-      Key names are _style*rgbGen and _style*alphaGen where * is replaced by style number.
+      Key names are _style*rgbgen and _style*alphagen where * is replaced by style number.
     noradiosity: >
       [dynamic] Disable radiosity (lightmap) lighting. Setting this property makes the light dynamic.
       This enables realtime shadows.
@@ -255,6 +220,7 @@
     Any property marked as [projected] if set makes dynamic light projected.
     Projected light requires most of its properties set, such as "light_target", "light_up", "light_right".
 - name: lightJunior # OK
+  extend: [point]
   color: 00b34c
   size_min: [-6.0, -6.0, -6.0]
   size_max: [6.0, 6.0, 6.0]
@@ -262,7 +228,6 @@
   - LINEAR: Use a linear falloff. Default is inverse distance squared (more realistic).
   - ANGLE: Force angle attenuation. Useless, "_anglescale" implies this flag on.
   props:
-    origin: *origin
     light: Intensity.
     _color: Weighted RGB value of light color.
     _filterradius: No attenuation within _filterradius sphere.
@@ -302,31 +267,11 @@
     The -pointscale and -scale arguments to Q3Map2 affect the brightness of these lights.
     The -skyscale argument affects brightness of entity sun lights.
 - name: func_bobbing
-  color: 007fcc
+  extend: [brush,indexmap2]
   flags: # ALL OK
   - X_AXIS: Entity will bob along the X axis. # TODO: check axis again
   - Y_AXIS: Entity will bob along the Y axis. # TODO: check axis again
   props:
-    _celshader: 'Sets the cel shader used for this geometry. Note: omit the "textures/"
-      prefix.'
-    _cs OR _castshadows: Allows per-entity control over shadow casting. Defaults to
-      0 on entities, 1 on world. 0 = no shadow casting. 1 = cast shadows on world.
-      > 1 = cast shadows on entities with _rs (or _receiveshadows) with the corresponding
-      value, AND world. Negative values imply same, but DO NOT cast shadows on world.
-    _indexmap OR alphamap: Path/name for the art file used to guide the mapping of
-      textures on the terrain surface.
-    _layers OR layers: Integer value is the number unique root shaders that will be
-      use on the terrain.
-    _lightmapscale: Floating point value scaling the resolution of lightmaps on brushes/patches
-      in this entity (default 1.0).
-    _rs OR _receiveshadows: Allows per-entity control over shadow reception. Defaults
-      to 1 on everything (world shadows). 0 = receives NO shadows. > 1 = receive shadows
-      only from corresponding keyed entities (see above) and world. < 1 = receive
-      shadows ONLY from corresponding keyed entities.
-    _shader OR shader: 'Path to the metashader used to assign textures to the terrain
-      entity. Note: Omit the "textures/" prefix.'
-    # found in code
-    model: '' # todo: SetBrushModel, no effect found
     # OK
     speed: Amount of time in seconds for one complete oscillation cycle.
     height: Amount of travel of the oscillation movement.
@@ -364,29 +309,9 @@
     Solid entity that oscillates back and forth in a linear motion. # OK
     Entity bobs on the Z axis (up-down) by default. # OK
 - name: func_button
-  color: 007fcc
+  extend: [brush,indexmap2]
   flags: []
   props:
-    _celshader: 'Sets the cel shader used for this geometry. Note: omit the "textures/"
-      prefix.'
-    _cs OR _castshadows: Allows per-entity control over shadow casting. Defaults to
-      0 on entities, 1 on world. 0 = no shadow casting. 1 = cast shadows on world.
-      > 1 = cast shadows on entities with _rs (or _receiveshadows) with the corresponding
-      value, AND world. Negative values imply same, but DO NOT cast shadows on world.
-    _indexmap OR alphamap: Path/name for the art file used to guide the mapping of
-      textures on the terrain surface.
-    _layers OR layers: Integer value is the number unique root shaders that will be
-      use on the terrain.
-    _lightmapscale: Floating point value scaling the resolution of lightmaps on brushes/patches
-      in this entity (default 1.0).
-    _rs OR _receiveshadows: Allows per-entity control over shadow reception. Defaults
-      to 1 on everything (world shadows). 0 = receives NO shadows. > 1 = receive shadows
-      only from corresponding keyed entities (see above) and world. < 1 = receive
-      shadows ONLY from corresponding keyed entities.
-    _shader OR shader: 'Path to the metashader used to assign textures to the terrain
-      entity. Note: Omit the "textures/" prefix.'
-    # found in code
-    model: ''
     # OK:
     target: All entities with a matching targetname will be triggered. If not set
       button will not appear.
@@ -433,16 +358,14 @@
 - name: func_destructable
 # bug: object just disappers without any explosion effect or sound.
 # TODO: check toggling as target
+  extend: [brush,indexmap2]
   flags:
   # found in code
   - INDESTRUCTABLE: '' # todo: causes object to disappear. for what? (trap_LinkEntity skipped to call)
   # may be another SPAWN_DISABLED?
-  color: 007fcc
   props:
     origin: '' # todo: sets restingPosition, but no noticeable difference in game (maybe it's for custom "model"?)
     angles: '' # todo: look like applies only for custom "model"
-    # found in code
-    model: ''
     # OK:
     health: Amount of damage needed to destroy this.
     damage: Splash damage caused when destroyed.
@@ -459,7 +382,7 @@
     Destructable object. You can destroy this object in game. When destructed deals splash damage
     to everyone near it. Does not cause splash damage to builables. # OK
 - name: func_door
-  color: 007fcc
+  extend: [brush,indexmap2]
   flags: # ALL OK
   - START_OPEN: The door will spawn in the open state and operate in reverse.
   # bug: activation area placed near opened state door position, often unreachable
@@ -468,32 +391,12 @@
       or building until it dies or gets out of the way.
     # bug: crusher door trembling when blocked
   props:
-    _celshader: 'Sets the cel shader used for this geometry. Note: omit the "textures/"
-      prefix.'
-    _cs OR _castshadows: Allows per-entity control over shadow casting. Defaults to
-      0 on entities, 1 on world. 0 = no shadow casting. 1 = cast shadows on world.
-      > 1 = cast shadows on entities with _rs (or _receiveshadows) with the corresponding
-      value, AND world. Negative values imply same, but DO NOT cast shadows on world.
-    _indexmap OR alphamap: Path/name for the art file used to guide the mapping of
-      textures on the terrain surface.
-    _layers OR layers: Integer value is the number unique root shaders that will be
-      use on the terrain.
-    _lightmapscale: Floating point value scaling the resolution of lightmaps on brushes/patches
-      in this entity (default 1.0).
-    _rs OR _receiveshadows: Allows per-entity control over shadow reception. Defaults
-      to 1 on everything (world shadows). 0 = receives NO shadows. > 1 = receive shadows
-      only from corresponding keyed entities (see above) and world. < 1 = receive
-      shadows ONLY from corresponding keyed entities.
-    _shader OR shader: 'Path to the metashader used to assign textures to the terrain
-      entity. Note: Omit the "textures/" prefix.'
     sound1to2: the sound played when the door, platform or button moves from state
       1 to state 2.
     sound2to1: the sound played when the door or platform moves from from state 2
       to state 1.
     soundPos1: the sound played when the door or platform reaches state 1.
     soundPos2: the sound played when the door or platform reaches state 2.
-    # found in code:
-    model: ''
     # OK:
     targetname: If set, a func_button or trigger is required to activate the door.
       Overrides activation by damage.
@@ -551,22 +454,10 @@
   color: 007fcc
   flags: []
   props:
-    _celshader: 'Sets the cel shader used for this geometry. Note: omit the "textures/"
-      prefix.'
-    _cs OR _castshadows: Allows per-entity control over shadow casting. Defaults to
-      0 on entities, 1 on world. 0 = no shadow casting. 1 = cast shadows on world.
-      > 1 = cast shadows on entities with _rs (or _receiveshadows) with the corresponding
-      value, AND world. Negative values imply same, but DO NOT cast shadows on world.
     _indexmap OR alphamap: Path/name for the art file used to guide the mapping of
       textures on the terrain surface.
     _layers OR layers: Integer value is the number unique root shaders that will be
       use on the terrain.
-    _lightmapscale: Floating point value scaling the resolution of lightmaps on brushes/patches
-      in this entity (default 1.0).
-    _rs OR _receiveshadows: Allows per-entity control over shadow reception. Defaults
-      to 1 on everything (world shadows). 0 = receives NO shadows. > 1 = receive shadows
-      only from corresponding keyed entities (see above) and world. < 1 = receive
-      shadows ONLY from corresponding keyed entities.
     _shader OR shader: 'Path to the metashader used to assign textures to the terrain
       entity. Note: Omit the "textures/" prefix.'
     targetname: if set, a func_button or trigger is required to activate the door.
@@ -623,7 +514,7 @@
     using the modelOrigin, scale and angle/angles keys repsectively.
 - name: func_door_rotating
 # maybe bug: no blocking damage.
-  color: 007fcc
+  extend: [brush,indexmap2]
   flags: # ALL OK
   - START_OPEN: the door will spawn in the open state and operate in reverse.
   # bug: closes at the start of map and cannot be opened then
@@ -635,24 +526,6 @@
   - X_AXIS: rotate around the X axis instead of the Z. # TODO: check axis again
   - Y_AXIS: rotate around the Y axis instead of the Z. # TODO: check axis again
   props:
-    _celshader: 'Sets the cel shader used for this geometry. Note: omit the "textures/"
-      prefix.'
-    _cs OR _castshadows: Allows per-entity control over shadow casting. Defaults to
-      0 on entities, 1 on world. 0 = no shadow casting. 1 = cast shadows on world.
-      > 1 = cast shadows on entities with _rs (or _receiveshadows) with the corresponding
-      value, AND world. Negative values imply same, but DO NOT cast shadows on world.
-    _indexmap OR alphamap: Path/name for the art file used to guide the mapping of
-      textures on the terrain surface.
-    _layers OR layers: Integer value is the number unique root shaders that will be
-      use on the terrain.
-    _lightmapscale: Floating point value scaling the resolution of lightmaps on brushes/patches
-      in this entity (default 1.0).
-    _rs OR _receiveshadows: Allows per-entity control over shadow reception. Defaults
-      to 1 on everything (world shadows). 0 = receives NO shadows. > 1 = receive shadows
-      only from corresponding keyed entities (see above) and world. < 1 = receive
-      shadows ONLY from corresponding keyed entities.
-    _shader OR shader: 'Path to the metashader used to assign textures to the terrain
-      entity. Note: Omit the "textures/" prefix.'
     sound1to2: the sound played when the door, platform or button moves from state
       1 to state 2.
     sound2to1: the sound played when the door or platform moves from from state 2
@@ -672,7 +545,6 @@
     light: *SP_ConstantLightField_light
     color: *SP_ConstantLightField_color
     group: *InitMover_group
-    origin: *InitMover_origin
   proptypes:
     wait: float # variance not used
     rotatorAngle: float
@@ -718,74 +590,26 @@
     # reset_moverspeed
     model: ''
   desc: ''
-- name: func_group
-# TODO: SP_RemoveSelf
-  color: 007fcc
+- name: func_group # OK
+  extend: [brush,indexmap]
   flags: []
-  props:
-    _celshader: 'Sets the cel shader used for this geometry. Note: omit the "textures/"
-      prefix.'
-    _cs OR _castshadows: Allows per-entity control over shadow casting. Defaults to
-      0 on entities, 1 on world. 0 = no shadow casting. 1 = cast shadows on world.
-      > 1 = cast shadows on entities with _rs (or _receiveshadows) with the corresponding
-      value, AND world. Negative values imply same, but DO NOT cast shadows on world.
-    _indexmap OR alphamap: Path/name for the art file used to guide the mapping of
-      textures on the terrain surface.
-    _layers OR layers: Integer value is the number unique root shaders that will be
-      use on the terrain.
-    _lightmapscale: Floating point value scaling the resolution of lightmaps on brushes/patches
-      in this entity (default 1.0).
-    _rs OR _receiveshadows: Allows per-entity control over shadow reception. Defaults
-      to 1 on everything (world shadows). 0 = receives NO shadows. > 1 = receive shadows
-      only from corresponding keyed entities (see above) and world. < 1 = receive
-      shadows ONLY from corresponding keyed entities.
-    _shader OR shader: 'Path to the metashader used to assign textures to the terrain
-      entity. Note: Omit the "textures/" prefix.'
-    alphamap: this is the path/name for the art file used to guide the mapping of
-      textures on the terrain surface.
-    layers: this integer value is the number unique root shaders that will be use
-      on the terrain.
-    shader: this is the path to the metashader used to assign textures to the terrain
-      entity.
-    terrain: 'this is an on/off flag. When set to 1, the entity becomes a terrain
-      entity. Note: unecessary when compiling with Q3Map2. See Q3Map2 keys.'
   desc: >
     This is not an entity as such. It is strictly an editor utility to group
     world brushes and patches together for convenience (selecting, moving, copying,
     etc). You cannot group entities with this.
 
     The TAB key can be used to flip through the component pieces of a selected func_group
-    entity, isolating individual components. To make a func_group into a terrain entity,
-    refer to the Terrain Construction documentation.
+    entity, isolating individual components.
 - name: func_pendulum
 # bug: instakill in very big touching angle. It should just rub, not squish.
-  color: 007fcc
+  extend: [brush,indexmap2]
   flags: []
   props:
-    _celshader: 'Sets the cel shader used for this geometry. Note: omit the "textures/"
-      prefix.'
-    _cs OR _castshadows: Allows per-entity control over shadow casting. Defaults to
-      0 on entities, 1 on world. 0 = no shadow casting. 1 = cast shadows on world.
-      > 1 = cast shadows on entities with _rs (or _receiveshadows) with the corresponding
-      value, AND world. Negative values imply same, but DO NOT cast shadows on world.
-    _indexmap OR alphamap: Path/name for the art file used to guide the mapping of
-      textures on the terrain surface.
-    _layers OR layers: Integer value is the number unique root shaders that will be
-      use on the terrain.
-    _lightmapscale: Floating point value scaling the resolution of lightmaps on brushes/patches
-      in this entity (default 1.0).
-    _rs OR _receiveshadows: Allows per-entity control over shadow reception. Defaults
-      to 1 on everything (world shadows). 0 = receives NO shadows. > 1 = receive shadows
-      only from corresponding keyed entities (see above) and world. < 1 = receive
-      shadows ONLY from corresponding keyed entities.
-    _shader OR shader: 'Path to the metashader used to assign textures to the terrain
-      entity. Note: Omit the "textures/" prefix.'
     noise: path/name of .wav file to play. Use looping sounds only (eg. sound/world/drone6.wav).
-    # found:
     # OK
     speed: Angle of swing arc in either direction from initial position.
     phase: Sets the start offset of the swinging cycle.
-    origin: Alternate method of setting XYZ origin of entity's rotation axis and .md3
+    origin: Alternate method of setting XYZ origin of entity's rotation axis and
       model included with entity.
     angle: Angle offset of axis of rotation from default X axis. Equivalent to angles = 0 a 0.
     dmg: Damage dealt when blocked.
@@ -801,7 +625,6 @@
     light: *SP_ConstantLightField_light
     color: *SP_ConstantLightField_color
     group: *InitMover_group
-    origin: *InitMover_origin
   proptypes:
     phase: float
     light: float
@@ -838,7 +661,7 @@
 # bug: when added to map raises warnings
 # Warning: failed to load sound sound/movers/plats/pt1_end.wav
 # Warning: failed to load sound sound/movers/plats/pt1_strt.wav
-  color: 007fcc
+  extend: [brush,indexmap2]
   flags: # ALL OK
   - DONT_WAIT: The platform will not wait for a client to leave before returning to
       its original position.
@@ -846,24 +669,6 @@
   - CRUSHER: *door_crusher
   # bug: crusher door trembling when blocked
   props:
-    _celshader: 'Sets the cel shader used for this geometry. Note: omit the "textures/"
-      prefix.'
-    _cs OR _castshadows: Allows per-entity control over shadow casting. Defaults to
-      0 on entities, 1 on world. 0 = no shadow casting. 1 = cast shadows on world.
-      > 1 = cast shadows on entities with _rs (or _receiveshadows) with the corresponding
-      value, AND world. Negative values imply same, but DO NOT cast shadows on world.
-    _indexmap OR alphamap: Path/name for the art file used to guide the mapping of
-      textures on the terrain surface.
-    _layers OR layers: Integer value is the number unique root shaders that will be
-      use on the terrain.
-    _lightmapscale: Floating point value scaling the resolution of lightmaps on brushes/patches
-      in this entity (default 1.0).
-    _rs OR _receiveshadows: Allows per-entity control over shadow reception. Defaults
-      to 1 on everything (world shadows). 0 = receives NO shadows. > 1 = receive shadows
-      only from corresponding keyed entities (see above) and world. < 1 = receive
-      shadows ONLY from corresponding keyed entities.
-    _shader OR shader: 'Path to the metashader used to assign textures to the terrain
-      entity. Note: Omit the "textures/" prefix.'
     sound1to2: the sound played when the door, platform or button moves from state
       1 to state 2.
     sound2to1: the sound played when the door or platform moves from from state 2
@@ -929,31 +734,13 @@
 - name: func_rotating
 # bug: doesn't work when speed is not set
 # bug: by default rotates around 0 0 0 instead of brush center
-  color: 007fcc
+  extend: [brush,indexmap2]
   flags: # ALL OK
   - '-': ''
   - '-': ''
   - X_AXIS: Entity will rotate around the X axis. # TODO: check axis again
   - Y_AXIS: Entity will rotate around the Y axis. # TODO: check axis again
   props:
-    _celshader: 'Sets the cel shader used for this geometry. Note: omit the "textures/"
-      prefix.'
-    _cs OR _castshadows: Allows per-entity control over shadow casting. Defaults to
-      0 on entities, 1 on world. 0 = no shadow casting. 1 = cast shadows on world.
-      > 1 = cast shadows on entities with _rs (or _receiveshadows) with the corresponding
-      value, AND world. Negative values imply same, but DO NOT cast shadows on world.
-    _indexmap OR alphamap: Path/name for the art file used to guide the mapping of
-      textures on the terrain surface.
-    _layers OR layers: Integer value is the number unique root shaders that will be
-      use on the terrain.
-    _lightmapscale: Floating point value scaling the resolution of lightmaps on brushes/patches
-      in this entity (default 1.0).
-    _rs OR _receiveshadows: Allows per-entity control over shadow reception. Defaults
-      to 1 on everything (world shadows). 0 = receives NO shadows. > 1 = receive shadows
-      only from corresponding keyed entities (see above) and world. < 1 = receive
-      shadows ONLY from corresponding keyed entities.
-    _shader OR shader: 'Path to the metashader used to assign textures to the terrain
-      entity. Note: Omit the "textures/" prefix.'
     noise: path/name of .wav file to play. Use looping sounds only (eg. sound/world/drone6.wav).
     # OK
     speed: determines how fast entity rotates (default 100).
@@ -1001,29 +788,11 @@
 - name: func_static
 # TODO: apply InitMover ?????
 # TODO: apply reset_moverspeed ?????
-  color: 007fcc
+  extend: [brush,indexmap2]
   flags: []
   props:
     # InitMover
     # reset_moverspeed
-    _celshader: 'Sets the cel shader used for this geometry. Note: omit the "textures/"
-      prefix.'
-    _cs OR _castshadows: Allows per-entity control over shadow casting. Defaults to
-      0 on entities, 1 on world. 0 = no shadow casting. 1 = cast shadows on world.
-      > 1 = cast shadows on entities with _rs (or _receiveshadows) with the corresponding
-      value, AND world. Negative values imply same, but DO NOT cast shadows on world.
-    _indexmap OR alphamap: Path/name for the art file used to guide the mapping of
-      textures on the terrain surface.
-    _layers OR layers: Integer value is the number unique root shaders that will be
-      use on the terrain.
-    _lightmapscale: Floating point value scaling the resolution of lightmaps on brushes/patches
-      in this entity (default 1.0).
-    _rs OR _receiveshadows: Allows per-entity control over shadow reception. Defaults
-      to 1 on everything (world shadows). 0 = receives NO shadows. > 1 = receive shadows
-      only from corresponding keyed entities (see above) and world. < 1 = receive
-      shadows ONLY from corresponding keyed entities.
-    _shader OR shader: 'Path to the metashader used to assign textures to the terrain
-      entity. Note: Omit the "textures/" prefix.'
     color: constantLight color of .md3 model included with entity. Has no effect on
       the entity's brushes (default 1 1 1).
     light: constantLight radius of .md3 model included with entity. Has no effect
@@ -1065,29 +834,11 @@
 - name: func_train
 # bug: can watch through train when it pushes player
 # bug: incorrect movement when activated/deactivated waiting on path_corner
-  color: 007fcc
+  extend: [brush,indexmap2]
   flags: # ALL OK
   - START_OFF: The train will spawn in the off state
   - BLOCK_STOPS: Train simply stops if blocked, instead of killing.
   props:
-    _celshader: 'Sets the cel shader used for this geometry. Note: omit the "textures/"
-      prefix.'
-    _cs OR _castshadows: Allows per-entity control over shadow casting. Defaults to
-      0 on entities, 1 on world. 0 = no shadow casting. 1 = cast shadows on world.
-      > 1 = cast shadows on entities with _rs (or _receiveshadows) with the corresponding
-      value, AND world. Negative values imply same, but DO NOT cast shadows on world.
-    _indexmap OR alphamap: Path/name for the art file used to guide the mapping of
-      textures on the terrain surface.
-    _layers OR layers: Integer value is the number unique root shaders that will be
-      use on the terrain.
-    _lightmapscale: Floating point value scaling the resolution of lightmaps on brushes/patches
-      in this entity (default 1.0).
-    _rs OR _receiveshadows: Allows per-entity control over shadow reception. Defaults
-      to 1 on everything (world shadows). 0 = receives NO shadows. > 1 = receive shadows
-      only from corresponding keyed entities (see above) and world. < 1 = receive
-      shadows ONLY from corresponding keyed entities.
-    _shader OR shader: 'Path to the metashader used to assign textures to the terrain
-      entity. Note: Omit the "textures/" prefix.'
     # found in code
     dmg: '' # seems to be parsed but unused.
     # OK
@@ -1130,9 +881,8 @@
     Target this entity with a misc_model to have the model attached to the entity
     (set the model's "target" key to the same value as this entity's "targetname").
 - name: path_corner # OK
+  extend: [point]
   color: 7f4c00
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
   flags: []
   props:
     target: Point to next path_corner in the path.
@@ -1149,12 +899,10 @@
   desc: >
     Path corner entity that func_trains can be made to follow.
 - name: pos_alien_intermission # OK
+  extend: [point]
   color: &alienColor ff3300
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
   flags: []
   props: &Inter_props
-    origin: &Inter_pos Position.
     angles: &Inter_ang Orientation.
     target: &Inter_target Alternative way to set orientation.
     onSpawn: Name of the target fired when player comes to the intermission view.
@@ -1165,9 +913,8 @@
   aliasof: pos_alien_intermission
   deprecated: y
 - name: pos_human_intermission # OK
+  extend: [point]
   color: &humanColor 0033ff
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
   flags: []
   props: *Inter_props
   desc: *Inter_desc
@@ -1177,12 +924,10 @@
   aliasof: pos_human_intermission
   deprecated: y
 - name: pos_player_intermission # OK
+  extend: [point]
   color: ff00ff
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
   flags: []
   props:
-    origin: *Inter_pos
     angles: *Inter_ang
     target: *Inter_target
   desc: *Inter_desc
@@ -1192,9 +937,8 @@
   aliasof: pos_player_intermission
   deprecated: y
 - name: pos_location
+  extend: [point]
   color: 007f00
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
   flags: []
   props:
     # old props
@@ -1228,9 +972,8 @@
   aliasof: pos_player_spawn
   deprecated: y
 - name: pos_target
+  extend: [point]
   color: 007f00
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
   flags: []
   props:
     # old prop misc_teleporter_dest
@@ -1259,9 +1002,8 @@
 - name: info_null
 # TODO: SP_RemoveSelf
   deprecated: y
+  extend: [point]
   color: 007f00
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
   flags: []
   props:
     targetname: must match the target key of entity that uses this for pointing.
@@ -1269,10 +1011,10 @@
     Used as a positional target for light entities to create a spotlight effect.
     A target_position can be used instead of this but was kept in Q3A for legacy purposes.
 - name: target_print
+# bug: deprecated, but no replacing functionality provided
   deprecated: y
   color: 007f00
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
+  extend: [point]
   flags:
   - HUMAN_TEAM: Only the human team players will see the message. # OK, but TODO check net game
   - ALIEN_TEAM: Only the alien team players will see the message. # OK, but TODO check net game
@@ -1286,9 +1028,8 @@
     By default, all the clients will see the message.
 - name: target_push
   deprecated: y
+  extend: [point]
   color: 7f7f7f
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
   flags: []
   props:
     # found in code
@@ -1296,7 +1037,6 @@
       The roll angle does not apply.
     speed: speed of push (default 1000). Has no effect if entity targets an aiming
       entity.
-    origin: ''
     # OK
     target: This points to the aiming entity to which the player will jump.
     targetname: The activating trigger points to this. Push originates from the location
@@ -1316,9 +1056,8 @@
     (or set the target_push's "angles" key). Note that the "angle" key also works.
 - name: target_teleporter
   deprecated: y
+  extend: [point]
   color: 007f00
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
   flags: []
   props:
     target: this must point to a misc_teleporter_dest entity.
@@ -1329,14 +1068,14 @@
     does NOT allow client prediction of events.
 - name: target_hurt
   deprecated: y
+  extend: [point]
   color: ff0000
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
   flags: []
   props:
     dmg: 'amount of damage to deal (default: 5)'
   desc: When triggered, this hurts the entity that caused the trigger.
 - name: team_human_spawn
+  extend: [point]
   color: *humanColor
   size_min: [-40.0, -40.0, -4.0]
   size_max: [40.0, 40.0, 4.0]
@@ -1345,6 +1084,7 @@
   desc: The human spawn point.
   specials: {model: models/buildables/telenode/telenode.md3}
 - name: team_human_armoury
+  extend: [point]
   color: *humanColor
   size_min: [-40.0, -40.0, -13.0]
   size_max: [40.0, 40.0, 50.0]
@@ -1353,6 +1093,7 @@
   desc: The human armoury.
   specials: {model: models/buildables/arm/arm.md3}
 - name: team_human_drill
+  extend: [point]
   color: *humanColor
   size_min: [-15.0, -15.0, -15.0]
   size_max: [15.0, 15.0, 25.0]
@@ -1361,6 +1102,7 @@
   desc: The human drill.
   specials: {model: models/buildables/drill/drill.md3}
 - name: team_human_medistat
+  extend: [point]
   color: *humanColor
   size_min: [-35.0, -35.0, -7.0]
   size_max: [35.0, 35.0, 7.0]
@@ -1369,6 +1111,7 @@
   desc: The human medical station.
   specials: {model: models/buildables/medistat/medistat.md3}
 - name: team_human_mgturret
+  extend: [point]
   color: *humanColor
   size_min: [-25.0, -25.0, -20.0]
   size_max: [25.0, 25.0, 20.0]
@@ -1377,6 +1120,7 @@
   desc: The human machinegun turret.
   specials: {model: models/buildables/mgturret/mgturret.md3}
 - name: team_human_reactor
+  extend: [point]
   color: *humanColor
   size_min: [-50.0, -50.0, -15.0]
   size_max: [50.0, 50.0, 95.0]
@@ -1385,6 +1129,7 @@
   desc: The human reactor.
   specials: {model: models/buildables/reactor/reactor.md3}
 - name: team_human_repeater
+  extend: [point]
   color: *humanColor
   size_min: [-15.0, -15.0, -15.0]
   size_max: [15.0, 15.0, 25.0]
@@ -1393,6 +1138,7 @@
   desc: The human repeater.
   specials: {model: models/buildables/repeater/repeater.md3}
 - name: team_human_tesla
+  extend: [point]
   color: *humanColor
   size_min: [-22.0, -22.0, -40.0]
   size_max: [22.0, 22.0, 40.0]
@@ -1401,6 +1147,7 @@
   desc: The human tesla generator.
   specials: {model: models/buildables/tesla/tesla.md3}
 - name: team_alien_spawn
+  extend: [point]
   color: *alienColor
   size_min: [-15.0, -15.0, -15.0]
   size_max: [15.0, 15.0, 15.0]
@@ -1409,6 +1156,7 @@
   desc: The alien spawn point.
   specials: {model: models/buildables/eggpod/eggpod.md3}
 - name: team_alien_acid_tube
+  extend: [point]
   color: *alienColor
   size_min: [-25.0, -25.0, -25.0]
   size_max: [25.0, 25.0, 25.0]
@@ -1417,6 +1165,7 @@
   desc: The alien acid tube.
   specials: {model: models/buildables/acid_tube/acid_tube.md3}
 - name: team_alien_barricade
+  extend: [point]
   color: *alienColor
   size_min: [-35.0, -35.0, -15.0]
   size_max: [35.0, 35.0, 60.0]
@@ -1425,6 +1174,7 @@
   desc: The alien barricade.
   specials: {model: models/buildables/barricade/barricade.md3}
 - name: team_alien_booster
+  extend: [point]
   color: *alienColor
   size_min: [-26.0, -26.0, -9.0]
   size_max: [26.0, 26.0, 9.0]
@@ -1433,6 +1183,7 @@
   desc: The alien booster.
   specials: {model: models/buildables/booster/booster.md3}
 - name: team_alien_overmind
+  extend: [point]
   color: *alienColor
   size_min: [-45.0, -45.0, -15.0]
   size_max: [45.0, 45.0, 95.0]
@@ -1441,6 +1192,7 @@
   desc: The alien overmind.
   specials: {model: models/buildables/overmind/overmind.md3}
 - name: team_alien_trapper
+  extend: [point]
   color: *alienColor
   size_min: [-15.0, -15.0, -15.0]
   size_max: [15.0, 15.0, 15.0]
@@ -1449,6 +1201,7 @@
   desc: The alien trapper.
   specials: {model: models/buildables/trapper/trapper.md3}
 - name: team_alien_hive
+  extend: [point]
   color: *alienColor
   size_min: [-35.0, -35.0, -25.0]
   size_max: [35.0, 35.0, 25.0]
@@ -1457,6 +1210,7 @@
   desc: The alien hive.
   specials: {model: models/buildables/hive/hive.md3}
 - name: team_alien_leech
+  extend: [point]
   color: *alienColor
   size_min: [-56.0, -40.0, -20.0]
   size_max: [56.0, 40.0, 20.0]
@@ -1465,9 +1219,8 @@
   desc: The alien leech.
   specials: {model: models/buildables/leech/leech.md3}
 - name: ctrl_limited # OK
+  extend: [point]
   color: &ctrl_color 00b3b3
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
   flags:
   - SPAWN_DISABLED: &Spawn_disabled Disabled by default.
   # bug: no way to activate it in-game
@@ -1481,9 +1234,8 @@
     Can be triggered limited amount of times.
     Every activation fires targets.
 - name: ctrl_relay # OK
+  extend: [point]
   color: *ctrl_color
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
   flags:
   - SPAWN_DISABLED: *Spawn_disabled
   # bug: can't enable entity later in game, remove spawn_disabled at all?
@@ -1627,9 +1379,8 @@
   deprecated: y
 - name: fx_rumble # OK
 # bug: this is not an earthquake, this is jumping
+  extend: [point]
   color: ff0000
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
   flags: []
   props:
     amount: Duration of the quake.
@@ -1644,9 +1395,8 @@
   deprecated: y
 - name: game_end # OK
 # improvement: make it able to end game in draw with team=0 or omitted
+  extend: [point]
   color: &game_color ff0000
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
   flags: []
   props:
     team: &Team_number 1 for aliens, 2 for humans.
@@ -1669,9 +1419,8 @@
   proptypes: {}
   descreplace: {'the team': 'the human team'}
 - name: game_funds # OK
+  extend: [point]
   color: *game_color
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
   flags: []
   props:
     amount: Amount of funds. 1 = 1 credit = 0.01 evo.
@@ -1680,9 +1429,8 @@
     amount: 0
   desc: *game_desc
 - name: game_kill # OK
+  extend: [point]
   color: *game_color
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
   flags: []
   props:
     targetname: *TN
@@ -1694,9 +1442,8 @@
   deprecated: y
 - name: game_score # OK
 # possible improvement: measure amount directly in score points
+  extend: [point]
   color: *game_color
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
   flags: []
   props:
     amount: Amount of score points. 50 = 1 score, calculated as quantity of funds
@@ -1711,6 +1458,7 @@
   aliasof: game_score
   deprecated: y
 - name: gfx_animated_model # OK
+  extend: [point]
   color: &gfx_animated_model_color ff7f3f
   size_min: [-12.0, -12.0, -12.0]
   size_max: [12.0, 12.0, 12.0]
@@ -1742,6 +1490,7 @@
 # bug: deprecated, but no replacement given
 # misc_model differs from gfx_animated_model: it handled by q3map2
   deprecated: y
+  extend: [point,brush]
   color: *gfx_animated_model_color
   size_min: [-12.0, -12.0, -12.0]
   size_max: [12.0, 12.0, 12.0]
@@ -1750,15 +1499,11 @@
   - CLIPMODELS: ''
   - FORCEMETA: ''
   props:
-    # found in q3map2
-    _celshader: ''
     # OK
-    origin: *origin
     model: Path to a custom model.
     _frame: Animation frame to pick. This differs from gfx_animated_model.animation!
     angle: Simple model orientation.
     angles: Full model orientation.
-    _lightmapscale: Value scaling the resolution of lightmaps. Lesser value gives bigger resolution.
     modelscale: Scale factor.
     modelscale_vec: Separate scale factor per axis.
   proptypes:
@@ -1774,9 +1519,8 @@
     Static model baked into level geometry by q3map2.
     Can be walked through. Not animated, but you can choose one of the frames.
 - name: gfx_light_flare
+  extend: [point]
   color: a6a6ff
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
   flags: # ALL OK
   - SPAWN_DISABLED: *Spawn_disabled
   props:
@@ -1809,7 +1553,6 @@
     mindist: ''
     speed: ''
     shader: '' # or targetShaderName
-    origin: ''
     #radius: ''
     #angles: ''
     # TODO: merge with misc_light_flare
@@ -1829,9 +1572,8 @@
 # bug: if player toggles entity twice quickly (->ON->OFF),
 # after "wait" delay it toggles once again (->ON)
 # and becomes constantly visible
+  extend: [point]
   color: ff7f3f
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
   flags: # ALL OK
   - SPAWN_DISABLED: *Spawn_disabled
   props:
@@ -1843,7 +1585,6 @@
       Look at scripts/*.particle, you need the name residing inside of these files.
     wait: Wait after toggle, then toggle again. Disabled if value <= 0.
     targetname: *TN
-    origin: Position.
   proptypes:
     psName: string
     wait: float # variance not used
@@ -1859,9 +1600,8 @@
   aliasof: gfx_particle_system
   deprecated: y
 - name: gfx_portal_camera
+  extend: [point]
   color: ff7f3f
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
   flags:
   # found in code
   - FRAME25: Slow rotation.
@@ -1889,9 +1629,8 @@
   aliasof: gfx_portal_camera
   deprecated: y
 - name: gfx_portal_surface
+  extend: [point]
   color: ff7f3f
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
   flags: []
   props:
     # old props
@@ -1941,9 +1680,8 @@
 - name: sensor_creep # OK
 # bug: cannot be toggled via targetname
 # possible improvement: "wait" triggering delay same as trigger_buildable
+  extend: [point]
   color: *sensor_color
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
   flags:
   - SPAWN_DISABLED: *Spawn_disabled
   props:
@@ -1953,9 +1691,8 @@
 
     If condition is satisfied fires targets continuously.
 - name: sensor_end # OK
+  extend: [point]
   color: *sensor_color
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
   flags: *Some_sensors_flags
   props:
     target: *target
@@ -2015,18 +1752,16 @@
 - name: sensor_power # OK
 # bug: sensor never triggers
 # src/gamelogic/game/g_spawn_sensor.c:590
+  extend: [point]
   color: *sensor_color
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
   flags:
   - SPAWN_DISABLED: *Spawn_disabled
   props: {}
   desc: ''
 - name: sensor_stage # OK
 # possible improvement: detect substages, stages down
+  extend: [point]
   color: *sensor_color
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
   flags: *Some_sensors_flags
   props:
     target: *target
@@ -2046,9 +1781,8 @@
     stage: *sensor_stage_stage
     team: *Team_number
 - name: sensor_start # OK
+  extend: [point]
   color: *sensor_color
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
   flags: []
   props:
     target: *target
@@ -2060,9 +1794,8 @@
 - name: sensor_support # OK
 # bug: cannot be toggled via targetname
 # bug: remove this entity? there is a sensor_creep already
+  extend: [point]
   color: *sensor_color
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
   flags:
   - SPAWN_DISABLED: *Spawn_disabled
   props:
@@ -2074,9 +1807,8 @@
 
     If condition is satisfied fires targets continuously.
 - name: sensor_timer # OK
+  extend: [point]
   color: *sensor_color
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
   flags:
   - START_ON: Timer will start on in the game and continuously fire its targets.
   props:
@@ -2089,16 +1821,14 @@
 # maybe bug: not marked as deprecated in source code
   aliasof: sensor_timer
 - name: sfx_speaker # OK
+  extend: [point]
   color: 00b3b3
-  size_min: [-8.0, -8.0, -8.0]
-  size_max: [8.0, 8.0, 8.0]
   flags:
   - PRESTARTED_LOOP: Same as LOOP, but speaker is active by default.
   - LOOP: Makes infinite loop. Can be toggled via targetname.
   - BROADCAST: Makes sound global, sound volume is maximal everywhere on map. Doesn't work with LOOPs.
   - ACTIVATOR_SPEAKER: Plays sound only for person who activated it.
   props:
-    origin: Position.
     noise: *Sound_path
     targetname: *TN
     wait: With nonzero variance part continuously starts sounds in parallel with delay defined by "wait".
@@ -2130,6 +1860,6 @@
   props:
     target: Projection direction, pos_target.
   desc: >
-    Compiler-only entity that specifies a decal to be projected.
+    [q3map]-only entity that specifies a decal to be projected.
     Should contain 1 or more patch meshes (curves) and target an pos_target entity.
     The distance between the center of the _decal entity and the target is the axis and distance of projection.
