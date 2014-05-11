@@ -268,7 +268,7 @@ def validate_entity(e, dt):
         return r
 
     # prop* keys consistency
-    props = set(e['props'].keys())
+    props = set(e.get('props', {}).keys())
     for k in additional_fields:
         val = set(e.get(k, {}).keys())
         x = val - props
@@ -427,9 +427,9 @@ def fix_flag_lists(data):
 def apply_baseclass_to_entity(base, ent):
     tmp = deepcopy(base)
 
-    processed = set()
+    processed = {'desc', 'extend'}
 
-    for key in ('flags', 'color', 'aliasof', 'extend', 'size_min', 'size_max', 'name', 'deprecated'):
+    for key in ('flags', 'color', 'aliasof', 'size_min', 'size_max', 'name', 'deprecated'):
         processed.add(key)
         if key in ent:
             tmp[key] = ent[key]
@@ -441,7 +441,6 @@ def apply_baseclass_to_entity(base, ent):
                 tmp[key] = {}
             tmp[key].update(ent[key])
 
-    processed.add('desc')
     desc = (ent.get('desc', '') + '\n' + base.get('desc', '')).strip('\n ')
     if desc:
         tmp['desc'] = desc
@@ -463,17 +462,27 @@ def apply_aliasof(data):
         tmp.update(e)
         data[i] = tmp
 
+def apply_extends_to_entity(e, common):
+    counted = []
+    notcounted = e.get('extend', [])
+    while notcounted:
+        for name in notcounted[:]:
+            if name not in counted:
+                # check
+                if name not in common:
+                    raise Exception('Unknown extend {} in {}'.format(name, e))
+                # add new deps
+                notcounted.extend(x for x in common[name].get('extend', []) if x not in counted and x not in notcounted)
+            counted.append(name)
+            notcounted.remove(name)
+    # now we have full dep list
+    for name in counted:
+        e = apply_baseclass_to_entity(common[name], e)
+    return e
+
 def apply_extend(data, common):
     for i, e in enumerate(data):
-        if 'extend' not in e:
-            continue
-        result = e
-        for name in e['extend']:
-            if name not in common:
-                raise Exception('Unknown extend {} in {}'.format(name, e))
-            result = apply_baseclass_to_entity(common[name], result)
-        del result['extend']
-        data[i] = result
+        data[i] = apply_extends_to_entity(e, common)
 
 def load_yamls(name):
     data = load_yaml_file(args.yamlname)

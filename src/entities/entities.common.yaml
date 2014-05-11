@@ -56,10 +56,21 @@ point:
   size_max: [8.0, 8.0, 8.0]
   props:
     origin: Position.
-#mover: # InitMover
-  #props:
-# -model2 (requires origin specified)
-# -light (float, default 100)
-# -color (vec3_float, default 1 1 1)
-# -group (deprecated team)
-
+clight: # SP_ConstantLightField
+  props:
+    color: Colour of emitted light.
+      Emission activated by either color or light set. Don't forget to set origin.
+    light: Light emitting intensity.
+      Emission activated by either color or light set. Don't forget to set origin.
+    origin: Entity position point.
+  proptypes:
+    light: float
+    color: vec3_float
+  propdefaults:
+    light: 100
+    color: [1, 1, 1]
+mover: # InitMover, InitRotator
+  extend: [clight]
+  props:
+    model2: Path to custom model attached to entity. Don't forget to set origin.
+    group: Name of entity group. Allows to activate all entities of group at once.

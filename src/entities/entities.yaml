@@ -1,19 +1,8 @@
-# any InitMover has options:
-# -model2 (requires origin specified)
-# -light (float, default 100)
-# -color (vec3_float, default 1 1 1)
-# -group (deprecated team)
-#
-# any reset_moverspeed has options:
-# -speed (float)
-#
 # TODO: add targetname for every entity that can be activated
 # TODO: rename targetname -> name
-# TODO: make size aliases
 # TODO: make [required] mark based on src/gamelogic/game/g_spawn.c:247
 # TODO: make yaml-aliased string for target
 # TODO: make same colors for all entity groups
-# TODO: remove default flags [] and default props {}
 # TODO: mark all [q3map] properties
 - name: worldspawn
   extend: [indexmap2]
@@ -74,8 +63,13 @@
       tesla,arm,medistat,drill,reactor,repeater)
       # bug: disable buildables works, but shows warnings
     colorGrade: or gradingTexture - Path of color grading effect
-    _keepLights: Keep light entities in the BSP. Normally stripped out by the BSP
+    _keepLights: >
+      [q3map] Keep light entities in the BSP. Normally stripped out by the BSP
       process and read from the .map file by the lighting phase.
+    _style*rgbgen: >
+      [q3map] Used for lights with "style" set. Star is replaced by numbers.
+    _style*alphagen: >
+      [q3map] Used for lights with "style" set. Star is replaced by numbers.
   proptypes:
     music: string
     disabledEquipment: string
@@ -119,28 +113,34 @@
     #_flare, _flareshader: no effect
     light: Intensity.
     _color: Weighted RGB value of light color.
-    _filterradius: No attenuation within _filterradius sphere.
-    target: Lights pointed at a target will be spotlights.
-    radius: Overrides the default 64 unit Radius of a spotlight at the target point.
+    _filterradius: >
+      [q3map] No attenuation within _filterradius sphere.
+    target: >
+      [q3map] Lights pointed at a target will be spotlights.
+    radius: >
+      [q3map] Overrides the default 64 unit Radius of a spotlight at the target point.
     scale: >
-      Scales intensity, from SOF2/JK2. Eg. light=300, scale=0.2 will result in light=60
-    fade: Linear (only linear) light attenuation coefficient, less value - far the light goes.
-    _anglescale: Angle attenuation coefficient for spotlights (those having target).
+      [q3map] Scales intensity, from SOF2/JK2. Eg. light=300, scale=0.2 will result in light=60
+    fade: >
+      [q3map] Linear (only linear) light attenuation coefficient, less value - far the light goes.
+    _anglescale: >
+      [q3map] Angle attenuation coefficient for spotlights (those having target).
     _samples: >
-      Used for light jitter in pair with _deviance.
+      [q3map] Used for light jitter in pair with _deviance.
       Number of lights created near each other instead of the sole light source.
       Sum of all intensities equals to original light intensity.
     _deviance: >
-      Used in pair with _samples. Jitter radius for array of lights.
+      [q3map] Used in pair with _samples. Jitter radius for array of lights.
     _sun: >
-      Set this key on a spotlight (those having "target") to make an infinite sun light.
+      [q3map] Set this key on a spotlight (those having "target") to make an infinite sun light.
       This can be used instead of q3map_skylight shader directive.
       Properties remaining useful are "target", "_color", "_deviance", "_samples", "style".
     # bug: doesn't work with buttons.
     targetname: Setting name implies dynamic light style set.
     style: >
-      Used for blinking lights. Number used to choose proper worldspawn entity keys with formulas.
+      [q3map] Used for blinking lights. Number used to choose proper worldspawn entity keys with formulas.
       Key names are _style*rgbgen and _style*alphagen where * is replaced by style number.
+      Read more here http://q3map2.robotrenegade.com/docs/shader_manual/lightstyles.html
     noradiosity: >
       [dynamic] Disable radiosity (lightmap) lighting. Setting this property makes the light dynamic.
       This enables realtime shadows.
@@ -229,19 +229,23 @@
   props:
     light: Intensity.
     _color: Weighted RGB value of light color.
-    _filterradius: No attenuation within _filterradius sphere.
-    target: Lights pointed at a target will be spotlights.
+    _filterradius: >
+      [q3map] No attenuation within _filterradius sphere.
+    target: >
+      [q3map] Lights pointed at a target will be spotlights.
     radius: Overrides the default 64 unit Radius of a spotlight at the target point.
     scale: >
-      Scales intensity, from SOF2/JK2. Eg. light=300, scale=0.2 will result in light=60
-    fade: Linear (only linear) light attenuation coefficient, less value - far the light goes.
-    _anglescale: Angle attenuation coefficient for spotlights (those having target).
+      [q3map] Scales intensity, from SOF2/JK2. Eg. light=300, scale=0.2 will result in light=60
+    fade: >
+      [q3map] Linear (only linear) light attenuation coefficient, less value - far the light goes.
+    _anglescale: >
+      [q3map] Angle attenuation coefficient for spotlights (those having target).
     _samples: >
-      Used for light jitter in pair with _deviance.
+      [q3map] Used for light jitter in pair with _deviance.
       Number of lights created near each other instead of the sole light source.
       Sum of all intensities equals to original light intensity.
     _deviance: >
-      Used in pair with _samples. Jitter radius for array of lights.
+      [q3map] Used in pair with _samples. Jitter radius for array of lights.
   proptypes:
     light: float
     _color: vec3_float
@@ -266,7 +270,7 @@
     The -pointscale and -scale arguments to Q3Map2 affect the brightness of these lights.
     The -skyscale argument affects brightness of entity sun lights.
 - name: func_bobbing
-  extend: [brush,indexmap2]
+  extend: [brush,indexmap2,mover]
   flags: # ALL OK
   - X_AXIS: Entity will bob along the X axis. # TODO: check axis again
   - Y_AXIS: Entity will bob along the Y axis. # TODO: check axis again
@@ -280,35 +284,24 @@
     # src/gamelogic/game/g_spawn_mover.c:370
     # player squashed instantly
     phase: Sets the start offset of the oscillation cycle.
-    model2: &InitMover_model2 Path to custom model attached to entity. Don't forget to set origin.
-    color: &SP_ConstantLightField_color Colour of emitted light.
-      Emission activated by either color or light set. Don't forget to set origin.
-    light: &SP_ConstantLightField_light Light emitting intensity.
-      Emission activated by either color or light set. Don't forget to set origin.
-    origin: &InitMover_origin Entity position point.
-    group: &InitMover_group Name of entity group. Allows to activate all entities of group at once.
     noise: Sound played when activated via targetname. Emitted at origin.
     # bug: should it emit noise always, not just when activated? When activated, it's better to call
     # property "sound".
   proptypes:
     height: float
     phase: float
-    light: float
-    color: vec3_float
   propdefaults:
     height: 32
     phase: 0
     dmg: 2
     speed: 4
-    light: 100
-    color: [1, 1, 1]
   propranges:
     phase: [0, 1]
   desc: >
     Solid entity that oscillates back and forth in a linear motion. # OK
     Entity bobs on the Z axis (up-down) by default. # OK
 - name: func_button
-  extend: [brush,indexmap2]
+  extend: [brush,indexmap2,mover]
   props:
     # OK:
     target: All entities with a matching targetname will be triggered. If not set
@@ -320,11 +313,6 @@
     angle: &brush_angle 'Determines moving direction of brush (around Z axis:
       0=+x, 90=+y, 180=-x, 270=-y; special values: up = -1, down = -2).'
     health: &brush_health If set, the brush must take damage (any amount) to activate.
-    model2: *InitMover_model2
-    light: *SP_ConstantLightField_light
-    color: *SP_ConstantLightField_color
-    group: *InitMover_group
-    origin: *InitMover_origin
     sound1to2: Activation sound.
   propreplace:
     speed: &Rbutt {brush: button}
@@ -334,13 +322,9 @@
     wait: {'before brush returns': 'button stays pressed'}
   proptypes:
     lip: float
-    light: float
-    color: vec3_float
   propdefaults:
     lip: 4
     health: false
-    light: 100
-    color: [1, 1, 1]
     sound1to2: sound/movers/switches/button1.wav
   boolvalues:
     health: [0, 1]
@@ -380,7 +364,7 @@
     Destructable object. You can destroy this object in game. When destructed deals splash damage
     to everyone near it. Does not cause splash damage to builables. # OK
 - name: func_door
-  extend: [brush,indexmap2]
+  extend: [brush,indexmap2,mover]
   flags: # ALL OK
   - START_OPEN: The door will spawn in the open state and operate in reverse.
   # bug: activation area placed near opened state door position, often unreachable
@@ -410,11 +394,6 @@
       Door will reverse direction when blocked unless CRUSHER spawnflag is set.
       # bug: cannot set 0 dmg
     health: *brush_health
-    model2: *InitMover_model2
-    light: *SP_ConstantLightField_light
-    color: *SP_ConstantLightField_color
-    group: *InitMover_group
-    origin: *InitMover_origin
   propreplace:
     speed: &Rdoor {brush: door}
     lip: *Rdoor
@@ -423,16 +402,12 @@
   proptypes:
     range: int
     lip: float
-    light: float
-    color: vec3_float
   propdefaults:
     health: false
     range: 72
     lip: 8
     speed: 400
     dmg: 2
-    light: 100
-    color: [1, 1, 1]
   boolvalues:
     health: [0, 1]
   desc: >
@@ -449,6 +424,7 @@
     Target this entity with a misc_model to have the model attached to the entity
     (set the model's "target" key to the same value as this entity''s "targetname").
 - name: func_door_model
+  extend: [clight]
   color: 007fcc
   props:
     _indexmap OR alphamap: Path/name for the art file used to guide the mapping of
@@ -477,8 +453,6 @@
       # seems to be visible model
       # TODO: drops warning if not set
     noise: '' # sound
-    light: *SP_ConstantLightField_light
-    color: *SP_ConstantLightField_color
     angles: '' #???
     animation: The first frame and number of frames in the door open animation (e.g.
       0 10). This will be reversed for the close animation.
@@ -491,16 +465,12 @@
     modelOrigin: vec3_float
     scale: vec3_float
     animation: vec2_int
-    light: float
-    color: vec3_float
   propdefaults:
     range: 72
     wait: 2
     modelOrigin: [0, 0, 0]
     scale: [1, 1, 1]
     speed: 200
-    light: 100
-    color: [1, 1, 1]
     noise: ''
   desc: >
     A model based door entity. By default, the door will activate when player
@@ -511,7 +481,7 @@
     using the modelOrigin, scale and angle/angles keys repsectively.
 - name: func_door_rotating
 # maybe bug: no blocking damage.
-  extend: [brush,indexmap2]
+  extend: [brush,indexmap2,mover]
   flags: # ALL OK
   - START_OPEN: the door will spawn in the open state and operate in reverse.
   # bug: closes at the start of map and cannot be opened then
@@ -535,24 +505,15 @@
     speed: Determines how fast the door moves, in degrees/second.
     rotatorAngle: The number of degrees through which to rotate.
     health: *brush_health
-    origin: Sets the rotation axis position. # TODO: check it sets .md3 position
     targetname: If set, a func_button or trigger is required to activate the door.
       # bug: if health and targetname are set, still can be activated by building explosion near it
-    model2: *InitMover_model2
-    light: *SP_ConstantLightField_light
-    color: *SP_ConstantLightField_color
-    group: *InitMover_group
   proptypes:
     wait: float # variance not used
     rotatorAngle: float
-    light: float
-    color: vec3_float
   propdefaults:
     wait: 2
     rotatorAngle: 90
     health: false
-    light: 100
-    color: [1, 1, 1]
   propreplace:
     wait: *Rdoor
     health: *Rdoor
@@ -596,14 +557,12 @@
     entity, isolating individual components.
 - name: func_pendulum
 # bug: instakill in very big touching angle. It should just rub, not squish.
-  extend: [brush,indexmap2]
+  extend: [brush,indexmap2,mover]
   props:
     noise: path/name of .wav file to play. Use looping sounds only (eg. sound/world/drone6.wav).
     # OK
     speed: Angle of swing arc in either direction from initial position.
     phase: Sets the start offset of the swinging cycle.
-    origin: Alternate method of setting XYZ origin of entity's rotation axis and
-      model included with entity.
     angle: Angle offset of axis of rotation from default X axis. Equivalent to angles = 0 a 0.
     dmg: Damage dealt when blocked.
     # bug: parsed, but actually unused (maybe remove it?).
@@ -614,14 +573,8 @@
     targetname: &toggleable Give it a name to be able to toggle its activity.
     # bug: when signalled via button: stops and never resumes
     # bug: when stopped position resets hardly, instantly moving to origin
-    model2: *InitMover_model2
-    light: *SP_ConstantLightField_light
-    color: *SP_ConstantLightField_color
-    group: *InitMover_group
   proptypes:
     phase: float
-    light: float
-    color: vec3_float
   propdefaults:
     phase: 0
     dmg: 2
@@ -629,8 +582,6 @@
     origin: [0, 0, 0]
     angle: 0
     angles: [0, 0, 0]
-    light: 100
-    color: [1, 1, 1]
   propranges:
     phase: [0, 1]
     angle: [-180.0, 180.0]
@@ -654,7 +605,7 @@
 # bug: when added to map raises warnings
 # Warning: failed to load sound sound/movers/plats/pt1_end.wav
 # Warning: failed to load sound sound/movers/plats/pt1_strt.wav
-  extend: [brush,indexmap2]
+  extend: [brush,indexmap2,mover]
   flags: # ALL OK
   - DONT_WAIT: The platform will not wait for a client to leave before returning to
       its original position.
@@ -678,26 +629,17 @@
     targetname: If set, the trigger that points to this will raise the plat each time
       it fires. The plat raises and comes back down a second later if no player is
       on it.
-    model2: *InitMover_model2
-    light: *SP_ConstantLightField_light
-    color: *SP_ConstantLightField_color
-    group: *InitMover_group
-    origin: *InitMover_origin
   propreplace:
     lip: {brush: plat, 'move.': 'move. Can be overridden by "height". If you use lip
       place your plat near the bottom point.'}
   proptypes:
     lip: float
     height: float
-    light: float
-    color: vec3_float
   propdefaults:
     dmg: 2
     lip: 8
     height: 0
     speed: 400
-    light: 100
-    color: [1, 1, 1]
   desc: >
     Rising platform the player can ride to reach higher places. Plats must always
     be drawn in the raised position, so they will operate and be lighted correctly
@@ -727,7 +669,7 @@
 - name: func_rotating
 # bug: doesn't work when speed is not set
 # bug: by default rotates around 0 0 0 instead of brush center
-  extend: [brush,indexmap2]
+  extend: [brush,indexmap2,mover]
   flags: # ALL OK
   - '-': ''
   - '-': ''
@@ -740,19 +682,9 @@
     dmg: Damage dealt when blocked.
     # bug: parsed, but not used. No damage dealt
     # bug: trembling when blocked
-    model2: *InitMover_model2
-    light: *SP_ConstantLightField_light
-    color: *SP_ConstantLightField_color
-    group: *InitMover_group
-    origin: *InitMover_origin
-  proptypes:
-    light: float
-    color: vec3_float
   propdefaults:
     speed: 400
     dmg: 2
-    light: 100
-    color: [1, 1, 1]
   propreplace:
     origin: {'point.': 'point. Sets the rotation axis position.'}
   desc: >
@@ -825,7 +757,7 @@
 - name: func_train
 # bug: can watch through train when it pushes player
 # bug: incorrect movement when activated/deactivated waiting on path_corner
-  extend: [brush,indexmap2]
+  extend: [brush,indexmap2,mover]
   flags: # ALL OK
   - START_OFF: The train will spawn in the off state
   - BLOCK_STOPS: Train simply stops if blocked, instead of killing.
@@ -838,18 +770,9 @@
     origin: Required, if you omit this, train will not appear. Base position of train.
     speed: *brush_speed
     targetname: *toggleable
-    model2: *InitMover_model2
-    light: *SP_ConstantLightField_light
-    color: *SP_ConstantLightField_color
-    group: *InitMover_group
-  proptypes:
-    light: float
-    color: vec3_float
   propdefaults:
     dmg: 2
     speed: 100
-    light: 100
-    color: [1, 1, 1]
   propreplace:
     speed: {brush: train, 'moves.': 'moves. Can be overridden by path_corner speed.'}
   desc: >
