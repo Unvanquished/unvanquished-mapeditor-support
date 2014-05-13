@@ -1,6 +1,7 @@
 # TODO: add targetname for every entity that can be activated
 # TODO: rename targetname -> name
 # TODO: make [required] mark based on src/gamelogic/game/g_spawn.c:247
+# TODO: recheck all func_ entities for [required]
 # TODO: make yaml-aliased string for target
 # TODO: make same colors for all entity groups
 # TODO: mark all [q3map] properties
@@ -269,13 +270,12 @@
 
     The -pointscale and -scale arguments to Q3Map2 affect the brightness of these lights.
     The -skyscale argument affects brightness of entity sun lights.
-- name: func_bobbing
+- name: func_bobbing # OK
   extend: [brush,indexmap2,mover]
-  flags: # ALL OK
-  - X_AXIS: Entity will bob along the X axis. # TODO: check axis again
-  - Y_AXIS: Entity will bob along the Y axis. # TODO: check axis again
+  flags:
+  - X_AXIS: Entity will bob along the X axis.
+  - Y_AXIS: Entity will bob along the Y axis.
   props:
-    # OK
     speed: Amount of time in seconds for one complete oscillation cycle.
     height: Amount of travel of the oscillation movement.
     dmg: Damage dealt when blocked.
@@ -298,12 +298,11 @@
   propranges:
     phase: [0, 1]
   desc: >
-    Solid entity that oscillates back and forth in a linear motion. # OK
-    Entity bobs on the Z axis (up-down) by default. # OK
-- name: func_button
+    Solid entity that oscillates back and forth in a linear motion.
+    Entity bobs on the Z axis (up-down) by default.
+- name: func_button # OK
   extend: [brush,indexmap2,mover]
   props:
-    # OK:
     target: All entities with a matching targetname will be triggered. If not set
       button will not appear.
     wait: &brush_wait Number of seconds before brush returns. -1 = return immediately.
@@ -336,23 +335,18 @@
     When a button is touched by a player, it moves in the direction set by the
     "angle" key, triggers all its targets, stays pressed by an amount of time set
     by the "wait" key, then returns to it's original position where it can be operated
-    again. # OK
-- name: func_destructable
-# bug: object just disappers without any explosion effect or sound.
-# TODO: check toggling as target
+    again.
+- name: func_destructable # OK
+# bug or not: object just disappers without any explosion effect or sound. players not pushed by "explosion".
   extend: [brush,indexmap2]
   flags:
-  # found in code
-  - INDESTRUCTABLE: '' # todo: causes object to disappear. for what? (trap_LinkEntity skipped to call)
-  # may be another SPAWN_DISABLED?
+  - SPAWN_DISABLED: Hidden by default. Can be shown via activation as target.
   props:
-    origin: '' # todo: sets restingPosition, but no noticeable difference in game (maybe it's for custom "model"?)
-    angles: '' # todo: look like applies only for custom "model"
-    # OK:
     health: Amount of damage needed to destroy this.
     damage: Splash damage caused when destroyed.
     radius: Splash damage radius.
     onDie: Name of the target fired when destroyed.
+    targetname: Can be toggled as target. Causes object to appear or disappear. Even after being destructed object can appear again.
   proptypes:
     damage: int
     radius: int
@@ -362,10 +356,11 @@
     health: 100
   desc: >
     Destructable object. You can destroy this object in game. When destructed deals splash damage
-    to everyone near it. Does not cause splash damage to builables. # OK
-- name: func_door
+    to everyone near it. Does not cause splash damage to builables.
+- name: func_door # OK
+# bug: no "noise" key
   extend: [brush,indexmap2,mover]
-  flags: # ALL OK
+  flags:
   - START_OPEN: The door will spawn in the open state and operate in reverse.
   # bug: activation area placed near opened state door position, often unreachable
   - '-': ''
@@ -373,14 +368,11 @@
       or building until it dies or gets out of the way.
     # bug: crusher door trembling when blocked
   props:
-    sound1to2: the sound played when the door, platform or button moves from state
-      1 to state 2.
-    sound2to1: the sound played when the door or platform moves from from state 2
-      to state 1.
-    soundPos1: the sound played when the door or platform reaches state 1.
-    soundPos2: the sound played when the door or platform reaches state 2.
-    # OK:
-    targetname: If set, a func_button or trigger is required to activate the door.
+    sound1to2: The sound played on start moving from state 1 to state 2.
+    sound2to1: The sound played on start moving from state 2 to state 1.
+    soundPos1: The sound played reached state 1.
+    soundPos2: The sound played reached state 2.
+    targetname: &door_targetname If set, a func_button or trigger is required to activate the door.
       Overrides activation by damage.
     # bug: spectator cannot go through door with targetname set
     speed: *brush_speed
@@ -412,66 +404,48 @@
     health: [0, 1]
   desc: >
     Normal sliding door entity. By default, the door will activate when player
-    walks close (range) to it or when damage is inflicted (health) to it.
-
-    Unlike in Quake 2, doors that touch are NOT automatically teamed. If you want
-    doors to operate together, you have to team them manually by assigning the same
-    team name to all of them. Setting the origin key is simply an alternate method
-    to using an origin brush. When using the model2 key, the origin point of the model
-    will correspond to the origin point defined by either the origin brush or the
-    origin coordinate value.
-
-    Target this entity with a misc_model to have the model attached to the entity
-    (set the model's "target" key to the same value as this entity''s "targetname").
-- name: func_door_model
+    walks close ("range") to it or when damage is inflicted ("health") to it.
+- name: func_door_model # OK
+# bug: you can walk through closed door, it works only with targetname activation
+# bug: with targetname activation you can stuck inside door when it "closes"
+# bug: impossible to activate via "health" (shooting at door)
   extend: [clight]
   color: 007fcc
   props:
-    _indexmap OR alphamap: Path/name for the art file used to guide the mapping of
-      textures on the terrain surface.
-    _layers OR layers: Integer value is the number unique root shaders that will be
-      use on the terrain.
-    _shader OR shader: 'Path to the metashader used to assign textures to the terrain
-      entity. Note: Omit the "textures/" prefix.'
-    targetname: if set, a func_button or trigger is required to activate the door.
-    team: assign the same team name to multiple doors that should operate together
-      (see Notes).
-    # found in code
-    sound1to2: the sound played when the door, platform or button moves from state
-      1 to state 2.
-    sound2to1: the sound played when the door or platform moves from from state 2
-      to state 1.
-    soundPos1: the sound played when the door or platform reaches state 1.
-    soundPos2: the sound played when the door or platform reaches state 2.
-    wait: number of seconds before door returns (default 2)
-    range: ''
-    model: '' # seems to be clip model
-    modelOrigin: means of setting the origin of the model.
-    scale: scale the model in each of the major axes (e.g. 1.0 1.0 2.0 -- twice as
-      high as normal).
-    model2: 'path/name of the door model (eg: models/mapobjects/pipe/pipe02.md3).'
-      # seems to be visible model
-      # TODO: drops warning if not set
-    noise: '' # sound
-    angles: '' #???
-    animation: The first frame and number of frames in the door open animation (e.g.
-      0 10). This will be reversed for the close animation.
-    speed: determines the time taken for the door to change state in msec (default
-      200).
-    health: (default 0) if set to any non-zero value, the door must take damage (any
-      amount) to activate.
+    animation: The first frame and number of frames in the door open animation.
+      This will be reversed for the close animation.
+    modelOrigin: [required] "model2" position.
+    model2: [required] The door model.
+    speed: The time taken for the door to change state in msec.
+    range: Door triggering range.
+    wait: Number of seconds before door returns.
+    scale: Model scale factors for each axis.
+    angles: Model orientation.
+    sound1to2: The sound played on start moving from state 1 to state 2.
+    sound2to1: The sound played on start moving from state 2 to state 1.
+    soundPos1: The sound played reached state 1.
+    soundPos2: The sound played reached state 2.
+    noise: The sound played repeatedly while door is moving.
+      # bug: plays only on forward door move. no way to set backward
+    health: *brush_health # TODO: recheck when door will be fixed
+    targetname: *door_targetname
+  propreplace:
+    health: {brush: door}
   proptypes:
     range: int
     modelOrigin: vec3_float
     scale: vec3_float
     animation: vec2_int
+    wait: float
   propdefaults:
     range: 72
     wait: 2
     modelOrigin: [0, 0, 0]
     scale: [1, 1, 1]
     speed: 200
-    noise: ''
+  propeg:
+    animation: [0, 10]
+    model2: models/mapobjects/pipe/pipe02.md3
   desc: >
     A model based door entity. By default, the door will activate when player
     walks close to it. The opening and closing of the door is provided by an animation
@@ -754,46 +728,37 @@
 
     Target this entity with a misc_model to have the model attached to the entity
     (set the model's "target" key to the same value as this entity's "targetname").
-- name: func_train
+- name: func_train # OK
 # bug: can watch through train when it pushes player
 # bug: incorrect movement when activated/deactivated waiting on path_corner
   extend: [brush,indexmap2,mover]
-  flags: # ALL OK
+  flags:
   - START_OFF: The train will spawn in the off state
   - BLOCK_STOPS: Train simply stops if blocked, instead of killing.
   props:
-    # found in code
-    dmg: '' # seems to be parsed but unused.
-    # OK
     target: This points to the first path_corner of the path which is also
       location of the train's origin.
-    origin: Required, if you omit this, train will not appear. Base position of train.
+    origin: [required] Base position of train.
     speed: *brush_speed
     targetname: *toggleable
+    dmg: Unused.
+    # bug: do we need custom damage from train instead of hardcoded 10000?
   propdefaults:
     dmg: 2
     speed: 100
   propreplace:
     speed: {brush: train, 'moves.': 'moves. Can be overridden by path_corner speed.'}
   desc: >
-    Trains are moving solids that follow a string of path_corner entities. Trains
-    in Tremulous are less basic than in Q3A, they also require an origin brush (see
-    Notes).
+    Trains are moving solids that follow a string of path_corner entities.
 
-    1. Trains instakill anything in their path by default.
+    Trains instakill anything in their path by default (unless BLOCK_STOPS set).
 
-    2. Trains cannot emit sound.
-
-    3. When BLOCK_STOPS is set, trains cannot be stopped just by getting in their
+    When BLOCK_STOPS is set, trains cannot be stopped just by getting in their
     way, the player must be wedged between the train and another obstacle to block
     it.
 
-    Setting the origin key is simply an alternate method to using an origin brush.
-    When using the model2 key, the origin point of the model will correspond to the
-    origin point defined by either the origin brush or the origin coordinate value.
-
-    Target this entity with a misc_model to have the model attached to the entity
-    (set the model's "target" key to the same value as this entity's "targetname").
+    You must set proper "origin" coordinates. It used as base point for train brush.
+    That base point moves over path_corners, i.e. you can shift the train off the path.
 - name: path_corner # OK
   extend: [point]
   color: 7f4c00

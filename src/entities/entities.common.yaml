@@ -72,5 +72,6 @@ clight: # SP_ConstantLightField
 mover: # InitMover, InitRotator
   extend: [clight]
   props:
-    model2: Path to custom model attached to entity. Don't forget to set origin.
+    model2: Path to custom model attached to entity. Don't forget to set "origin".
     group: Name of entity group. Allows to activate all entities of group at once.
+    origin: "model2" position.
