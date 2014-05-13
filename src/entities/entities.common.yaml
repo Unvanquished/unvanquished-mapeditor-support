@@ -60,6 +60,7 @@ clight: # SP_ConstantLightField
   props:
     color: Colour of emitted light.
       Emission activated by either color or light set. Don't forget to set origin.
+    # bug: reads floats locale-aware or using , instead .
     light: Light emitting intensity.
       Emission activated by either color or light set. Don't forget to set origin.
     origin: Entity position point.
@@ -74,4 +75,5 @@ mover: # InitMover, InitRotator
   props:
     model2: Path to custom model attached to entity. Don't forget to set "origin".
     group: Name of entity group. Allows to activate all entities of group at once.
-    origin: "model2" position.
+    origin: >
+      "model2" position.

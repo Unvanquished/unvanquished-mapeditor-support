@@ -1,7 +1,5 @@
-# TODO: add targetname for every entity that can be activated
 # TODO: rename targetname -> name
 # TODO: make [required] mark based on src/gamelogic/game/g_spawn.c:247
-# TODO: recheck all func_ entities for [required]
 # TODO: make yaml-aliased string for target
 # TODO: make same colors for all entity groups
 # TODO: mark all [q3map] properties
@@ -30,8 +28,8 @@
       separated by spaces, representing number of units between grid points in X Y
       Z. Default gridsize value is 128 128 256. Use larger powers of 2 to reduce BSP
       size and compile time on very large maps.
-    reverbIntensity: '' # OK, todo:
-    reverbEffect: none|generic # todo: there can be more names, but I didn't found any
+    reverbEffect: &revEffect Effect name. Use /testReverb <TAB> to view the list of possible values.
+    reverbIntensity: &revIntensity Intensity of reverberation.
     # testReverb command works on these values
     # bug: causes game to crash CM_ClipHandleToModel: bad handle -1
     humanBuildPoints: The maximum amount of power the humans can use. # bug: exist in code, but unused
@@ -284,7 +282,7 @@
     # src/gamelogic/game/g_spawn_mover.c:370
     # player squashed instantly
     phase: Sets the start offset of the oscillation cycle.
-    noise: Sound played when activated via targetname. Emitted at origin.
+    noise: &another_func_noise Sound played when activated via targetname. Emitted at origin.
     # bug: should it emit noise always, not just when activated? When activated, it's better to call
     # property "sound".
   proptypes:
@@ -414,8 +412,10 @@
   props:
     animation: The first frame and number of frames in the door open animation.
       This will be reversed for the close animation.
-    modelOrigin: [required] "model2" position.
-    model2: [required] The door model.
+    modelOrigin: >
+      [required] "model2" position.
+    model2: >
+      [required] The door model.
     speed: The time taken for the door to change state in msec.
     range: Door triggering range.
     wait: Number of seconds before door returns.
@@ -436,7 +436,7 @@
     modelOrigin: vec3_float
     scale: vec3_float
     animation: vec2_int
-    wait: float
+    wait: float # variance not used
   propdefaults:
     range: 72
     wait: 2
@@ -453,10 +453,10 @@
 
     Every func_door_model needs its model to be positioned, scaled and orientated
     using the modelOrigin, scale and angle/angles keys repsectively.
-- name: func_door_rotating
+- name: func_door_rotating # OK
 # maybe bug: no blocking damage.
   extend: [brush,indexmap2,mover]
-  flags: # ALL OK
+  flags:
   - START_OPEN: the door will spawn in the open state and operate in reverse.
   # bug: closes at the start of map and cannot be opened then
   - '-': ''
@@ -467,20 +467,19 @@
   - X_AXIS: rotate around the X axis instead of the Z. # TODO: check axis again
   - Y_AXIS: rotate around the Y axis instead of the Z. # TODO: check axis again
   props:
-    sound1to2: the sound played when the door, platform or button moves from state
-      1 to state 2.
-    sound2to1: the sound played when the door or platform moves from from state 2
-      to state 1.
-    soundPos1: the sound played when the door or platform reaches state 1.
-    soundPos2: the sound played when the door or platform reaches state 2.
-    # OK
     wait: *brush_wait
       # bug: bad -1 value, it makes annoying sound cascade (opens/closes every frame)
     speed: Determines how fast the door moves, in degrees/second.
     rotatorAngle: The number of degrees through which to rotate.
     health: *brush_health
     targetname: If set, a func_button or trigger is required to activate the door.
-      # bug: if health and targetname are set, still can be activated by building explosion near it
+      # bug: if health and targetname are set, still can be activated by buildable entity explosion near it
+    origin: "[required] Rotation axis position."
+    sound1to2: The sound played on start moving from state 1 to state 2.
+    sound2to1: The sound played on start moving from state 2 to state 1.
+    soundPos1: The sound played reached state 1.
+    soundPos2: The sound played reached state 2.
+    noise: The sound played repeatedly while door is moving.
   proptypes:
     wait: float # variance not used
     rotatorAngle: float
@@ -495,31 +494,19 @@
     health: [0, 1]
   desc: >
     Rotating door entity. By default, the door will activate when player walks
-    close to it. # OK
+    close to it.
 
-    Rotating door will not cause damage to player when blocked. # OK
+    Rotating door will not cause damage to player when blocked.
 
-    Unlike in Quake 2, doors that touch are NOT automatically teamed. If you want
-    doors to operate together, you have to team them manually by assigning the same
-    team name to all of them. Setting the origin key is simply an alternate method
-    to using an origin brush. When using the model2 key, the origin point of the model
-    will correspond to the origin point defined by either the origin brush or the
-    origin coordinate value.
-
-    Target this entity with a misc_model to have the model attached to the entity
-    (set the model''s "target" key to the same value as this entity''s "targetname").
-
-    You need to have an origin brush as part of this entity.  The center of that brush
-    will be the point around which it is rotated. It will rotate around the Z axis
-    by default.  You can check either the X_AXIS or Y_AXIS box to change that.
+    When activated turns around the rotation axis ("origin") to angle ("rotatorAngle")
+    with "speed", then stops. After "wait" time door starts turning back.
 - name: func_dynamic
-# TODO: apply InitMover ?????
-# TODO: apply reset_moverspeed ?????
+# bug: useless entity
+# bug: direct triggering via button crashes game
+  extend: [brush,indexmap2,mover]
   color: 007fcc
-  props:
-    # InitMover
-    # reset_moverspeed
-    model: ''
+  desc: >
+    Do not use.
 - name: func_group # OK
   extend: [brush,indexmap]
   desc: >
@@ -529,12 +516,10 @@
 
     The TAB key can be used to flip through the component pieces of a selected func_group
     entity, isolating individual components.
-- name: func_pendulum
+- name: func_pendulum # OK
 # bug: instakill in very big touching angle. It should just rub, not squish.
   extend: [brush,indexmap2,mover]
   props:
-    noise: path/name of .wav file to play. Use looping sounds only (eg. sound/world/drone6.wav).
-    # OK
     speed: Angle of swing arc in either direction from initial position.
     phase: Sets the start offset of the swinging cycle.
     angle: Angle offset of axis of rotation from default X axis. Equivalent to angles = 0 a 0.
@@ -544,9 +529,10 @@
     # src/gamelogic/game/g_spawn_mover.c:370
     # player squashed instantly
     angles: Orienting pendulum.
-    targetname: &toggleable Give it a name to be able to toggle its activity.
-    # bug: when signalled via button: stops and never resumes
-    # bug: when stopped position resets hardly, instantly moving to origin
+    targetname: Doesn't work properly.
+    # bug: resets position of entity to 0 0 0
+    origin: "[required] Rotation axis position."
+    noise: *another_func_noise
   proptypes:
     phase: float
   propdefaults:
@@ -562,40 +548,23 @@
   desc: >
     Solid entity that describes a pendulum back and forth rotation movement. Rotates
     on the X axis by default. Pendulum frequency is a physical constant based on the
-    length of the beam and gravity. Blocking the pendulum instantly kills a player. # OK
+    length of the beam and gravity. Blocking the pendulum instantly kills a player.
 
-    You need to have an origin brush as part of this entity. The center of that
-    brush will be the point through which the rotation axis passes. Setting the
-    origin key is simply an alternate method to using an origin brush. Pendulum
-    will rotate along the X axis by default. Very crude operation
-    pendulum cannot rotate along Z axis, the speed of swing (frequency) is not
-    adjustable. When using the model2 key, the origin point of the model will correspond
-    to the origin point defined by either the origin brush or the origin coordinate
-    value.
-
-    Target this entity with a misc_model to have the model attached to the entity
-    (set the model's "target" key to the same value as this entity's "targetname").
-- name: func_plat
+    The speed of swing (frequency) is not adjustable.
+- name: func_plat # OK
 # bug: when added to map raises warnings
 # Warning: failed to load sound sound/movers/plats/pt1_end.wav
 # Warning: failed to load sound sound/movers/plats/pt1_strt.wav
   extend: [brush,indexmap2,mover]
-  flags: # ALL OK
+  flags:
   - DONT_WAIT: The platform will not wait for a client to leave before returning to
       its original position.
   - '-': ''
   - CRUSHER: *door_crusher
   # bug: crusher door trembling when blocked
   props:
-    sound1to2: the sound played when the door, platform or button moves from state
-      1 to state 2.
-    sound2to1: the sound played when the door or platform moves from from state 2
-      to state 1.
-    soundPos1: the sound played when the door or platform reaches state 1.
-    soundPos2: the sound played when the door or platform reaches state 2.
-    # OK
     height: If set, this will determine the total amount of vertical travel of the
-      plat. Place plat at the top point. In game it will be at bottom.
+      plat. Place plat at the top point. In game it will spawn at bottom.
       Overrides "lip" option.
     dmg: Damage dealt when blocked.
     speed: Determines how fast the plat moves.
@@ -603,6 +572,11 @@
     targetname: If set, the trigger that points to this will raise the plat each time
       it fires. The plat raises and comes back down a second later if no player is
       on it.
+    sound1to2: The sound played on start moving from state 1 to state 2.
+    sound2to1: The sound played on start moving from state 2 to state 1.
+    soundPos1: The sound played reached state 1.
+    soundPos2: The sound played reached state 2.
+    noise: The sound played repeatedly while plat is moving.
   propreplace:
     lip: {brush: plat, 'move.': 'move. Can be overridden by "height". If you use lip
       place your plat near the bottom point.'}
@@ -617,96 +591,52 @@
   desc: >
     Rising platform the player can ride to reach higher places. Plats must always
     be drawn in the raised position, so they will operate and be lighted correctly
-    but they spawn in the lowered position. The plat will stay in the raised position
-    until the player steps off. There are no proper sounds for this entity, only beep
-    noises. It will spawn in the game and work properly but it sounds silly (see Notes).
+    but they spawn in the lowered position.
 
-    By default, the total amount of vertical travel of a platform is implicitly determined
-    by the overall vertical size of the brushes of which it''s made minus the lip
-    value. But if the "height" key is used, then the total amount of vertical travel
-    of the plat will be exactly that value regardless of the shape and size of the
-    plat and regardless of the value of the "lip" key. Using the "height" key is the
-    best method for any kind of platforms and the only possible one for thin plats
-    which need to travel vertical distances many times their own thickness. Setting
-    the origin key is simply an alternate method to using an origin brush. When using
-    the model2 key, the origin point of the model will correspond to the origin point
-    defined by either the origin brush or the origin coordinate value.
-
-    There is a way to make plats play proper sounds. Just create a sound\movers\plats
-    folder under baseq3 and put 2 sounds named pt1_strt.wav and pt1_end.wav in it.
-    Those can be the renamed sounds from the Q2 plats or renamed copies of the sound\movers\doors
-    sounds you can extract from your pak0.pk3 file or new custom sounds if you're
-    up to it. Thanks to Fragzilla for the tip.
-
-    Target this entity with a misc_model to have the model attached to the entity
-    (set the model's "target" key to the same value as this entity's "targetname").
-- name: func_rotating
+    The plat will stay in the raised position until the player steps off.
+- name: func_rotating # OK
 # bug: doesn't work when speed is not set
 # bug: by default rotates around 0 0 0 instead of brush center
   extend: [brush,indexmap2,mover]
-  flags: # ALL OK
+  flags:
   - '-': ''
   - '-': ''
-  - X_AXIS: Entity will rotate around the X axis. # TODO: check axis again
-  - Y_AXIS: Entity will rotate around the Y axis. # TODO: check axis again
+  - X_AXIS: Entity will rotate around the X axis.
+  - Y_AXIS: Entity will rotate around the Y axis.
   props:
-    noise: path/name of .wav file to play. Use looping sounds only (eg. sound/world/drone6.wav).
-    # OK
-    speed: determines how fast entity rotates (default 100).
+    speed: "[required] Determines how fast entity rotates."
     dmg: Damage dealt when blocked.
     # bug: parsed, but not used. No damage dealt
     # bug: trembling when blocked
+    targetname: Doesn't work properly.
+    # bug: resets position of entity to 0 0 0
+    noise: *another_func_noise
+    origin: "[required] Rotation axis position."
   propdefaults:
     speed: 400
     dmg: 2
   propreplace:
     origin: {'point.': 'point. Sets the rotation axis position.'}
   desc: >
-    Solid entity that rotates continuously. Rotates on the Z axis by default
-    and requires an origin brush. It will always start on in the game and is not targetable.
-
-    You need to have an origin brush as part of this entity. The center of that brush
-    will be the point through which the rotation axis passes. Setting the origin key
-    is simply an alternate method to using an origin brush. It will rotate along the
-    Z axis by default. You can check either the X_AXIS or Y_AXIS box to change that.
-    When using the model2 key, the origin point of the model will correspond to the
-    origin point defined by either the origin brush or the origin coordinate value.
-
-    Target this entity with a misc_model to have the model attached to the entity
-    (set the model's "target" key to the same value as this entity's "targetname").
-- name: func_spawn # todo:
-  color: '007fcc'
-  flags:
-  # found in code
-  - INITIALLY_LINKED: ''
-  - DONT_KILL_BRUSH_MODEL_ON_ACT: ''
-  props:
-    angles: ''
-    model: ''
-- name: func_static
-# TODO: apply InitMover ?????
-# TODO: apply reset_moverspeed ?????
+    Solid entity that rotates continuously. Rotates on the Z axis by default.
+- name: func_spawn # OK
   extend: [brush,indexmap2]
+  flags:
+  - SPAWN_ENABLED: By default brush is present in level.
+  - DONT_KILL: Disable killing on appearing.
   props:
-    # InitMover
-    # reset_moverspeed
-    color: constantLight color of .md3 model included with entity. Has no effect on
-      the entity's brushes (default 1 1 1).
-    light: constantLight radius of .md3 model included with entity. Has no effect
-      on the entity's brushes (default 0).
-    model2: 'path/name of model to include (eg: models/mapobjects/bitch/fembotbig.md3).'
-    origin: alternate method of setting XYZ origin of .md3 model included with entity
-      (See Notes).
-    targetname: NOT SUPPORTED BY RENDERER - if set, a func_button or trigger can make
-      entity disappear from the game (See Notes).
-    # found in code
-    reverbEffect: ''
-    reverbDistance: ''
-    reverbIntensity: ''
-    model: ''
-    # OK
+    targetname: &toggleable Give it a name to be able to toggle its activity.
+  desc:
+    Toggleable wall.
+- name: func_static # OK
+  extend: [brush,indexmap2,mover]
+  props:
     gradingTexture: If set, there is the grading effect fluently appears when player comes closer.
     gradingDistance: Distance where grading effect appears.
+    # bug: reverb doesn't work!
+    reverbEffect: *revEffect
+    reverbDistance: Distance where reverb effect appears.
+    reverbIntensity: *revIntensity
   proptypes:
     gradingTexture: string
     gradingDistance: float
@@ -718,16 +648,9 @@
     reverbDistance: 250
     reverbIntensity: 1
   desc: >
-    Static non-solid bspmodel. Can be used for conditional walls and models.
-    When using the model2 key, the origin point of the model will correspond to
-    the origin point defined by either the origin brush or the origin coordinate
-    value. If a model is included with a targeted func_static, the brush(es) of
-    the entity will be removed from the game but the .md3 model wont
-    it will automatically be moved to the (0 0 0) world origin so you should NOT
-    include an .md3 model to a targeted func_static.
+    Static non-solid bspmodel.
 
-    Target this entity with a misc_model to have the model attached to the entity
-    (set the model's "target" key to the same value as this entity's "targetname").
+    Used to add colour grading and reverb effects to specific area.
 - name: func_train # OK
 # bug: can watch through train when it pushes player
 # bug: incorrect movement when activated/deactivated waiting on path_corner
@@ -738,7 +661,7 @@
   props:
     target: This points to the first path_corner of the path which is also
       location of the train's origin.
-    origin: [required] Base position of train.
+    origin: "[required] Base position of train."
     speed: *brush_speed
     targetname: *toggleable
     dmg: Unused.
