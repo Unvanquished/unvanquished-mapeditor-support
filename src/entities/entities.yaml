@@ -3,6 +3,7 @@
 # TODO: make yaml-aliased string for target
 # TODO: make same colors for all entity groups
 # TODO: mark all [q3map] properties
+# TODO: angle/angles
 - name: worldspawn
   extend: [indexmap2]
   color: '000000'
@@ -269,6 +270,7 @@
     The -pointscale and -scale arguments to Q3Map2 affect the brightness of these lights.
     The -skyscale argument affects brightness of entity sun lights.
 - name: func_bobbing # OK
+# bug: after activation via targetname stops and never resumes
   extend: [brush,indexmap2,mover]
   flags:
   - X_AXIS: Entity will bob along the X axis.
@@ -285,6 +287,7 @@
     noise: &another_func_noise Sound played when activated via targetname. Emitted at origin.
     # bug: should it emit noise always, not just when activated? When activated, it's better to call
     # property "sound".
+    targetname: &toggleable Give it a name to be able to toggle its activity.
   proptypes:
     height: float
     phase: float
@@ -301,8 +304,7 @@
 - name: func_button # OK
   extend: [brush,indexmap2,mover]
   props:
-    target: All entities with a matching targetname will be triggered. If not set
-      button will not appear.
+    target: &target Name of the entity to activate.
     wait: &brush_wait Number of seconds before brush returns. -1 = return immediately.
     speed: &brush_speed Determines how fast the brush moves.
     lip: &brush_lip When 0, brush displacement = brush's size in direction of movement.
@@ -625,7 +627,7 @@
   - SPAWN_ENABLED: By default brush is present in level.
   - DONT_KILL: Disable killing on appearing.
   props:
-    targetname: &toggleable Give it a name to be able to toggle its activity.
+    targetname: *toggleable
   desc:
     Toggleable wall.
 - name: func_static # OK
@@ -734,26 +736,27 @@
 - name: info_player_intermission
   aliasof: pos_player_intermission
   deprecated: y
-- name: pos_location
+- name: pos_location # OK
   extend: [point]
   color: 007f00
   props:
-    # old props
-    count: color of the location text displayed in parentheses during team chat. Set
-      to 0-7 for color.
-    message: name of the location (text string). Displayed in parentheses in front
+    count: >
+      Color of the location text displayed in parentheses during team chat.
+      0: white (default)
+      1: red
+      2: green
+      3: yellow
+      4: blue
+      5: cyan
+      6: magenta
+      7: white
+    message: Name of the location (text string). Displayed in parentheses in front
       of all team chat and order messages.
+  proptypes:
+    count: int
   desc: >
-    Location marker used for team chats. The closest target_location in sight
+    Location marker used for team chats. The closest pos_location in sight
     is used for the location. If none is in sight, the closest in distance is used.
-    '0': white (default)
-    '1': red
-    '2': green
-    '3': yellow
-    '4': blue
-    '5': cyan
-    '6': magenta
-    '7': white
 - name: target_location
   aliasof: pos_location
   deprecated: y
@@ -765,21 +768,16 @@
 - name: info_player_start
   aliasof: pos_player_spawn
   deprecated: y
-- name: pos_target
+- name: pos_target # OK
   extend: [point]
   color: 007f00
   props:
-    # old prop misc_teleporter_dest
-    angle: direction in which player will look when teleported.
-    # OK:
+    angles: Used for env_afx_teleport. Direction in which player will look when teleported.
     targetname: Name of this position.
   desc: >
-    Aiming target for entities like light, misc_portal_camera and trigger_push
+    Aiming target for entities like light, gfx_portal_camera and env_afx_push.
 
     Used as a positional target for entities that can use directional pointing.
-    A target_position can be used instead of this but was kept in Q3A for legacy purposes.
-
-    Teleport destination location point for trigger_teleporter entities.
 - name: target_position
   aliasof: pos_target
   deprecated: y
@@ -793,15 +791,10 @@
   size_min: [-32.0, -32.0, -24.0]
   size_max: [32.0, 32.0, -16.0]
 - name: info_null
-# TODO: SP_RemoveSelf
+  aliasof: pos_target
   deprecated: y
-  extend: [point]
-  color: 007f00
-  props:
-    targetname: must match the target key of entity that uses this for pointing.
   desc: >
-    Used as a positional target for light entities to create a spotlight effect.
-    A target_position can be used instead of this but was kept in Q3A for legacy purposes.
+    Same as pos_target, but used only at q3map2 stage. I.e. you can use it only for lights.
 - name: target_print
 # bug: deprecated, but no replacing functionality provided
   deprecated: y
@@ -814,60 +807,66 @@
   props:
     message: text string to print on screen. # OK
     targetname: the activating trigger points to this. # OK
+
   desc: >
     This will print a message on the center of the screen when triggered. # OK
 
     By default, all the clients will see the message.
-- name: target_push
+- name: target_push # OK
+# bug: "angles" + "speed" properties cannot be used. These properties can be removed though.
+#   target mechanism is sufficient. Also, entity is deprecated, skip this bug?
   deprecated: y
   extend: [point]
   color: 7f7f7f
   props:
-    # found in code
-    angles: this sets the pitch and yaw aiming angles of push entity (default 0 0).
-      The roll angle does not apply.
-    speed: speed of push (default 1000). Has no effect if entity targets an aiming
-      entity.
-    # OK
     target: This points to the aiming entity to which the player will jump.
     targetname: The activating trigger points to this. Push originates from the location
       of the trigger.
-  propdefaults:
-    speed: 1000
   desc: >
-    This can be used to create jump pads and launch ramps. The direction of push
-    can be set by the "angles" key or pointing to a target_position or info_notnull
-    entity. Unlike trigger_push, this is NOT client side predicted and must be activated
+    DO NOT USE THIS ENTITY, USE env_afx_push!
+
+    This can be used to create jump pads and launch ramps.
+
+    Unlike trigger_push, this is NOT client side predicted and must be activated
     by a trigger.
 
     To make a jump pad or launch ramp, create a trigger_multiple where the jump must
     originate. Place the target_push directly above the trigger_multiple and place
     the target_position entity at the highest point of the jump. Target the trigger_multiple
-    to the target_push and target the target_push to the target_position/info_notnull
-    (or set the target_push's "angles" key). Note that the "angle" key also works.
-- name: target_teleporter
+    to the target_push and target the target_push to the target_position/info_notnull.
+- name: target_teleporter # OK
   deprecated: y
   extend: [point]
   color: 007f00
   props:
-    target: this must point to a misc_teleporter_dest entity.
-    targetname: activating trigger points to this.
+    target: This must point to a misc_teleporter_dest entity.
+    targetname: Activating trigger points to this.
+    speed: Player speed after teleportation.
   desc: >
+    DO NOT USE THIS ENTITY, USE env_afx_teleport!
+
     Activating this will teleport players to the location of the targeted misc_teleporter_dest
     entity. Unlike trigger_teleport, this entity must be activated by a trigger and
     does NOT allow client prediction of events.
-- name: target_hurt
+- name: target_hurt # OK
   deprecated: y
   extend: [point]
   color: ff0000
   props:
-    dmg: 'amount of damage to deal (default: 5)'
-  desc: When triggered, this hurts the entity that caused the trigger.
+    dmg: Amount of damage to deal.
+  propdefaults:
+    dmg: 5
+  desc: >
+    DO NOT USE THIS ENTITY, USE env_afx_hurt!
+
+    When triggered, this hurts the entity that caused the trigger.
 - name: team_human_spawn
   extend: [point]
   color: *humanColor
   size_min: [-40.0, -40.0, -4.0]
   size_max: [40.0, 40.0, 4.0]
+  props:
+    angle: Player orientation after spawn.
   desc: The human spawn point.
   specials: {model: models/buildables/telenode/telenode.md3}
 - name: team_human_armoury
@@ -924,6 +923,8 @@
   color: *alienColor
   size_min: [-15.0, -15.0, -15.0]
   size_max: [15.0, 15.0, 15.0]
+  props:
+    angle: Player orientation after spawn.
   desc: The alien spawn point.
   specials: {model: models/buildables/eggpod/eggpod.md3}
 - name: team_alien_acid_tube
@@ -983,7 +984,7 @@
   # bug: no way to activate it in-game
   props:
     amount: Possible activation count.
-    target: &target Name of the entity to activate.
+    target: *target
     targetname: *TN
   propdefaults:
     amount: 1
