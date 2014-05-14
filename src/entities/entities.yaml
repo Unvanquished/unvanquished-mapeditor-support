@@ -1251,21 +1251,32 @@
   - CLIPMODELS: Disallows walking through the model (makes it solid).
   - FORCEMETA: Use lightmap lighting for the model.
   props:
-    model: Path to a custom model.
-    _frame: Animation frame to pick. This differs from gfx_animated_model.animation!
-    angle: Simple model orientation.
-    angles: Full model orientation.
-    modelscale: Scale factor.
-    modelscale_vec: Separate scale factor per axis.
+    model: >
+      [q3map] Path to a custom model.
+    _frame: >
+      [q3map] Animation frame to pick. This differs from gfx_animated_model.animation!
+    angle: >
+      [q3map] Simple model orientation.
+    angles: >
+      [q3map] Full model orientation.
+    modelscale: >
+      [q3map] Scale factor.
+    modelscale_vec: >
+      [q3map] Separate scale factor per axis.
+    _remap*: >
+      [q3map] Remap shaders. Any property name starting with "_remap" counts.
+      Values are ; separated.
   proptypes:
     _frame: int
     modelscale: float
     modelscale_vec: vec3_float
+    _remap*: string
   propdefaults:
     modelscale: 1
     modelscale_vec: [1, 1, 1]
   propeg:
     _frame: 5
+    _remap*: models/buildables/tesla/tesla_main;textures/newmap/ter_dirt
   desc: >
     Static model baked into level geometry by q3map2.
     Can be walked through. Not animated, but you can choose one of the frames.
