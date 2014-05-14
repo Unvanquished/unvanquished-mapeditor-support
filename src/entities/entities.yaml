@@ -1237,7 +1237,7 @@
 - name: misc_anim_model
   aliasof: gfx_animated_model
   deprecated: y
-- name: misc_model
+- name: misc_model # OK
 # bug: deprecated, but no replacement given
 # misc_model differs from gfx_animated_model: it handled by q3map2
   deprecated: y
@@ -1246,11 +1246,11 @@
   size_min: [-12.0, -12.0, -12.0]
   size_max: [12.0, 12.0, 12.0]
   flags:
-  - RMGSHADER: ''
-  - CLIPMODELS: ''
-  - FORCEMETA: ''
+  - '-': '' # not used. key for sof2 shader renaming. If renaming if active
+    # "shader" renamed to "shader_BSP". With this flag set - to "shader_RMG_BSP"
+  - CLIPMODELS: Disallows walking through the model (makes it solid).
+  - FORCEMETA: Use lightmap lighting for the model.
   props:
-    # OK
     model: Path to a custom model.
     _frame: Animation frame to pick. This differs from gfx_animated_model.animation!
     angle: Simple model orientation.
@@ -1266,26 +1266,25 @@
     modelscale_vec: [1, 1, 1]
   propeg:
     _frame: 5
-  desc: > # OK
+  desc: >
     Static model baked into level geometry by q3map2.
     Can be walked through. Not animated, but you can choose one of the frames.
-- name: gfx_light_flare
+- name: gfx_light_flare # OK
   extend: [point]
   color: a6a6ff
-  flags: # ALL OK
+  flags:
   - SPAWN_DISABLED: *Spawn_disabled
   props:
-    # old props
+    shader: The name of the shader of the light flare.
     angles: This reflects which direction the flare points. It is not important unless
-      the second component of the radius key is employed. angles is a vector of PITCH
-      YAW ROLL. For example a value of "90 0 0" would create a flare pointing down.
-      ROLL is redundant in this context and can be set arbitrarily.
-    radius: 'The radius key is a vector.
+      the second component of the radius key is employed.
+    radius: >
+      The radius key is a vector.
 
       The first component is the size of the light flare. The radius is calculated
       by taking the distance of the viewer from the light flare and dividing by this
       key, so the larger the key value, the smaller the flare. Values between 2 and
-      10 are sensible. # OK
+      10 are sensible.
 
       The second component indicates the angle around the direction the flare points
       for which it is visible. For example a value of 90 means that you can see the
@@ -1298,15 +1297,9 @@
       to the same value as the first component, fading will commence as soon as the
       edge of the light flare is occluded by some surface between the viewer and the
       flare. If it is set larger the flare will overlap the occluding surface before
-      it begins to fade.'
-    targetShaderName: The name of the shader of the light flare.
-    # found in code
-    mindist: ''
-    speed: ''
-    shader: '' # or targetShaderName
-    #radius: ''
-    #angles: ''
-    # TODO: merge with misc_light_flare
+      it begins to fade.
+    mindist: Minimal distance for flare to appear.
+    speed: Fading time, msec. Useful only for cg_lightFlare 2.
   proptypes:
     mindist: int
   propdefaults:
@@ -1319,23 +1312,21 @@
 - name: misc_light_flare
   aliasof: gfx_light_flare
   deprecated: y
-- name: gfx_particle_system
+- name: gfx_particle_system # OK
 # bug: if player toggles entity twice quickly (->ON->OFF),
 # after "wait" delay it toggles once again (->ON)
 # and becomes constantly visible
   extend: [point]
   color: ff7f3f
-  flags: # ALL OK
+  flags:
   - SPAWN_DISABLED: *Spawn_disabled
   props:
-    # found in code
-    angles: ''
-    # OK
     psName: >
       Name of particle system.
-      Look at scripts/*.particle, you need the name residing inside of these files.
+      Look at scripts/*.particle, they contain particle system effects along with their names.
     wait: Wait after toggle, then toggle again. Disabled if value <= 0.
-    targetname: *TN
+    targetname: *toggleable
+    angles: Particle system orientation.
   proptypes:
     psName: string
     wait: float # variance not used
@@ -1345,61 +1336,65 @@
     psName: firebomb_subPS
   desc: >
     Particle system entity.
-
-    Setting this as target allows to toggle its activity. # OK
 - name: misc_particle_system
   aliasof: gfx_particle_system
   deprecated: y
-- name: gfx_portal_camera
+- name: gfx_portal_camera # OK
   extend: [point]
   color: ff7f3f
   flags:
-  # found in code
   - FRAME25: Slow rotation.
   - FRAME75: Fast rotation.
-  - NO_ROTATION: ''
+  - NO_ROTATION: Disable camera wiggling.
   props:
-    # old props
-    angles: this sets the pitch and yaw aiming angles of the portal camera (default
-      0 0). Use "roll" key to set roll angle.
-    roll: roll angle of camera. A value of 0 is upside down and 180 is the same as
-      the player's view.
-    target: point this to a target_position entity to set the camera's pointing direction.
-    targetname: a misc_portal_surface portal surface indicator must point to this.
+    targetname: A gfx_portal_surface portal surface indicator must point to this.
+    angles: Camera orientation. 3rd component is ignored in favour of "roll".
+    roll: Roll angle of camera.
+    target: Point this to a pos_target entity to set the camera's pointing direction.
   desc: >
-    Portal camera. This camera is used to project its view onto a portal surface
-    in the level through the intermediary of a misc_portal_surface entity. Use the
-    "angles" key or target a target_position or info_notnull entity to set the camera''s
-    pointing direction.
+    Portal camera.
 
-    Both the setting "angles" key or "targeting a target_position" methods can be
-    used to aim the camera. However, the target_position method is simpler. In both
-    cases, the "roll" key must be used to set the roll angle. If either the SLOWROTATE
-    or FASTROTATE spawnflag is set, then the "roll" value is irrelevant.
+    This camera is used to project its view onto a portal surface
+    in the level through the intermediary of a gfx_portal_surface entity. Use the
+    "angles" key or target a pos_target entity to set the camera's pointing direction.
+
+    Both the setting "angles" key or targeting a pos_target methods can be
+    used to aim the camera. However, the pos_target method is simpler. In both
+    cases, the "roll" key must be used to set the roll angle.
+
+    By default camera is wiggling. Use spawnflags to make it rotate or stand still.
 - name: misc_portal_camera
   aliasof: gfx_portal_camera
   deprecated: y
-- name: gfx_portal_surface
+- name: gfx_portal_surface # OK
   extend: [point]
   color: ff7f3f
   props:
-    # old props
-    target: point this to a misc_portal_camera that "sees" the view you want to display
+    target: point this to a gfx_portal_camera that "sees" the view you want to display
       on the portal.
   desc:
     Portal surface indicator. This will "lock on" the brush face closest to it
     and identify as a portal. The view displayed on the portal surface is the view
-    of the misc_portal_camera that this entity targets. Also used for mirrors (see
+    of the gfx_portal_camera that this entity targets. Also used for mirrors (see
     Notes).
 
     The entity must be no farther than 64 units away from the portal surface to lock
     onto it. To make a mirror, apply the common/mirror shader to the surface, place
-    this entity near it but don't target a misc_portal_camera.
+    this entity near it but don't target a gfx_portal_camera.
 - name: misc_portal_surface
   aliasof: gfx_portal_surface
   deprecated: y
-- name: gfx_shader_mod
-  color: '000000'
+- name: gfx_shader_mod # OK
+# bug: breaks depth test after activation
+# bug: cannot toggle
+  extend: [point]
+  color: ff7f3f
+  props:
+    shader: Name of original shader.
+    replacement: Name of replacement shader.
+    targetname: *TN
+  desc:
+    Entity remaps shader when activated.
 - name: sensor_buildable # OK
   color: &sensor_color 43aa00
   flags: &Some_sensors_flags
