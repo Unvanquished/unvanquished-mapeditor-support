@@ -3,7 +3,7 @@ mapeditor-support
 
 Unvanquished support files for map editors.
 
-**These packages are work in progress and may not yet work!**
+**These packages are work in progress!**
 
 Using the support files
 -----------------------
@@ -15,7 +15,7 @@ Packages
 
 Packages are available for
 
-* [Archlinux & Netradiant](https://aur.archlinux.org/packages/netradiant-unvanquished/)
+* [Archlinux & Netradiant](https://aur.archlinux.org/packages/netradiant-unvanquished-git/)
 
 Contributing
 ------------
