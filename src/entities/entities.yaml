@@ -1,10 +1,5 @@
 # TODO: rename targetname -> name
 # TODO: make [required] mark based on src/gamelogic/game/g_spawn.c:247
-# TODO: make yaml-aliased string for target
-# TODO: make same colors for all entity groups
-# TODO: mark all [q3map] properties
-# TODO: angle/angles
-# TODO: light's _flare _flareshader
 - name: worldspawn
   extend: [indexmap2]
   color: '000000'
@@ -140,7 +135,6 @@
   - NOGRIDLIGHT: Do not affect the lightgrid (dynamic entity lighting).
   props:
     #light_center: [dynamic]: no effect
-    #_flare, _flareshader: no effect
     light: Intensity.
     _color: Weighted RGB value of light color.
     _filterradius: >
@@ -197,6 +191,7 @@
       [dynamic] 3x3 rotation matrix for frustum box.
     parallel: >
       [dynamic,parallel] Make light parallel, similar to using orthogonal projection instead of usual frustum.
+    # lights can also do _flare and _flareshader (LensFlare etc). but it seems to be not supported by unv.
   proptypes:
     light: float
     _color: vec3_float
@@ -452,6 +447,7 @@
     range: Door triggering range.
     wait: Number of seconds before door returns.
     scale: Model scale factors for each axis.
+    angle: &angle Short version of "angles".
     angles: Model orientation.
     sound1to2: The sound played on start moving from state 1 to state 2.
     sound2to1: The sound played on start moving from state 2 to state 1.
@@ -554,7 +550,7 @@
   props:
     speed: Angle of swing arc in either direction from initial position.
     phase: Sets the start offset of the swinging cycle.
-    angle: Angle offset of axis of rotation from default X axis. Equivalent to angles = 0 a 0.
+    angle: *angle
     dmg: Damage dealt when blocked.
     # bug: parsed, but actually unused (maybe remove it?).
     # there is the line of code overrides this parameter
@@ -735,6 +731,7 @@
   extend: [point]
   color: &alienColor ff3300
   props: &Inter_props
+    angle: *angle
     angles: &Inter_ang Orientation.
     target: &Inter_target Alternative way to set orientation.
     onSpawn: Name of the target fired when player comes to the intermission view.
@@ -758,6 +755,7 @@
   extend: [point]
   color: ff00ff
   props:
+    angle: *angle
     angles: *Inter_ang
     target: *Inter_target
   desc: *Inter_desc
@@ -802,6 +800,7 @@
   extend: [point]
   color: 007f00
   props:
+    angle: *angle
     angles: Used for env_afx_teleport. Direction in which player will look when teleported.
     targetname: Name of this position.
   desc: >
@@ -1252,6 +1251,7 @@
     animation: >
       The guts of the entity. This is identical to an entry in an animation.cfg
       - Start Frame, Number of frames, Looping Frames, Frame rate.
+    angle: *angle
     angles: Orientation.
     radius: The scale of the model compared to its original size.
     targetname: *toggleable
@@ -1286,8 +1286,7 @@
       [q3map] Path to a custom model.
     _frame: >
       [q3map] Animation frame to pick. This differs from gfx_animated_model.animation!
-    angle: >
-      [q3map] Simple model orientation.
+    angle: *angle
     angles: >
       [q3map] Full model orientation.
     modelscale: >
@@ -1308,6 +1307,8 @@
   propeg:
     _frame: 5
     _remap*: models/buildables/tesla/tesla_main;textures/newmap/ter_dirt
+  propreplace:
+    angle: {'Short': '[q3map] Short'}
   desc: >
     Static model baked into level geometry by q3map2.
     Can be walked through. Not animated, but you can choose one of the frames.
@@ -1318,6 +1319,7 @@
   - SPAWN_DISABLED: *Spawn_disabled
   props:
     shader: The name of the shader of the light flare.
+    angle: *angle
     angles: This reflects which direction the flare points. It is not important unless
       the second component of the radius key is employed.
     radius: >
@@ -1368,6 +1370,7 @@
       Look at scripts/*.particle, they contain particle system effects along with their names.
     wait: Wait after toggle, then toggle again. Disabled if value <= 0.
     targetname: *toggleable
+    angle: *angle
     angles: Particle system orientation.
   proptypes:
     psName: string
@@ -1390,6 +1393,7 @@
   - NO_ROTATION: Disable camera wiggling.
   props:
     targetname: A gfx_portal_surface portal surface indicator must point to this.
+    angle: *angle
     angles: Camera orientation. 3rd component is ignored in favour of "roll".
     roll: Roll angle of camera.
     target: Point this to a pos_target entity to set the camera's pointing direction.
@@ -1412,7 +1416,7 @@
   extend: [point]
   color: ff7f3f
   props:
-    target: point this to a gfx_portal_camera that "sees" the view you want to display
+    target: Point this to a gfx_portal_camera that "sees" the view you want to display
       on the portal.
   desc:
     Portal surface indicator. This will "lock on" the brush face closest to it
@@ -1647,6 +1651,7 @@
   extend: [point]
   color: 4444ff
   props:
+    angle: *angle
     angles: >
       [q3map] Skybox geometry orientation.
     _scale: >
@@ -1656,6 +1661,8 @@
     _scale: vec3_float
   propdefaults:
     _scale: [64, 64, 64]
+  propreplace:
+    angle: {'Short': '[q3map] Short'}
   desc: >
     [q3map]-only entity. Used to make skybox with additional geometry (portal sky).
 
