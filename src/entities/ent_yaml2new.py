@@ -8,13 +8,6 @@ import argparse
 from copy import deepcopy
 
 
-postscriptum = '''
-
-If you find any mistakes or want to improve descriptions, feel free to message me:
-#unvanquished-dev at irc.freenode.net nickname Neu
-'''
-
-
 bad_token_re = re.compile(r'[}{)(\':\s]', re.M)
 
 def escape_token(t):
@@ -188,7 +181,6 @@ def print_entity(e, dt, pr_types=False, pr_defaults=False, pr_ranges=False, pr_e
     print_prop_desc(e, dt, pr_types, pr_defaults, pr_ranges, pr_eg)
     print_common_desc(e)
     print_specials(e)
-    print(postscriptum)
     print('*/')
     print()
 
@@ -540,7 +532,7 @@ elif args.generate:
     if args.header:
         with open(args.header, "r") as fp:
             for line in fp.readlines():
-                print("// {}".format(line.rstrip()))
+                print("// {}".format(line).rstrip())
         print()
     opts = {
         'pr_types': args.gtypes,
