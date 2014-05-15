@@ -1643,3 +1643,22 @@
     [q3map]-only entity that specifies a decal to be projected.
     Should contain 1 or more patch meshes (curves) and target an pos_target entity.
     The distance between the center of the _decal entity and the target is the axis and distance of projection.
+- name: _skybox
+  extend: [point]
+  color: 4444ff
+  props:
+    angles: >
+      [q3map] Skybox geometry orientation.
+    _scale: >
+      [q3map] Scale skybox geometry.
+      Can be vec3_float or just float (x=y=z=value).
+  proptypes:
+    _scale: vec3_float
+  propdefaults:
+    _scale: [64, 64, 64]
+  desc: >
+    [q3map]-only entity. Used to make skybox with additional geometry (portal sky).
+
+    Place this entity into isolated box.
+
+    More info: http://en.wikibooks.org/wiki/Q3Map2#skybox_tutorial
