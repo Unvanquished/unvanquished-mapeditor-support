@@ -1,3 +1,24 @@
+chain_autonom:
+  props:
+    targetname: Can possibly be fired.
+chain_active:
+  props:
+    target: >
+      [required] Must have entity to fire at.
+chain_passive:
+  props:
+    targetname: >
+      [required] Must be someone's target for firing.
+chain_relay:
+  props:
+    target: >
+      [required] Must have entity to fire at.
+    targetname: >
+      [required] Must be someone's target for firing.
+chain_target:
+  props:
+    targetname: >
+      [required] Must be someone's target for aiming.
 brush:
   color: 007fcc
   props:

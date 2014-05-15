@@ -490,6 +490,14 @@ def apply_extend(data, common):
     for i, e in enumerate(data):
         data[i] = apply_extends_to_entity(e, common)
 
+def cleanup_null_props(data):
+    for e in data:
+        props = e.get('props', {}).copy()
+        for k, v in e.get('props', {}).items():
+            if v is None:
+                del props[k]
+        e['props'] = props
+
 def load_yamls(name):
     data = load_yaml_file(args.yamlname)
     deftypes = load_yaml_file(get_additional_file_name(args.yamlname, 'deftypes'))
@@ -500,6 +508,8 @@ def load_yamls(name):
 
     apply_aliasof(data)
     apply_extend(data, common)
+
+    cleanup_null_props(data)
 
     return data, deftypes
 
