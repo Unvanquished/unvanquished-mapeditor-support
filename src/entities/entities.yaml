@@ -1,4 +1,6 @@
 # TODO: rename targetname -> name
+# TODO: finish worldspawn
+# TODO: check target_print for 2 players
 - name: worldspawn
   extend: [indexmap2]
   color: '000000'
@@ -121,7 +123,7 @@
       'name of': 'name of looping'
       file: file used for level's music
   desc: Only used for the world.
-- name: light # OK
+- name: light
 # bug: marked as deprecated in code. src/gamelogic/game/g_spawn.c:368
   extend: [point]
   color: a6a6ff
@@ -242,7 +244,7 @@
     Properties for dynamic realtime lights marked as [dynamic].
     Any property marked as [projected] if set makes dynamic light projected.
     Projected light requires most of its properties set, such as "light_target", "light_up", "light_right".
-- name: lightJunior # OK
+- name: lightJunior
   extend: [point]
   color: 00b34c
   size_min: [-6.0, -6.0, -6.0]
@@ -293,7 +295,7 @@
 
     The -pointscale and -scale arguments to Q3Map2 affect the brightness of these lights.
     The -skyscale argument affects brightness of entity sun lights.
-- name: func_bobbing # OK
+- name: func_bobbing
 # bug: after activation via targetname stops and never resumes
   extend: [chain_autonom,brush,indexmap2,mover]
   flags:
@@ -325,7 +327,7 @@
   desc: >
     Solid entity that oscillates back and forth in a linear motion.
     Entity bobs on the Z axis (up-down) by default.
-- name: func_button # OK
+- name: func_button
   extend: [chain_active,brush,indexmap2,mover]
   props:
     wait: &brush_wait Number of seconds before brush returns. -1 = return immediately.
@@ -359,7 +361,7 @@
     "angle" key, triggers all its targets, stays pressed by an amount of time set
     by the "wait" key, then returns to it's original position where it can be operated
     again.
-- name: func_destructable # OK
+- name: func_destructable
 # bug or not: object just disappers without any explosion effect or sound. players not pushed by "explosion".
   extend: [chain_autonom,brush,indexmap2]
   flags:
@@ -380,7 +382,7 @@
   desc: >
     Destructable object. You can destroy this object in game. When destructed deals splash damage
     to everyone near it. Does not cause splash damage to builables.
-- name: func_door # OK
+- name: func_door
 # bug: no "noise" key
   extend: [chain_autonom,brush,indexmap2,mover]
   flags:
@@ -428,7 +430,7 @@
   desc: >
     Normal sliding door entity. By default, the door will activate when player
     walks close ("range") to it or when damage is inflicted ("health") to it.
-- name: func_door_model # OK
+- name: func_door_model
 # bug: you can walk through closed door, it works only with targetname activation
 # bug: with targetname activation you can stuck inside door when it "closes"
 # bug: impossible to activate via "health" (shooting at door)
@@ -479,7 +481,7 @@
 
     Every func_door_model needs its model to be positioned, scaled and orientated
     using the modelOrigin, scale and angle/angles keys repsectively.
-- name: func_door_rotating # OK
+- name: func_door_rotating
 # maybe bug: no blocking damage.
   extend: [chain_autonom,brush,indexmap2,mover]
   flags:
@@ -533,7 +535,7 @@
   color: 007fcc
   desc: >
     Do not use.
-- name: func_group # OK
+- name: func_group
   extend: [brush,indexmap]
   desc: >
     This is not an entity as such. It is strictly an editor utility to group
@@ -542,7 +544,7 @@
 
     The TAB key can be used to flip through the component pieces of a selected func_group
     entity, isolating individual components.
-- name: func_pendulum # OK
+- name: func_pendulum
 # bug: instakill in very big touching angle. It should just rub, not squish.
   extend: [chain_autonom,brush,indexmap2,mover]
   props:
@@ -577,7 +579,7 @@
     length of the beam and gravity. Blocking the pendulum instantly kills a player.
 
     The speed of swing (frequency) is not adjustable.
-- name: func_plat # OK
+- name: func_plat
 # bug: when added to map raises warnings
 # Warning: failed to load sound sound/movers/plats/pt1_end.wav
 # Warning: failed to load sound sound/movers/plats/pt1_strt.wav
@@ -620,7 +622,7 @@
     but they spawn in the lowered position.
 
     The plat will stay in the raised position until the player steps off.
-- name: func_rotating # OK
+- name: func_rotating
 # bug: doesn't work when speed is not set
 # bug: by default rotates around 0 0 0 instead of brush center
   extend: [chain_autonom,brush,indexmap2,mover]
@@ -645,14 +647,14 @@
     origin: {'point.': 'point. Sets the rotation axis position.'}
   desc: >
     Solid entity that rotates continuously. Rotates on the Z axis by default.
-- name: func_spawn # OK
+- name: func_spawn
   extend: [chain_passive,brush,indexmap2]
   flags:
   - SPAWN_ENABLED: By default brush is present in level.
   - DONT_KILL: Disable killing on appearing.
   desc:
     Toggleable wall.
-- name: func_static # OK
+- name: func_static
 # bug: is it really chain_autonomous? what effect it can do on activation?
   extend: [chain_autonom,brush,indexmap2,mover]
   props:
@@ -676,7 +678,7 @@
     Static non-solid bspmodel.
 
     Used to add colour grading and reverb effects to specific area.
-- name: func_train # OK
+- name: func_train
 # bug: can watch through train when it pushes player
 # bug: incorrect movement when activated/deactivated waiting on path_corner
   extend: [chain_active,brush,indexmap2,mover]
@@ -708,7 +710,7 @@
 
     You must set proper "origin" coordinates. It used as base point for train brush.
     That base point moves over path_corners, i.e. you can shift the train off the path.
-- name: path_corner # OK
+- name: path_corner
   extend: [chain_target,point]
   color: 7f4c00
   props:
@@ -724,7 +726,7 @@
     wait: 0
   desc: >
     Path corner entity that func_trains can be made to follow.
-- name: pos_alien_intermission # OK
+- name: pos_alien_intermission
 # TODO: can be disabled by firing?
   extend: [chain_autonom,point]
   color: &alienColor ff3300
@@ -739,7 +741,7 @@
 - name: info_alien_intermission
   aliasof: pos_alien_intermission
   deprecated: y
-- name: pos_human_intermission # OK
+- name: pos_human_intermission
 # TODO: can be disabled by firing?
   extend: [chain_autonom,point]
   color: &humanColor 0033ff
@@ -750,7 +752,7 @@
 - name: info_human_intermission
   aliasof: pos_human_intermission
   deprecated: y
-- name: pos_player_intermission # OK
+- name: pos_player_intermission
 # TODO: can be disabled by firing?
   extend: [chain_autonom,point]
   color: ff00ff
@@ -764,7 +766,7 @@
 - name: info_player_intermission
   aliasof: pos_player_intermission
   deprecated: y
-- name: pos_location # OK
+- name: pos_location
 # TODO: any effect on fire?
   extend: [chain_autonom,point]
   color: 007f00
@@ -801,7 +803,7 @@
 - name: info_player_start
   aliasof: pos_player_spawn
   deprecated: y
-- name: pos_target # OK
+- name: pos_target
   extend: [chain_target,point]
   color: 007f00
   props:
@@ -838,12 +840,12 @@
   - ALIEN_TEAM: Only the alien team players will see the message. # OK, but TODO check net game
   - PRIVATE: Only the player that activates the target will see the message. # OK, but TODO check net game
   props:
-    message: text string to print on screen. # OK
+    message: text string to print on screen.
   desc: >
-    This will print a message on the center of the screen when triggered. # OK
+    This will print a message on the center of the screen when triggered.
 
     By default, all the clients will see the message.
-- name: target_push # OK
+- name: target_push
 # bug: "angles" + "speed" properties cannot be used. These properties can be removed though.
 #   target mechanism is sufficient. Also, entity is deprecated, skip this bug?
   deprecated: y
@@ -866,7 +868,7 @@
     originate. Place the target_push directly above the trigger_multiple and place
     the target_position entity at the highest point of the jump. Target the trigger_multiple
     to the target_push and target the target_push to the target_position/info_notnull.
-- name: target_teleporter # OK
+- name: target_teleporter
   deprecated: y
   extend: [chain_passive,point]
   color: 007f00
@@ -879,7 +881,7 @@
     Activating this will teleport players to the location of the targeted misc_teleporter_dest
     entity. Unlike trigger_teleport, this entity must be activated by a trigger and
     does NOT allow client prediction of events.
-- name: target_hurt # OK
+- name: target_hurt
   deprecated: y
   extend: [chain_passive,point]
   color: ff0000
@@ -1007,7 +1009,7 @@
   size_max: [56.0, 40.0, 20.0]
   desc: The alien leech.
   specials: {model: models/buildables/leech/leech.md3}
-- name: ctrl_limited # OK
+- name: ctrl_limited
   extend: [chain_relay,point]
   color: &ctrl_color 00b3b3
   flags:
@@ -1020,7 +1022,7 @@
   desc: >
     Can be triggered limited amount of times.
     Every activation fires targets.
-- name: ctrl_relay # OK
+- name: ctrl_relay
   extend: [chain_relay,point]
   color: *ctrl_color
   flags:
@@ -1035,7 +1037,7 @@
     wait: 0
   desc: &relay_desc >
     When activated waits amount of time then activates its own targets.
-- name: target_relay # OK
+- name: target_relay
   aliasof: ctrl_relay
   deprecated: y
   flags: &target_relay_flags
@@ -1047,7 +1049,7 @@
     wait: *relay_wait
   propdefaults:
     wait: 0
-- name: target_delay # OK
+- name: target_delay
   aliasof: ctrl_relay
   deprecated: y
   flags: *target_relay_flags
@@ -1056,7 +1058,7 @@
     wait: *relay_wait
   propdefaults:
     wait: 1
-- name: env_afx_ammo # OK
+- name: env_afx_ammo
   extend: [chain_autonom]
   color: 5b7c2d
   flags:
@@ -1076,7 +1078,7 @@
 - name: trigger_ammo
   aliasof: env_afx_ammo
   deprecated: y
-- name: env_afx_gravity # OK
+- name: env_afx_gravity
 # bug: local negative (<0) gravity fights with level gravity causing player to tremble
   extend: [chain_autonom]
   color: 7f7f7f
@@ -1089,7 +1091,7 @@
 - name: trigger_gravity
   aliasof: env_afx_gravity
   deprecated: y
-- name: env_afx_heal # OK
+- name: env_afx_heal
   extend: [chain_autonom]
   color: 2d7c50
   flags:
@@ -1106,7 +1108,7 @@
 - name: trigger_heal
   aliasof: env_afx_heal
   deprecated: y
-- name: env_afx_hurt # OK
+- name: env_afx_hurt
 # bug: can't customize sound
 # it is always sound/misc/electro.wav
   extend: [chain_autonom]
@@ -1127,7 +1129,7 @@
 - name: trigger_hurt
   aliasof: env_afx_hurt
   deprecated: y
-- name: env_afx_push # OK
+- name: env_afx_push
   extend: [chain_autonom]
   color: 7f7f7f
   flags:
@@ -1144,7 +1146,7 @@
 - name: trigger_push
   aliasof: env_afx_push
   deprecated: y
-- name: env_afx_teleport # OK
+- name: env_afx_teleport
 # bug: stepping into disabled teleport continuously shows flashing screen effect.
   extend: [chain_autonom]
   color: '754928'
@@ -1168,7 +1170,7 @@
 - name: trigger_teleport
   aliasof: env_afx_teleport
   deprecated: y
-- name: fx_rumble # OK
+- name: fx_rumble
 # bug: this is not an earthquake, this is jumping
   extend: [chain_passive,point]
   color: ff0000
@@ -1182,28 +1184,28 @@
 - name: target_rumble
   aliasof: fx_rumble
   deprecated: y
-- name: game_end # OK
+- name: game_end
 # improvement: make it able to end game in draw with team=0 or omitted
   extend: [chain_passive,point]
   color: &game_color ff0000
   props:
     team: &Team_number 1 for aliens, 2 for humans.
   desc: When triggered, this causes an unconditional win for the team.
-- name: target_alien_win # OK
+- name: target_alien_win
   aliasof: game_end
   deprecated: y
   color: *alienColor
   props:
     team: null
   descreplace: {'the team': 'the alien team'}
-- name: target_human_win # OK
+- name: target_human_win
   aliasof: game_end
   deprecated: y
   color: *humanColor
   props:
     team: null
   descreplace: {'the team': 'the human team'}
-- name: game_funds # OK
+- name: game_funds
   extend: [chain_passive,point]
   color: *game_color
   props:
@@ -1211,7 +1213,7 @@
   propdefaults:
     amount: 0
   desc: *game_desc
-- name: game_kill # OK
+- name: game_kill
   extend: [chain_passive,point]
   color: *game_color
   desc: *game_desc
@@ -1220,7 +1222,7 @@
 - name: target_kill
   aliasof: game_kill
   deprecated: y
-- name: game_score # OK
+- name: game_score
 # possible improvement: measure amount directly in score points
   extend: [chain_passive,point]
   color: *game_color
@@ -1235,7 +1237,7 @@
 - name: target_score
   aliasof: game_score
   deprecated: y
-- name: gfx_animated_model # OK
+- name: gfx_animated_model
   extend: [chain_autonom,point]
   color: &gfx_animated_model_color ff7f3f
   size_min: [-12.0, -12.0, -12.0]
@@ -1265,7 +1267,7 @@
 - name: misc_anim_model
   aliasof: gfx_animated_model
   deprecated: y
-- name: misc_model # OK
+- name: misc_model
 # bug: deprecated, but no replacement given
 # misc_model differs from gfx_animated_model: it handled by q3map2
   deprecated: y
@@ -1309,7 +1311,7 @@
   desc: >
     Static model baked into level geometry by q3map2.
     Can be walked through. Not animated, but you can choose one of the frames.
-- name: gfx_light_flare # OK
+- name: gfx_light_flare
   extend: [chain_autonom,point]
   color: a6a6ff
   flags:
@@ -1352,7 +1354,7 @@
 - name: misc_light_flare
   aliasof: gfx_light_flare
   deprecated: y
-- name: gfx_particle_system # OK
+- name: gfx_particle_system
 # bug: if player toggles entity twice quickly (->ON->OFF),
 # after "wait" delay it toggles once again (->ON)
 # and becomes constantly visible
@@ -1380,7 +1382,7 @@
 - name: misc_particle_system
   aliasof: gfx_particle_system
   deprecated: y
-- name: gfx_portal_camera # OK
+- name: gfx_portal_camera
   extend: [chain_target,point]
   color: ff7f3f
   flags:
@@ -1409,7 +1411,7 @@
 - name: misc_portal_camera
   aliasof: gfx_portal_camera
   deprecated: y
-- name: gfx_portal_surface # OK
+- name: gfx_portal_surface
   extend: [chain_autonom,point]
   color: ff7f3f
   props:
@@ -1427,7 +1429,7 @@
 - name: misc_portal_surface
   aliasof: gfx_portal_surface
   deprecated: y
-- name: gfx_shader_mod # OK
+- name: gfx_shader_mod
 # bug: breaks depth test after activation
 # bug: cannot toggle
   extend: [chain_passive,point]
@@ -1437,7 +1439,7 @@
     replacement: Name of replacement shader.
   desc:
     Entity remaps shader when activated.
-- name: sensor_buildable # OK
+- name: sensor_buildable
   extend: [chain_active]
   color: &sensor_color 43aa00
   flags: &Some_sensors_flags
@@ -1461,7 +1463,7 @@
 - name: trigger_buildable
   aliasof: sensor_buildable
   deprecated: y
-- name: sensor_creep # OK
+- name: sensor_creep
 # bug: cannot be toggled via targetname
 # possible improvement: "wait" triggering delay same as trigger_buildable
   extend: [chain_active,point]
@@ -1472,7 +1474,7 @@
     Detects creep, i.e. area where the building is allowed.
 
     If condition is satisfied fires targets continuously.
-- name: sensor_end # OK
+- name: sensor_end
   extend: [chain_active,point]
   color: *sensor_color
   flags: *Some_sensors_flags
@@ -1486,7 +1488,7 @@
 - name: trigger_win
   aliasof: sensor_end
   deprecated: y
-- name: sensor_player # OK
+- name: sensor_player
   extend: [chain_active]
 # bug: doesn't fire with minimum set of properties (target)
 # src/gamelogic/game/g_spawn_sensor.c:492 - set qtrue there?
@@ -1516,7 +1518,7 @@
 - name: trigger_equipment
   aliasof: sensor_player
   deprecated: y
-- name: trigger_multiple # OK
+- name: trigger_multiple
   aliasof: sensor_player
   deprecated: y
   color: *sensor_color
@@ -1530,14 +1532,14 @@
   propreplace: {}
   desc: >
     Triggered by a player.
-- name: sensor_power # OK
+- name: sensor_power
 # bug: sensor never triggers
 # src/gamelogic/game/g_spawn_sensor.c:590
   extend: [chain_active,point]
   color: *sensor_color
   flags:
   - SPAWN_DISABLED: *Spawn_disabled
-- name: sensor_stage # OK
+- name: sensor_stage
 # possible improvement: detect substages, stages down
   extend: [chain_active,point]
   color: *sensor_color
@@ -1550,14 +1552,14 @@
     team: {'humans.': 'humans. Omit if you don''t want to check the team.'}
   desc: >
     Triggers when the team reaches the stage. Stage down doesn't trigger.
-- name: trigger_stage # OK
+- name: trigger_stage
   aliasof: sensor_stage
   deprecated: y
   props:
     targetname: Can also be triggered as target.
     stage: *sensor_stage_stage
     team: *Team_number
-- name: sensor_start # OK
+- name: sensor_start
   extend: [chain_active,point]
   color: *sensor_color
   desc: >
@@ -1565,7 +1567,7 @@
 - name: trigger_always
   aliasof: sensor_start
   deprecated: y
-- name: sensor_support # OK
+- name: sensor_support
 # bug: cannot be toggled via targetname
 # bug: remove this entity? there is a sensor_creep already
   extend: [chain_active,point]
@@ -1579,7 +1581,7 @@
     Detects creep, i.e. area where the building is allowed.
 
     If condition is satisfied fires targets continuously.
-- name: sensor_timer # OK
+- name: sensor_timer
   extend: [chain_active,point]
   color: *sensor_color
   flags:
@@ -1592,7 +1594,7 @@
 - name: func_timer
 # maybe bug: not marked as deprecated in source code
   aliasof: sensor_timer
-- name: sfx_speaker # OK
+- name: sfx_speaker
   extend: [chain_autonom,point]
   color: 00b3b3
   flags:
