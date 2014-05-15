@@ -4,49 +4,32 @@
 # TODO: make same colors for all entity groups
 # TODO: mark all [q3map] properties
 # TODO: angle/angles
+# TODO: light's _flare _flareshader
 - name: worldspawn
   extend: [indexmap2]
   color: '000000'
   props:
-    _ambient OR ambient: Adds a constant value to overall lighting. Use is not recommended.
-      Ambient light will have a tendency to flatten out variations in light and shade.
-    _blocksize: q3map always splits the BSP tree along the planes X=_blocksize*n and
-      Y=_blocksize*n. Default _blocksize value is 1024. Increase the blocksize using
-      larger powers of 2 to reduce compile times on very large maps with a low structural
-      brush density.
-    _farplanedist: Limit on how many units the vis phase of compilation can see. Used
-      in combination with level-wide fog, it can help reduce r_speeds on large, open
-      maps.
-    _foghull: Shader to use for "fog hull." Foghull shader should be a sky shader.
-      Omit the "textures/" prefix.
-    _mingridlight: Minimum lightgrid (dynamic entity lighting) levelwide.
-    _minlight: Minimum light value, levelwide. Uses the _color key to set color. Does
-      not add unlike ambient.
-    _minvertexlight: Minimum vertex lighting, levelwide.
-    _noshadersun: Ignore q3map_sun/sun directives in sky shaders and ONLY use entity
-      sun lights.
-    gridsize: granularity of the lightgrid created by q3map. Value is three integers
-      separated by spaces, representing number of units between grid points in X Y
-      Z. Default gridsize value is 128 128 256. Use larger powers of 2 to reduce BSP
-      size and compile time on very large maps.
+    deluxeMapping: bool # not gtk q3map2
+    mapOverBrightBits: '' # not gtk q3map2
+    _q3map2_cmdline: '' # not gtk q3map2
+    hdrRGBE: bool # not gtk q3map2
+    mapOverBrightBits: ''
+    enabledust: '' # from shader manual, not in q3map2
+    # found in code
     reverbEffect: &revEffect Effect name. Use /testReverb <TAB> to view the list of possible values.
     reverbIntensity: &revIntensity Intensity of reverberation.
     # testReverb command works on these values
     # bug: causes game to crash CM_ClipHandleToModel: bad handle -1
-    humanBuildPoints: The maximum amount of power the humans can use. # bug: exist in code, but unused
-    humanRepeaterBuildPoints: maximum amount of power the humans can use around each repeater # bug: exist in code, but unused
-    alienBuildPoints: The maximum amount of sentience available to the overmind. # bug: exist in code, but unused
-    _color: or ambientColor RGB value for ambient light color (default is 0 0 0). # todo: no visible effect
-    fogColor: RGB (3 floats) # todo: no visible effect
-    fogDensity: float # todo: no visible effect
-    vertexremapshader: '' # todo:
-    remapshader: '' # todo:
-    gridsize: '' # todo:
-    deluxeMapping: only possible value is 1 # todo:
-    mapOverBrightBits: '' # todo:
-    _q3map2_cmdline: '' # todo:
-    hdrRGBE: '' # todo:
-    enabledust: '' # from shader manual
+    # idk how does it work on yocto.. did absolutely same values and got error
+    humanBuildPoints: The maximum amount of power the humans can use. # bug: no effect
+    humanRepeaterBuildPoints: maximum amount of power the humans can use around each repeater # bug: no effect
+    alienBuildPoints: The maximum amount of sentience available to the overmind. # bug: no effect
+    fogColor: RGB # bug: no effect
+    fogDensity: '' # bug: no effect
+    remapshader*: > # bug: R_RemapShader doesn't work
+      Remap shaders. Any property name starting with "remapshader" counts.
+      Values are ; separated.
+    # vertexremapshader skipped by game and commented in q3map2
     # OK:
     message: Shown above loading bar.
     music: &Sound_path Path/name of .wav or .ogg file.
@@ -70,6 +53,32 @@
       [q3map] Used for lights with "style" set. Star is replaced by numbers.
     _style*alphagen: >
       [q3map] Used for lights with "style" set. Star is replaced by numbers.
+    _ambient: >
+      [q3map] Adds a constant value to overall lighting. Use is not recommended.
+      Ambient light will have a tendency to flatten out variations in light and shade.
+    _color: >
+      [q3map] color value for "_ambient", "_minvertexlight", "_mingridlight".
+    _minvertexlight: >
+      [q3map] "_ambient" for vertex lighting.
+    _mingridlight: >
+      [q3map] "_ambient" for lightgrid (entity and weapon lighting).
+    _minlight: >
+      [q3map] Shorthand for setting both "_minvertexlight" and "_mingridlight".
+    _blocksize: >
+      [q3map] q3map always splits the BSP tree along the planes.
+      Increase the blocksize using larger powers of 2 to reduce compile times
+      on very large maps with a low structural brush density.
+    _farplanedist: >
+      [q3map] Limit on how many units the vis phase of compilation can see. Used
+      in combination with level-wide fog, it can help reduce r_speeds on large, open maps.
+      Use with "_foghull".
+    gridsize: >
+      [q3map] Granularity of the lightgrid created by q3map. Values for every axis. Minimum value is 8.
+    _noshadersun: >
+      [q3map] Ignore q3map_sun*/sun directives in sky shaders and ONLY use entity sun lights.
+    _foghull: >
+      [q3map] Shader to use for "fog hull." Foghull shader should be a sky shader.
+      Omit the "textures/" prefix. Use with "_farplanedist".
   proptypes:
     music: string
     disabledEquipment: string
@@ -79,16 +88,37 @@
     gravity: float
     reverbIntensity: float
     _keepLights: int
+    _ambient: float
+    _minvertexlight: float
+    _mingridlight: float
+    _minlight: float
+    _color: vec3_float
+    fogDensity: float
+    fogColor: vec3_float
+    _blocksize: vec3_int
+    gridsize: vec3_float
+    _noshadersun: int
+    remapshader*: string
   propdefaults:
     gravity: 800
     _keepLights: false
+    _blocksize: [1024, 1024, 1024]
+    _color: [1, 1, 1]
+    _noshadersun: false
   propranges:
     reverbIntensity: [0.0, 2.0]
   propeg:
     colorGrade: gfx/cgrading/red-only
     music: music/sonic5.wav
+    _ambient: 30
+    _minvertexlight: 30
+    _mingridlight: 30
+    _minlight: 30
+    gridsize: [64, 64, 128]
+    remapshader*: textures/newmap/ter_rock;textures/newmap/ter_sand
   boolvalues:
     _keepLights: [0, 1]
+    _noshadersun: [0, 1]
   propreplace:
     disabledBuildables: {'of buildables': 'of buildables to disable for this map'}
     disabledEquipment: {'weapons or upgrades': 'weapons or upgrades to disable for this map'}
