@@ -1,0 +1,73 @@
+# should not contain -keeplights
+- name: Build without visibility and lights
+  opts:
+    - meta: null
+      custinfoparms: null
+- name: Build without lights
+  opts:
+    - meta: null
+      custinfoparms: null
+    - vis: null
+      saveprt: null
+- name: Build with test settings (fast)
+  opts:
+    - meta: null
+      custinfoparms: null
+    - vis: null
+      fast: null
+      saveprt: null
+    - light: null
+      faster: null
+      patchshadows: null
+- name: Build with test settings (normal)
+  opts:
+    - meta: null
+      custinfoparms: null
+    - vis: null
+      saveprt: null
+    - light: null
+      faster: null
+      patchshadows: null
+- name: Build with test settings (slow)
+  opts:
+    - meta: null
+      custinfoparms: null
+      samplesize: 16
+    - vis: null
+      saveprt: null
+    - light: null
+      faster: null
+      dirty: null
+      patchshadows: null
+      samples: 2
+      lightmapsize: 1024
+      deluxe: null
+- name: Build with final settings (very slow)
+  opts:
+    - meta: null
+      custinfoparms: null
+      samplesize: 8
+    - vis: null
+      saveprt: null
+    - light: null
+      fast: null
+      shade: null
+      dirty: null
+      patchshadows: null
+      samples: 3
+      bouncegrid: null
+      bounce: 6
+      lightmapsize: 1024
+      deluxe: null
+- name: Minimap (small)
+  opts:
+    - minimap: null
+      size: 256
+      sharpen: 1
+      border: 0
+- name: Minimap (big)
+  opts:
+    - minimap: null
+      size: 1024
+      sharpen: 1
+      border: 0
