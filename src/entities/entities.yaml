@@ -71,7 +71,7 @@
     gridsize: >
       [q3map] Granularity of the lightgrid created by q3map. Values for every axis. Minimum value is 8.
     _noshadersun: >
-      [q3map] Ignore q3map_sun*/sun directives in sky shaders and ONLY use entity sun lights.
+      [q3map] Ignore q3map_sun*|sun directives in sky shaders and ONLY use entity sun lights.
     _foghull: >
       [q3map] Shader to use for "fog hull." Foghull shader should be a sky shader.
       Omit the "textures/" prefix. Use with "_farplanedist".

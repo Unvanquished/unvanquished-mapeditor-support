@@ -53,7 +53,7 @@ _keepLights: [q3map] Keep light entities in the BSP. Normally stripped out by th
 _mingridlight: [q3map] "_ambient" for lightgrid (entity and weapon lighting). (float, eg: 30)
 _minlight: [q3map] Shorthand for setting both "_minvertexlight" and "_mingridlight". (float, eg: 30)
 _minvertexlight: [q3map] "_ambient" for vertex lighting. (float, eg: 30)
-_noshadersun: [q3map] Ignore q3map_sun*/sun directives in sky shaders and ONLY use entity sun lights. (int, 0 or 1, def: 0)
+_noshadersun: [q3map] Ignore q3map_sun*|sun directives in sky shaders and ONLY use entity sun lights. (int, 0 or 1, def: 0)
 _style*alphagen: [q3map] Used for lights with "style" set. Star is replaced by numbers.
 _style*rgbgen: [q3map] Used for lights with "style" set. Star is replaced by numbers.
 gridsize: [q3map] Granularity of the lightgrid created by q3map. Values for every axis. Minimum value is 8. (vec3_float, eg: 64 64 128)
