@@ -7,8 +7,23 @@ import os.path
 from xml.etree import ElementTree as ET
 from datetime import datetime
 import argparse
+from collections import OrderedDict
+
 
 opt_filename = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'options.yaml')
+
+# load yaml data as ordered dict so generated file content keep the same order after each generation (reduces diff noise)
+def yaml_dict_representer(dumper, data):
+    return dumper.represent_dict(data.iteritems())
+
+
+def yaml_dict_constructor(loader, node):
+    return OrderedDict(loader.construct_pairs(node))
+
+
+yaml_mapping_tag = yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG
+yaml.add_representer(OrderedDict, yaml_dict_representer)
+yaml.add_constructor(yaml_mapping_tag, yaml_dict_constructor)
 
 
 def fine_format_xml(root):
