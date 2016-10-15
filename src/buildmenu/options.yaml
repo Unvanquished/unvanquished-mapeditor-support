@@ -40,8 +40,10 @@
       dirty: null
       patchshadows: null
       samples: 2
-      lightmapsize: 1024
+      samplesize: 16
       deluxe: null
+      lightmapsize: 1024
+      external: null
 - name: Build with final settings (very slow)
   opts:
     - meta: null
@@ -55,10 +57,12 @@
       dirty: null
       patchshadows: null
       samples: 3
+      samplesize: 8
       bouncegrid: null
-      bounce: 6
-      lightmapsize: 1024
+      bounce: 16
       deluxe: null
+      lightmapsize: 1024
+      external: null
 - name: Minimap (small)
   opts:
     - minimap: null
