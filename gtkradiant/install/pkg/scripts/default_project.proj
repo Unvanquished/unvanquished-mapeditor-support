@@ -1,44 +1,21 @@
 <?xml version="1.0"?>
 <!DOCTYPE project SYSTEM "dtds/project.dtd">
-<!--
-project template
-the $* strings will be expanded following these rules:
-$TEMPLATEapppath: path to the Radiant .. C:\Program Files\Gtkradiant
-$TEMPLATEenginepath: path to the engine .. C:\quake3\ C:\Program Files\Quake III Arena\ /usr/local/games/quake3/
-$TEMPLATEtoolspath: path to the tools directory (enginepath)radiant
-  (NOTE: on win32 tools directory is usually where the editor is .. but it's not true on linux)
-$TEMPLATEuserhomepath: on linux, the directory with write permissions for saving maps etc.
-  on win32, == $TEMPLATEenginepath
-$TEMPLATEbasedir: base game dir
 
-Note : Default project settings are for single player... this can be changed throught the projects select in the File Menu
-
--->
 <project>
-<key name="version" value="2"/>
-<!-- bump template_version to force a regen of the user project file from the template. Useful when tweaking the commands -->
-<key name="template_version" value="9"/>
-<key name="basepath" value="$TEMPLATEenginepath$TEMPLATEbasedir/"/>
-<key name="rshcmd" value=""/>
-<key name="entitypath" value="$TEMPLATEtoolspath$TEMPLATEbasedir/scripts/entities.def"/>
-<key name="texturepath" value="$TEMPLATEenginepath$TEMPLATEbasedir/textures/"/>
-<key name="autosave" value="$TEMPLATEuserhomepath$TEMPLATEbasedir/maps/autosave.map"/>
-<key name="mapspath" value="$TEMPLATEuserhomepath$TEMPLATEbasedir/maps/"/>
-
-<!-- ! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; ... $ -->
-
-<key name="bsp_Q3Map2: minimap (small)" value="! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -minimap -size 256 -sharpen 1 -border 0 $" />
-
-<key name="bsp_Q3Map2: build with final settings (very slow)" value="! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -meta -custinfoparms -samplesize 8 $ &amp;&amp; ! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -vis -saveprt $ &amp;&amp; ! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -light -fast -shade -dirty -patchshadows -samples 3 -bouncegrid -bounce 6 -lightmapsize 1024 -deluxe $" />
-
-<key name="bsp_Q3Map2: build with test settings (slow)" value="! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -meta -custinfoparms -samplesize 16 $ &amp;&amp; ! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -vis -saveprt $ &amp;&amp; ! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -light -faster -dirty -patchshadows -samples 2 -lightmapsize 1024 -deluxe $" />
-
-<key name="bsp_Q3Map2: build with test settings (normal)" value="! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -meta -custinfoparms $ &amp;&amp; ! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -vis -saveprt $ &amp;&amp; ! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -light -faster -patchshadows $" />
-
-<key name="bsp_Q3Map2: build with test settings (fast)" value="! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -meta -custinfoparms $ &amp;&amp; ! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -vis -fast -saveprt $ &amp;&amp; ! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -light -faster -patchshadows $" />
-
-<key name="bsp_Q3Map2: build without lights" value="! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -meta -custinfoparms $ &amp;&amp; ! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -vis -saveprt $" />
-
-<key name="bsp_Q3Map2: build without visibility and lights" value="! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -meta -custinfoparms $" />
-
+<key name="version" value="2" />
+<key name="template_version" value="6207" />
+<key name="basepath" value="$TEMPLATEenginepath$TEMPLATEbasedir/" />
+<key name="rshcmd" value="" />
+<key name="entitypath" value="$TEMPLATEtoolspath$TEMPLATEbasedir/scripts/entities.def" />
+<key name="texturepath" value="$TEMPLATEenginepath$TEMPLATEbasedir/textures/" />
+<key name="autosave" value="$TEMPLATEuserhomepath$TEMPLATEbasedir/maps/autosave.map" />
+<key name="mapspath" value="$TEMPLATEuserhomepath$TEMPLATEbasedir/maps/" />
+<key name="bsp_Q3Map2: Build without visibility and lights" value="! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -meta -custinfoparms $" />
+<key name="bsp_Q3Map2: Build without lights" value="! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -meta -custinfoparms $ &amp;&amp; ! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -vis -saveprt $" />
+<key name="bsp_Q3Map2: Build with test settings (fast)" value="! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -meta -custinfoparms $ &amp;&amp; ! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -vis -fast -saveprt $ &amp;&amp; ! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -light -faster -patchshadows $" />
+<key name="bsp_Q3Map2: Build with test settings (normal)" value="! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -meta -custinfoparms $ &amp;&amp; ! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -vis -saveprt $ &amp;&amp; ! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -light -faster -patchshadows $" />
+<key name="bsp_Q3Map2: Build with test settings (slow)" value="! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -meta -custinfoparms -samplesize 16 $ &amp;&amp; ! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -vis -saveprt $ &amp;&amp; ! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -light -faster -dirty -patchshadows -samples 2 -samplesize 16 -deluxe -lightmapsize 1024 -external $" />
+<key name="bsp_Q3Map2: Build with final settings (very slow)" value="! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -meta -custinfoparms -samplesize 8 $ &amp;&amp; ! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -vis -saveprt $ &amp;&amp; ! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -light -fast -shade -dirty -patchshadows -samples 3 -samplesize 8 -bouncegrid -bounce 16 -deluxe -lightmapsize 1024 -external $" />
+<key name="bsp_Q3Map2: Minimap (small)" value="! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -minimap -size 256 -sharpen 1 -border 0 $" />
+<key name="bsp_Q3Map2: Minimap (big)" value="! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -minimap -size 1024 -sharpen 1 -border 0 $" />
 </project>
