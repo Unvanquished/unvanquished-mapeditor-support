@@ -2,10 +2,13 @@
 
 cd "$(dirname "${0}")"
 
-SRC='../src'
-GTKRADIANT='../build/gtkradiant'
-NETRADIANT='../build/netradiant'
-SETTINGS="${SRC}/settings.ini"
+echo $SRC_DIR
+SRC_DIR="${SRC_DIR:-../src}"
+BUILD_DIR="${BUILD_DIR:-../build}"
+
+gtkradiant_build_dir="${BUILD_DIR}/gtkradiant"
+netradiant_build_dir="${BUILD_DIR}/netradiant"
+settings_file="${SRC_DIR}/settings.ini"
 
 printHelp () {
 	tab="$(printf '\t')"
@@ -46,9 +49,9 @@ readIni () {
 	| sed -e 's/[^=]*[^=]=//'
 }
 
-gamename="$(readIni "${SETTINGS}" 'gamename')"
-basegame="$(readIni "${SETTINGS}" 'basegame')"
-entities="$(readIni "${SETTINGS}" 'entities')"
+gamename="$(readIni "${settings_file}" 'gamename')"
+basegame="$(readIni "${settings_file}" 'basegame')"
+entities="$(readIni "${settings_file}" 'entities')"
 
 if [ -z "${gamename}" ]
 then
@@ -73,55 +76,55 @@ buildForEditor () {
 
 	case ${editor_name} in
 		'gtkradiant')
-			xlink_dir="${GTKRADIANT}/game"
-			entities_dir="${GTKRADIANT}/install/${basegame}/scripts"
+			xlink_dir="${gtkradiant_build_dir}/game"
+			entities_dir="${gtkradiant_build_dir}/install/${basegame}/scripts"
 			buildmenu_option="--gtkradiant"
-			buildmenu_dir="${GTKRADIANT}/install/${basegame}/scripts"
+			buildmenu_dir="${gtkradiant_build_dir}/install/${basegame}/scripts"
 			buildmenu_file='default_project.proj'
-			shaderlist_dir="${GTKRADIANT}/install/${basegame}/scripts"
-			synapse_dir="${GTKRADIANT}/game"
+			shaderlist_dir="${gtkradiant_build_dir}/install/${basegame}/scripts"
+			synapse_dir="${gtkradiant_build_dir}/game"
 		;;
 		'netradiant')
-			xlink_dir="${NETRADIANT}/${gamename}.game/"
-			entities_dir="${NETRADIANT}/${gamename}.game/${basegame}"
+			xlink_dir="${netradiant_build_dir}/${gamename}.game/"
+			entities_dir="${netradiant_build_dir}/${gamename}.game/${basegame}"
 			buildmenu_option="--netradiant"
-			buildmenu_dir="${NETRADIANT}/${gamename}.game"
+			buildmenu_dir="${netradiant_build_dir}/${gamename}.game"
 			buildmenu_file="default_build_menu.xml"
-			shaderlist_dir="${NETRADIANT}/install/${basegame}"
-			games_dir="${NETRADIANT}/games"
+			shaderlist_dir="${netradiant_build_dir}/install/${basegame}"
+			games_dir="${netradiant_build_dir}/games"
 			game_file="${gamename}.game"
 		;;
 	esac
 
 	mkdir --verbose --parents "${xlink_dir}"
-	cp --verbose "${SRC}/xlink/game.xlink" "${xlink_dir}/game.xlink"
+	cp --verbose "${SRC_DIR}/xlink/game.xlink" "${xlink_dir}/game.xlink"
 
 	mkdir --verbose --parents "${shaderlist_dir}"
-	cp --verbose "${SRC}/shaderlist/shaderlist.txt" "${shaderlist_dir}/default_shaderlist.txt"
+	cp --verbose "${SRC_DIR}/shaderlist/shaderlist.txt" "${shaderlist_dir}/default_shaderlist.txt"
 
 	mkdir --verbose --parents "${entities_dir}"
 	case "${entities}" in
 		'yaml')
 			echo "entities.py >>>> '${entities_dir}/entities.def'"
-			./entities.py -gdTDRE -p "${SRC}/entities/header.txt" "${SRC}/entities/entities.yaml" > "${entities_dir}/entities.def"
+			./entities.py -gdTDRE -p "${SRC_DIR}/entities/header.txt" "${SRC_DIR}/entities/entities.yaml" > "${entities_dir}/entities.def"
 		;;
 		'def')
-			cp --verbose "${SRC}/entities/entities.def" "${entities_dir}/entities.def"
+			cp --verbose "${SRC_DIR}/entities/entities.def" "${entities_dir}/entities.def"
 		;;
 	esac
 
 	mkdir --verbose --parents "${buildmenu_dir}"
 	echo "buildmenu.py >>>> '${buildmenu_dir}/${buildmenu_file}'"
-	./buildmenu.py "${buildmenu_option}" "${SRC}/buildmenu/buildmenu.yaml" > "${buildmenu_dir}/${buildmenu_file}"
+	./buildmenu.py "${buildmenu_option}" "${SRC_DIR}/buildmenu/buildmenu.yaml" > "${buildmenu_dir}/${buildmenu_file}"
 
 	case ${editor_name} in
 		'gtkradiant')
 			mkdir --verbose --parents "${synapse_dir}"
-			cp --verbose "${SRC}/synapse/synapse.config" "${synapse_dir}/synapse.config"
+			cp --verbose "${SRC_DIR}/synapse/synapse.config" "${synapse_dir}/synapse.config"
 		;;
 		'netradiant')
 			mkdir --verbose --parents "${games_dir}"
-			cp --verbose "${SRC}/gamefile/file.game" "${games_dir}/${game_file}"
+			cp --verbose "${SRC_DIR}/gamefile/file.game" "${games_dir}/${game_file}"
 		;;
 	esac
 }
