@@ -10,8 +10,6 @@ import argparse
 from collections import OrderedDict
 
 
-opt_filename = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'options.yaml')
-
 # load yaml data as ordered dict so generated file content keep the same order after each generation (reduces diff noise)
 def yaml_dict_representer(dumper, data):
     return dumper.represent_dict(data.iteritems())
@@ -127,20 +125,19 @@ def create_parser():
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         description='Generates radiant q3map2 build menu file.')
 
+    parser.add_argument('filename', metavar="buildmenu.yaml", type=argparse.FileType('r'), help='buildmenu.yaml')
     group = parser.add_argument_group(title='Radiant')
     group = group.add_mutually_exclusive_group(required=True)
-    group.add_argument('-n', '--net', action='store_true', help='NetRadiant')
-    group.add_argument('-g', '--gtk', action='store_true', help='GtkRadiant')
+    group.add_argument('-n', '--netradiant', action='store_true', help='NetRadiant')
+    group.add_argument('-g', '--gtkradiant', action='store_true', help='GtkRadiant')
 
     return parser
 
 args = create_parser().parse_args()
+text = args.filename.read()
+data = yaml.load(text)
 
-with open(opt_filename, 'r') as f:
-    text = f.read()
-    data = yaml.load(text)
-
-    if args.net:
-        print_netradiant_file(data)
-    elif args.gtk:
-        print_gtkradiant_file(data)
+if args.netradiant:
+	print_netradiant_file(data)
+elif args.gtkradiant:
+	print_gtkradiant_file(data)
