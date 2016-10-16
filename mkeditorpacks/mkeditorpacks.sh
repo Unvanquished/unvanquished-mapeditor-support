@@ -37,17 +37,17 @@ readIni () {
 	ini_file="${1}"
 	ini_key="${2}"
 
-	if ! [ -f "${1}" ]
-	then
-		echo "ERROR: missing ini file"
-		exit 1
-	fi
-
 	sanitizeIni < ${ini_file} \
 	| grep "^${ini_key}=" \
 	| head -n 1 \
 	| sed -e 's/[^=]*[^=]=//'
 }
+
+if ! [ -f "${settings_file}" ]
+then
+	echo "ERROR: missing settings.ini file"
+	exit 1
+fi
 
 gamename="$(readIni "${settings_file}" 'gamename')"
 basegame="$(readIni "${settings_file}" 'basegame')"
@@ -55,19 +55,19 @@ entities="$(readIni "${settings_file}" 'entities')"
 
 if [ -z "${gamename}" ]
 then
-	echo "ERROR: missing gamename ini key"
+	echo "ERROR: missing gamename key in settings.ini"
 	exit 1
 fi
 
 if [ -z "${basegame}" ]
 then
-	echo "ERROR: missing basegame ini key"
+	echo "ERROR: missing basegame key in settings.ini"
 	exit 1
 fi
 
 if [ -z "${entities}" ]
 then
-	echo "ERROR: missing entities ini key"
+	echo "ERROR: missing entities key in settings.ini"
 	exit 1
 fi
 
