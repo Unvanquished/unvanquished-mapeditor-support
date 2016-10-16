@@ -1,7 +1,7 @@
 all: gtkradiant netradiant
 
 gtkradiant:
-	./mkgamepack.sh --gtkradiant
+	./mkeditorpacks.sh --gtkradiant
 
 netradiant:
-	./mkgamepack.sh --netradiant
+	./mkeditorpacks.sh --netradiant
