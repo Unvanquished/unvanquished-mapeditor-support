@@ -1,11 +1,9 @@
 #! /bin/sh
 
-cd "$(dirname "${0}")"
-
-echo $SRC_DIR
 SRC_DIR="${SRC_DIR:-../src}"
 BUILD_DIR="${BUILD_DIR:-../build}"
 
+bin_dir="$(dirname "${0}")"
 gtkradiant_build_dir="${BUILD_DIR}/gtkradiant"
 netradiant_build_dir="${BUILD_DIR}/netradiant"
 settings_file="${SRC_DIR}/settings.ini"
@@ -42,6 +40,8 @@ readIni () {
 	| head -n 1 \
 	| sed -e 's/[^=]*[^=]=//'
 }
+
+cd "${bin_dir}"
 
 if ! [ -f "${settings_file}" ]
 then
@@ -106,7 +106,7 @@ buildForEditor () {
 	case "${entities}" in
 		'yaml')
 			echo "entities.py >>>> '${entities_dir}/entities.def'"
-			./entities.py -gdTDRE -p "${SRC_DIR}/entities/header.txt" "${SRC_DIR}/entities/entities.yaml" > "${entities_dir}/entities.def"
+			"${bin_dir}/tools/entities.py" -gdTDRE -p "${SRC_DIR}/entities/header.txt" "${SRC_DIR}/entities/entities.yaml" > "${entities_dir}/entities.def"
 		;;
 		'def')
 			cp --verbose "${SRC_DIR}/entities/entities.def" "${entities_dir}/entities.def"
@@ -115,7 +115,7 @@ buildForEditor () {
 
 	mkdir --verbose --parents "${buildmenu_dir}"
 	echo "buildmenu.py >>>> '${buildmenu_dir}/${buildmenu_file}'"
-	./buildmenu.py "${buildmenu_option}" "${SRC_DIR}/buildmenu/buildmenu.yaml" > "${buildmenu_dir}/${buildmenu_file}"
+	"${bin_dir}/tools/buildmenu.py" "${buildmenu_option}" "${SRC_DIR}/buildmenu/buildmenu.yaml" > "${buildmenu_dir}/${buildmenu_file}"
 
 	case ${editor_name} in
 		'gtkradiant')
