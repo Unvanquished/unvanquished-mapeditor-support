@@ -3,7 +3,7 @@
 
 <project>
 <key name="version" value="2" />
-<key name="template_version" value="6207" />
+<key name="template_version" value="6208" />
 <key name="basepath" value="$TEMPLATEenginepath$TEMPLATEbasedir/" />
 <key name="rshcmd" value="" />
 <key name="entitypath" value="$TEMPLATEtoolspath$TEMPLATEbasedir/scripts/entities.def" />
