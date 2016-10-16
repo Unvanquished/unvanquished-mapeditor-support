@@ -10,8 +10,8 @@ Using the support files
 
 Pick the directory corresponding to your editor and merge the file hierarchy inside the `gamepack` subdirectory into its installation. Further installation instructions are given in a seperate per-editor readme file.
 
-* [GtkRadiant readme](gtkradiant/README.md)
-* [NetRadiant readme](netradiant/README.md)
+* [GtkRadiant readme](build/gtkradiant/README.md)
+* [NetRadiant readme](build/netradiant/README.md)
 
 Packages
 --------
@@ -23,4 +23,4 @@ Packages are available for
 Contributing
 ------------
 
-The `src` directory contains common files, source files and export scripts that populate the editor specific directories. Files that aren't editor-specific should be maintained there. Ideally we will be able to auto-generate the entire contents of the editor directories eventually.
+It can sound obvious, but the `src` directory contains source files. The `build` directory contains the generated files. Do not modify files in `build` directories (except the readme files) or your changes will be overwritten.
