@@ -8,4 +8,10 @@ clean:
 	rm -Rf ${BUILD_DIR}
 
 all:
-	$(MAKE) -C mkeditorpacks
+	$(MAKE) -C mkeditorpacks all
+
+gtkradiant:
+	$(MAKE) -C mkeditorpacks gtkradiant
+
+netradiant:
+	$(MAKE) -C mkeditorpacks netradiant
