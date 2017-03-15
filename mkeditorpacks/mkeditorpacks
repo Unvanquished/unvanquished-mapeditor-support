@@ -12,6 +12,10 @@ SRC_DIR = os.getenv("SRC_DIR")
 if not SRC_DIR:
 	SRC_DIR = "../src"
 
+DOCS_DIR = os.getenv("DOCS_DIR")
+if not DOCS_DIR:
+	DOCS_DIR = "../docs"
+
 BUILD_DIR = os.getenv("BUILD_DIR")
 if not BUILD_DIR:
 	BUILD_DIR = "../build"
@@ -21,8 +25,6 @@ def error(message):
 
 bin_dir = os.path.abspath(os.path.dirname(os.path.realpath(sys.argv[0])))
 
-gtkradiant_build_dir = os.path.join(BUILD_DIR, "gtkradiant")
-netradiant_build_dir = os.path.join(BUILD_DIR, "netradiant")
 settings_file = os.path.join(SRC_DIR, "settings.ini")
 
 os.chdir(bin_dir)
@@ -45,26 +47,30 @@ if "basegame" not in settings.keys():
 if "entities" not in settings.keys():
 	error("missing entities key in settings.ini")
 
-def build (editor_name):
+def build(editor_name):
+	build_dir = os.path.join(BUILD_DIR, editor_name)
 
 	if editor_name == "gtkradiant":
-		xlink_dir = os.path.join(gtkradiant_build_dir, "game")
-		entities_dir = os.path.join(gtkradiant_build_dir, "install", basegame, "scripts")
+		xlink_dir = os.path.join(build_dir, "game")
+		entities_dir = os.path.join(build_dir, "install", basegame, "scripts")
 		buildmenu_option = "--gtkradiant"
-		buildmenu_dir = os.path.join(gtkradiant_build_dir, "install", basegame, "scripts")
+		buildmenu_dir = os.path.join(build_dir, "install", basegame, "scripts")
 		buildmenu_file = "default_project.proj"
-		shaderlist_dir = os.path.join(gtkradiant_build_dir, "install", basegame, "scripts")
-		synapse_dir = os.path.join(gtkradiant_build_dir, "game")
+		shaderlist_dir = os.path.join(build_dir, "install", basegame, "scripts")
+		synapse_dir = os.path.join(build_dir, "game")
 	elif editor_name == "netradiant":
 		game_dir = gamename + ".game"
 		game_file = gamename + ".game"
-		xlink_dir = os.path.join(netradiant_build_dir, game_dir)
-		entities_dir = os.path.join(netradiant_build_dir, game_dir, basegame)
+		xlink_dir = os.path.join(build_dir, game_dir)
+		entities_dir = os.path.join(build_dir, game_dir, basegame)
 		buildmenu_option = "--netradiant"
-		buildmenu_dir = os.path.join(netradiant_build_dir, game_dir)
+		buildmenu_dir = os.path.join(build_dir, game_dir)
 		buildmenu_file = "default_build_menu.xml"
-		shaderlist_dir = os.path.join(netradiant_build_dir, "install", basegame)
-		games_dir = os.path.join(netradiant_build_dir, "games")
+		shaderlist_dir = os.path.join(build_dir, "install", basegame)
+		games_dir = os.path.join(build_dir, "games")
+
+	os.makedirs(build_dir, exist_ok=True)
+	shutil.copyfile(os.path.join(DOCS_DIR, editor_name, "README.md"), os.path.join(build_dir, "README.md"))
 
 	os.makedirs(xlink_dir, exist_ok=True)
 	shutil.copyfile(os.path.join(SRC_DIR, "xlink", "game.xlink"), os.path.join(xlink_dir, "game.xlink"))
@@ -108,7 +114,6 @@ def build (editor_name):
 	elif editor_name == "netradiant":
 		os.makedirs(games_dir, exist_ok=True)
 		shutil.copyfile(os.path.join(SRC_DIR, "gamefile", "file.game"), os.path.join(games_dir, game_file))
-
 
 parser = argparse.ArgumentParser(description = "make editor packs")
 parser.add_argument("-g", "--gtkradiant", dest="gtkradiant", help="build GtkRadiant gamepack", action="store_true")
