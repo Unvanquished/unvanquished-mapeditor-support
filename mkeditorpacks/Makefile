@@ -1,3 +1,5 @@
+.DEFAULT_GOAL := all
+
 all: gtkradiant netradiant
 
 gtkradiant:
