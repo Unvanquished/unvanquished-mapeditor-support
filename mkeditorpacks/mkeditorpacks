@@ -66,7 +66,6 @@ def build(editor_name):
 		buildmenu_option = "--netradiant"
 		buildmenu_dir = os.path.join(build_dir, game_dir)
 		buildmenu_file = "default_build_menu.xml"
-		shaderlist_dir = os.path.join(build_dir, "install", basegame)
 		games_dir = os.path.join(build_dir, "games")
 
 	os.makedirs(build_dir, exist_ok=True)
@@ -74,9 +73,6 @@ def build(editor_name):
 
 	os.makedirs(xlink_dir, exist_ok=True)
 	shutil.copyfile(os.path.join(SRC_DIR, "xlink", "game.xlink"), os.path.join(xlink_dir, "game.xlink"))
-
-	os.makedirs(shaderlist_dir, exist_ok=True)
-	shutil.copyfile(os.path.join(SRC_DIR, "shaderlist", "shaderlist.txt"), os.path.join(shaderlist_dir, "default_shaderlist.txt"))
 
 	os.makedirs(entities_dir, exist_ok=True)
 	entities_path = os.path.join(entities_dir, "entities.def")
@@ -108,6 +104,9 @@ def build(editor_name):
 	f.close()
 
 	if editor_name == "gtkradiant":
+		os.makedirs(shaderlist_dir, exist_ok=True)
+		shutil.copyfile(os.path.join(SRC_DIR, "shaderlist", "shaderlist.txt"), os.path.join(shaderlist_dir, "default_shaderlist.txt"))
+
 		os.makedirs(synapse_dir, exist_ok=True)
 		shutil.copyfile(os.path.join(SRC_DIR, "synapse", "synapse.config"), os.path.join(synapse_dir, "synapse.config"))
 
