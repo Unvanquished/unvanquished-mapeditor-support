@@ -15,7 +15,7 @@
   unknowngamename="Unvanquished Mod"
   shaderpath="scripts"
   archivetypes="pk3"
-  texturetypes="tga jpg png pcx bmp webp"
+  texturetypes="tga jpg png pcx bmp"
   modeltypes="md3 ase lwo obj 3ds picoterrain"
   maptypes="mapq3"
   shaders="quake3"
