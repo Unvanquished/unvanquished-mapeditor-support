@@ -10,10 +10,3 @@ Supported editors
 
 - [GtkRadiant](http://icculus.org/gtkradiant/)
 - [NetRadiant](https://gitlab.com/xonotic/netradiant)
-
-Authors
--------
-
-- Maximilian “Viech” Stahlberg
-- Vitalik “neumond” Verhovodov
-- Thomas “illwieckz” Debesse

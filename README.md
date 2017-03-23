@@ -23,4 +23,4 @@ Packages are available for
 Contributing
 ------------
 
-It can sound obvious, but the `src` directory contains source files. The `build` directory contains the generated files. Do not modify files in `build` directories (except the readme files) or your changes will be overwritten.
+It can sound obvious, but the `src` directory contains source files. The `build` directory contains the generated files. Do not modify files in `build` directories or your changes will be overwritten.
