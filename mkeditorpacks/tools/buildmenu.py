@@ -1,4 +1,29 @@
 #!/usr/bin/env python3
+#-*- coding: UTF-8 -*-
+
+# Copyright (c) 2014-2017, Daemon Developers
+# All rights reserved.
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#  * Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#  * Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in the
+#    documentation and/or other materials provided with the distribution.
+#  * Neither the name of the Daemon developers nor the
+#    names of its contributors may be used to endorse or promote products
+#    derived from this software without specific prior written permission.
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+# ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL DAEMON DEVELOPERS BE LIABLE FOR ANY
+# DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+# ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 
 import yaml
 import re
@@ -7,8 +32,21 @@ import os.path
 from xml.etree import ElementTree as ET
 from datetime import datetime
 import argparse
+from collections import OrderedDict
 
-opt_filename = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'options.yaml')
+
+# load yaml data as ordered dict so generated file content keep the same order after each generation (reduces diff noise)
+def yaml_dict_representer(dumper, data):
+    return dumper.represent_dict(data.iteritems())
+
+
+def yaml_dict_constructor(loader, node):
+    return OrderedDict(loader.construct_pairs(node))
+
+
+yaml_mapping_tag = yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG
+yaml.add_representer(OrderedDict, yaml_dict_representer)
+yaml.add_constructor(yaml_mapping_tag, yaml_dict_constructor)
 
 
 def fine_format_xml(root):
@@ -112,20 +150,19 @@ def create_parser():
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         description='Generates radiant q3map2 build menu file.')
 
+    parser.add_argument('filename', metavar="buildmenu.yaml", type=argparse.FileType('r'), help='buildmenu.yaml')
     group = parser.add_argument_group(title='Radiant')
     group = group.add_mutually_exclusive_group(required=True)
-    group.add_argument('-n', '--net', action='store_true', help='NetRadiant')
-    group.add_argument('-g', '--gtk', action='store_true', help='GtkRadiant')
+    group.add_argument('-n', '--netradiant', action='store_true', help='NetRadiant')
+    group.add_argument('-g', '--gtkradiant', action='store_true', help='GtkRadiant')
 
     return parser
 
 args = create_parser().parse_args()
+text = args.filename.read()
+data = yaml.load(text)
 
-with open(opt_filename, 'r') as f:
-    text = f.read()
-    data = yaml.load(text)
-
-    if args.net:
-        print_netradiant_file(data)
-    elif args.gtk:
-        print_gtkradiant_file(data)
+if args.netradiant:
+	print_netradiant_file(data)
+elif args.gtkradiant:
+	print_gtkradiant_file(data)

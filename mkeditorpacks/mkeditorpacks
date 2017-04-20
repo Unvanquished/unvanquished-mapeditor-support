@@ -1,0 +1,155 @@
+#!/usr/bin/env python3
+#-*- coding: UTF-8 -*-
+
+# Copyright (c) 2016-2017, Daemon Developers
+# All rights reserved.
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#  * Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#  * Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in the
+#    documentation and/or other materials provided with the distribution.
+#  * Neither the name of the Daemon developers nor the
+#    names of its contributors may be used to endorse or promote products
+#    derived from this software without specific prior written permission.
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+# ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL DAEMON DEVELOPERS BE LIABLE FOR ANY
+# DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+# ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+import argparse
+import configparser
+import os
+import shutil
+import subprocess
+import sys
+
+
+SRC_DIR = os.getenv("SRC_DIR")
+if not SRC_DIR:
+	SRC_DIR = "../src"
+
+DOCS_DIR = os.getenv("DOCS_DIR")
+if not DOCS_DIR:
+	DOCS_DIR = "../docs"
+
+BUILD_DIR = os.getenv("BUILD_DIR")
+if not BUILD_DIR:
+	BUILD_DIR = "../build"
+
+def error(message):
+	raise ValueError(message)
+
+bin_dir = os.path.abspath(os.path.dirname(os.path.realpath(sys.argv[0])))
+
+settings_file = os.path.join(SRC_DIR, "settings.ini")
+
+os.chdir(bin_dir)
+
+config = configparser.ConfigParser()
+if not config.read(settings_file):
+	error("missing settings.ini file")
+
+settings = config["settings"]
+gamename = settings["gamename"]
+basegame = settings["basegame"]
+entities = settings["entities"]
+
+if "gamename" not in settings.keys():
+	error("missing gamename key in settings.ini")
+
+if "basegame" not in settings.keys():
+	error("missing basegame key in settings.ini")
+
+if "entities" not in settings.keys():
+	error("missing entities key in settings.ini")
+
+def build(editor_name):
+	build_dir = os.path.join(BUILD_DIR, editor_name)
+
+	if editor_name == "gtkradiant":
+		xlink_dir = os.path.join(build_dir, "game")
+		entities_dir = os.path.join(build_dir, "install", basegame, "scripts")
+		buildmenu_option = "--gtkradiant"
+		buildmenu_dir = os.path.join(build_dir, "install", basegame, "scripts")
+		buildmenu_file = "default_project.proj"
+		shaderlist_dir = os.path.join(build_dir, "install", basegame, "scripts")
+		synapse_dir = os.path.join(build_dir, "game")
+	elif editor_name == "netradiant":
+		game_dir = gamename + ".game"
+		game_file = gamename + ".game"
+		xlink_dir = os.path.join(build_dir, game_dir)
+		entities_dir = os.path.join(build_dir, game_dir, basegame)
+		buildmenu_option = "--netradiant"
+		buildmenu_dir = os.path.join(build_dir, game_dir)
+		buildmenu_file = "default_build_menu.xml"
+		games_dir = os.path.join(build_dir, "games")
+
+	os.makedirs(build_dir, exist_ok=True)
+	shutil.copyfile(os.path.join(DOCS_DIR, editor_name, "README.md"), os.path.join(build_dir, "README.md"))
+
+	os.makedirs(xlink_dir, exist_ok=True)
+	shutil.copyfile(os.path.join(SRC_DIR, "xlink", "game.xlink"), os.path.join(xlink_dir, "game.xlink"))
+
+	os.makedirs(entities_dir, exist_ok=True)
+	entities_path = os.path.join(entities_dir, "entities.def")
+	if entities == "yaml":
+		command = [
+			os.path.join(bin_dir, "tools", "entities.py"),
+			"-gdTDRE",
+			"-p",
+			os.path.join(SRC_DIR, "entities", "header.txt"),
+			os.path.join(SRC_DIR, "entities", "entities.yaml"),
+		]
+		result = subprocess.run(command, stdout=subprocess.PIPE)
+		f = open(entities_path, "wb")
+		f.write(result.stdout)
+		f.close()
+	elif entities == "def":
+		shutil.copyfile(os.path.join(SRC_DIR, "entities", "entities.def"), entities_path)
+
+	os.makedirs(buildmenu_dir, exist_ok=True)
+	buildmenu_path = os.path.join(buildmenu_dir, buildmenu_file)
+	command = [
+		os.path.join(bin_dir, "tools", "buildmenu.py"),
+		buildmenu_option,
+		os.path.join(SRC_DIR, "buildmenu", "buildmenu.yaml"),
+	]
+	result = subprocess.run(command, stdout=subprocess.PIPE)
+	f = open(buildmenu_path, "wb")
+	f.write(result.stdout)
+	f.close()
+
+	if editor_name == "gtkradiant":
+		os.makedirs(shaderlist_dir, exist_ok=True)
+		shutil.copyfile(os.path.join(SRC_DIR, "shaderlist", "shaderlist.txt"), os.path.join(shaderlist_dir, "default_shaderlist.txt"))
+
+		os.makedirs(synapse_dir, exist_ok=True)
+		shutil.copyfile(os.path.join(SRC_DIR, "synapse", "synapse.config"), os.path.join(synapse_dir, "synapse.config"))
+
+	elif editor_name == "netradiant":
+		os.makedirs(games_dir, exist_ok=True)
+		shutil.copyfile(os.path.join(SRC_DIR, "gamefile", "file.game"), os.path.join(games_dir, game_file))
+
+parser = argparse.ArgumentParser(description = "make editor packs")
+parser.add_argument("-g", "--gtkradiant", dest="gtkradiant", help="build GtkRadiant gamepack", action="store_true")
+parser.add_argument("-n", "--netradiant", dest="netradiant", help="build NetRadiant gamepack", action="store_true")
+args = parser.parse_args()
+
+if not args.gtkradiant and not args.netradiant:
+	parser.print_help()
+	exit(0)
+
+if args.gtkradiant:
+	build("gtkradiant")
+
+if args.netradiant:
+	build("netradiant")

@@ -1,20 +1,12 @@
 Unvanquished support for GtkRadiant
 ===================================
 
-Supported versions
-------------------
-
-* GtkRadiant 1.6
-
 Installation
 ------------
 
 GtkRadiant automatically fetches gamepacks it supports, you have no need to clone this repo.
 
-List of available games is hardcoded, so you will need patched version.
-Use my repo https://github.com/neumond/GtkRadiant
-It doesn't differ a lot, you'll get a version as close to official as possible.
-In future it can be merged to official repository.
+List of available games is hardcoded, so GtkRadiant must be patched in order to support Unvanquished. Some work have been started but nothing is usable yet and development stopped. If you have the skill, join [#unvanquished on freenode](http://webchat.freenode.net/?channels=%23unvanquished) to get more information. Prefer using NetRadiant currently.
 
 Using
 -----
