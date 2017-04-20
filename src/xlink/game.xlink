@@ -5,5 +5,5 @@
 	<item name="Unvanquished Wiki" url="https://wiki.unvanquished.net" />
 	<item name="Unvanquished Source" url="https://github.com/Unvanquished/Unvanquished" />
 	<item name="Unvanquished Bugtracker" url="https://github.com/Unvanquished/Unvanquished/issues" />
-	<item name="Unvanquished Gamepack Bugtracker" url="https://github.com/Unvanquished/mapeditor-support/issues" />
+	<item name="Unvanquished Gamepack Bugtracker" url="https://github.com/Unvanquished/unvanquished-mapeditor-support/issues" />
 </links>
