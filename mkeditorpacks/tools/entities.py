@@ -46,7 +46,9 @@ def color_to_float_triple(h):
     hexes = [h[:2], h[2:4], h[4:]]
     return [round(int(x, 16) / 255.0, 3) for x in hexes]
 
-
+def color_to_float_triple256(h):
+    hexes = [h[:2], h[2:4], h[4:]]
+    return [int(x, 16) for x in hexes]
 
 def list_of_dicts_to_list_of_tuples(dd):
     res = []
@@ -99,33 +101,6 @@ def outvalue(v, _type):
         return str(v)
     return globals()[func_name](v)
 
-def print_entity_head(e):
-    name = escape_token(e['name'])
-    color = '({} {} {})'.format(*(fmt_float(f) for f in color_to_float_triple(e['color'])))
-    flags = [escape_token(k) for k, _ in e.get('flags', [])]
-    if 'size_min' in e and 'size_max' in e:
-        sizes = ' ({} {} {}) ({} {} {})'.format(*(fmt_float(f) for f in e['size_min'] + e['size_max']))
-    else:
-        sizes = ''
-        if not dont_place_dummy_flag:
-            flags.insert(0, escape_token('?'))
-    flags = ' '.join(flags)
-    if flags:
-        flags = ' ' + flags
-    print('/*QUAKED {} {}{}{}'.format(name, color, sizes, flags))
-
-
-def print_flag_desc(e):
-    flags = []
-    for k, v in e.get('flags', []):
-        if k == '-' or not v:
-            continue
-        flags.append('{}: {}'.format(k, v))
-    if flags:
-        print(heading.format('FLAGS'))
-        for v in flags:
-            print(v)
-
 
 label_re = re.compile(r'^\s*\[([\w\d\s,]+)\]')
 def sort_properties(props):
@@ -143,72 +118,207 @@ def sort_properties(props):
         yield key, props[key]
 
 
-def print_prop_desc(e, dt, pr_types, pr_defaults, pr_ranges, pr_eg):
-    if 'props' not in e or not e['props']:
-        return
-
-    print(heading.format('PROPERTIES'))
-    proptypes, propdefaults, propranges, propreplace, propeg, boolvalues = \
-        (e.get(k, {}) for k in ('proptypes', 'propdefaults', 'propranges', 'propreplace', 'propeg', 'boolvalues'))
-
-    for k, v in sort_properties(e['props']):
-        _type = proptypes[k] if k in proptypes else (dt[k] if k in dt else None)
-        _bool = k in boolvalues
-        info = []
-        if pr_types and _type is not None:
-            info.append(_type)
-        if pr_eg and k in propeg:
-            info.append('eg: {}'.format(outvalue(propeg[k], _type)))
-        if pr_ranges and k in propranges:
-            v1, v2 = propranges[k]
-            info.append('{}..{}'.format(outvalue(v1, _type), outvalue(v2, _type)))
-        if pr_ranges and _bool:
-            v1, v2 = boolvalues[k]
-            info.append('{} or {}'.format(outvalue(v1, _type), outvalue(v2, _type)))
-        if pr_defaults and k in propdefaults:
-            v1 = propdefaults[k]
-            if _bool:
-                v1 = boolvalues[k][1 if v1 else 0]
-            info.append('def: {}'.format(outvalue(v1, _type)))
-        if info:
-            info = ' ({})'.format(', '.join(info))
+class DefPrinter:
+    def print_entity_head(self, e):
+        name = escape_token(e['name'])
+        color = '({} {} {})'.format(*(fmt_float(f) for f in color_to_float_triple(e['color'])))
+        flags = [escape_token(k) for k, _ in e.get('flags', [])]
+        if 'size_min' in e and 'size_max' in e:
+            sizes = ' ({} {} {}) ({} {} {})'.format(*(fmt_float(f) for f in e['size_min'] + e['size_max']))
         else:
-            info = ''
-        if k in propreplace:
-            for _from, _to in propreplace[k].items():
-                v = v.replace(_from, _to)
-        print('{}: {}{}'.format(k, v.rstrip(), info))
+            sizes = ''
+            if not dont_place_dummy_flag:
+                flags.insert(0, escape_token('?'))
+        flags = ' '.join(flags)
+        if flags:
+            flags = ' ' + flags
+        print('/*QUAKED {} {}{}{}'.format(name, color, sizes, flags))
 
 
-def print_common_desc(e):
-    if e.get('desc', '').strip():
-        print(heading.format('DESCRIPTION'))
-        v = e['desc']
-        if 'descreplace' in e:
-            for _from, _to in e['descreplace'].items():
-                v = v.replace(_from, _to)
-        print(v)
+    def print_flag_desc(self, e):
+        flags = []
+        for k, v in e.get('flags', []):
+            if k == '-' or not v:
+                continue
+            flags.append('{}: {}'.format(k, v))
+        if flags:
+            print(heading.format('FLAGS'))
+            for v in flags:
+                print(v)
 
+    def print_prop_desc(self, e, dt, pr_types, pr_defaults, pr_ranges, pr_eg):
+        if 'props' not in e or not e['props']:
+            return
 
-def print_specials(e):
-    if 'specials' in e and e['specials']:
-        for k, v in e['specials'].items():
-            print('{}="{}"'.format(k, v))
+        print(heading.format('PROPERTIES'))
+        proptypes, propdefaults, propranges, propreplace, propeg, boolvalues = \
+            (e.get(k, {}) for k in ('proptypes', 'propdefaults', 'propranges', 'propreplace', 'propeg', 'boolvalues'))
 
+        for k, v in sort_properties(e['props']):
+            _type = proptypes[k] if k in proptypes else (dt[k] if k in dt else None)
+            _bool = k in boolvalues
+            info = []
+            if pr_types and _type is not None:
+                info.append(_type)
+            if pr_eg and k in propeg:
+                info.append('eg: {}'.format(outvalue(propeg[k], _type)))
+            if pr_ranges and k in propranges:
+                v1, v2 = propranges[k]
+                info.append('{}..{}'.format(outvalue(v1, _type), outvalue(v2, _type)))
+            if pr_ranges and _bool:
+                v1, v2 = boolvalues[k]
+                info.append('{} or {}'.format(outvalue(v1, _type), outvalue(v2, _type)))
+            if pr_defaults and k in propdefaults:
+                v1 = propdefaults[k]
+                if _bool:
+                    v1 = boolvalues[k][1 if v1 else 0]
+                info.append('def: {}'.format(outvalue(v1, _type)))
+            if info:
+                info = ' ({})'.format(', '.join(info))
+            else:
+                info = ''
+            if k in propreplace:
+                for _from, _to in propreplace[k].items():
+                    v = v.replace(_from, _to)
+            print('{}: {}{}'.format(k, v.rstrip(), info))
 
-def print_entity(e, dt, pr_types=False, pr_defaults=False, pr_ranges=False, pr_eg=False):
-    print_entity_head(e)
-    if e.get('deprecated'):
-        print('DEPRECATED! DEPRECATED! DEPRECATED!')
-        if e.get('aliasof'):
-            print('RECOMMENDED TO USE: {}'.format(e.get('aliasof')))
-    print_flag_desc(e)
-    print_prop_desc(e, dt, pr_types, pr_defaults, pr_ranges, pr_eg)
-    print_common_desc(e)
-    print_specials(e)
-    print('*/')
-    print()
+    def print_common_desc(self, e):
+        if e.get('desc', '').strip():
+            print(heading.format('DESCRIPTION'))
+            v = e['desc']
+            if 'descreplace' in e:
+                for _from, _to in e['descreplace'].items():
+                    v = v.replace(_from, _to)
+            print(v)
 
+    def print_specials(self, e):
+        if 'specials' in e and e['specials']:
+            for k, v in e['specials'].items():
+                print('{}="{}"'.format(k, v))
+
+    def print_entity(self, e, dt, pr_types=False, pr_defaults=False, pr_ranges=False, pr_eg=False):
+        self.print_entity_head(e)
+        if e.get('deprecated'):
+            print('DEPRECATED! DEPRECATED! DEPRECATED!')
+            if e.get('aliasof'):
+                print('RECOMMENDED TO USE: {}'.format(e.get('aliasof')))
+        self.print_flag_desc(e)
+        self.print_prop_desc(e, dt, pr_types, pr_defaults, pr_ranges, pr_eg)
+        self.print_common_desc(e)
+        self.print_specials(e)
+        print('*/')
+        print()
+
+# ==============================================================================
+# Entity output in fgd format used by J.A.C.K
+
+class FgdPrinter:
+    @staticmethod
+    def remove_quotes(text):
+        return text.replace('"', '\'')
+
+    @staticmethod
+    def prepare_description(text):
+        return FgdPrinter.remove_quotes(text).rstrip().replace('\n', '\\n')
+
+    @staticmethod
+    def fgdtype(k, _type):
+        proptype = 'string'
+        if k == 'targetname':
+            proptype = 'target_source'
+        elif k == 'model' or k == 'model2':
+            proptype = 'studio'
+        elif k == '_color' or k == 'color':
+            proptype = 'color1'
+
+        if _type == 'int':
+            proptype = 'integer'
+        elif _type == 'string (target)':
+            proptype = 'target_destination'
+        elif _type == 'string (sound)':
+            proptype = 'sound'
+        return proptype
+
+    def print_entity_head(self, e):
+        name = e['name']
+        nonsolid = 'size_min' in e and 'size_max' in e
+        studio_model = ''
+        additional = ''
+        flags = ''
+        offset = ''
+        if nonsolid:
+            if 'props' in e and ('angle' in e['props'] or 'angles' in e['props']):
+                flags = ' flags(Angle)'
+            entclass = 'PointClass'
+            if name.startswith('team_human_') or name.startswith('team_alien_'):
+                offset = ' offset(0 0 {})'.format(round(abs(e['size_min'][2])) + 1) # so entities will be placed a bit above floor to prevent their vanishing
+            sizes = ' size({} {} {}, {} {} {})'.format(*(fmt_float(f) for f in e['size_min'] + e['size_max']))
+            color = ' color({} {} {})'.format(*(fmt_float(f) for f in color_to_float_triple256(e['color'])))
+            if 'specials' in e and 'model' in e['specials']:
+                studio_model = ' studio("{}")'.format(e['specials']['model'])
+            elif 'props' in e and ('model2' in e['props'] or 'model' in e['props']):
+                studio_model = ' studio()'
+            if name == 'light' or name == 'lightJunior':
+                studio_model = ' iconsprite("sprites/light.spr")'
+                flags = ' flags(Light)'
+        else:
+            entclass = 'SolidClass'
+            sizes = ''
+            color = ''
+        if 'desc' in e:
+            token_limit = 2047
+            desc = e['desc'].strip().replace('\n', '\\n\\n')
+            desc = FgdPrinter.remove_quotes(desc)
+            desc = ' + '.join(['"' + desc[i:i+token_limit] + '"' for i in range(0, len(desc), token_limit)])
+        else:
+            desc = '""'
+        print('@{}{}{}{}{}{} = {} : {}'.format(entclass, flags, sizes, color, studio_model, offset, name, desc))
+
+    def print_spawnflags(self, flags):
+        for i, (k, v) in enumerate(flags):
+            if k != '-':
+                print('\t\t{} : "{}" : : "{}"'.format(2**i, k.lower().capitalize(), FgdPrinter.prepare_description(v)))
+
+    def print_properties(self, e, dt, pr_types, pr_defaults, pr_ranges, pr_eg):
+        proptypes, propdefaults, propranges, propreplace, propeg, boolvalues = \
+            (e.get(k, {}) for k in ('proptypes', 'propdefaults', 'propranges', 'propreplace', 'propeg', 'boolvalues'))
+
+        for k, v in sort_properties(e['props']):
+            _type = proptypes[k] if k in proptypes else (dt[k] if k in dt else None)
+            _bool = k in boolvalues
+
+            default_value = ''
+            if pr_defaults and k in propdefaults:
+                v1 = propdefaults[k]
+                if _bool:
+                    v1 = boolvalues[k][1 if v1 else 0]
+                default_value = outvalue(v1, _type)
+                if type(default_value) == str and not default_value.isnumeric():
+                    default_value = '"' + default_value + '"'
+
+            if k in propreplace:
+                for _from, _to in propreplace[k].items():
+                    v = v.replace(_from, _to)
+
+            proptype = FgdPrinter.fgdtype(k, _type)
+            v = FgdPrinter.prepare_description(v)
+            display_name = k.capitalize()
+
+            print('\t{}({}) : {} : {} : "{}"'.format(k, proptype, display_name, default_value, v))
+
+        flags = e.get('flags', [])
+        if (len(flags)):
+            print('\tspawnflags(flags) = ')
+            print('\t[')
+            self.print_spawnflags(flags)
+            print('\t]')
+
+    def print_entity(self, e, dt, pr_types=False, pr_defaults=False, pr_ranges=False, pr_eg=False):
+        self.print_entity_head(e)
+        print('[')
+        self.print_properties(e, dt, pr_types, pr_defaults, pr_ranges, pr_eg)
+        print(']')
+        print()
 
 # ==============================================================================
 # validators
@@ -422,6 +532,7 @@ def create_parser():
     parser.add_argument('-D', '--gdefaults', action='store_true', help='Output default values')
     parser.add_argument('-R', '--granges', action='store_true', help='Output possible value ranges')
     parser.add_argument('-E', '--gexamples', action='store_true', help='Output example values')
+    parser.add_argument('-o', '--outformat', help='Output format. def (by default) or fgd', default='def')
     return parser
 
 def get_additional_file_name(mainname, f):
@@ -565,5 +676,12 @@ elif args.generate:
         'pr_ranges': args.granges,
         'pr_eg': args.gexamples,
     }
+
+    if args.outformat == 'def':
+        out_printer = DefPrinter()
+    elif args.outformat == 'fgd':
+        out_printer = FgdPrinter()
+    else:
+        raise Exception('Unknown format: {}'.format(args.outformat))
     for e in elist:
-        print_entity(e, deftypes, **opts)
+        out_printer.print_entity(e, deftypes, **opts)
