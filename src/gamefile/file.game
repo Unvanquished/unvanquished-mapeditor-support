@@ -9,7 +9,7 @@
   engine_win32="daemon.exe"
   engine_linux="../../../usr/bin/unvanquished"
   engine_macos="daemon.app"
-  prefix=".unvanquished"
+  prefix=".local/share/unvanquished"
   basegame="pkg"
   basegamename="Unvanquished"
   unknowngamename="Unvanquished Mod"
