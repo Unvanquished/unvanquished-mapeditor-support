@@ -95,6 +95,7 @@ def build(editor_name):
 
 	os.makedirs(build_dir, exist_ok=True)
 	shutil.copyfile(os.path.join(DOCS_DIR, editor_name, "README.md"), os.path.join(build_dir, "README.md"))
+	shutil.copyfile(os.path.join(DOCS_DIR, editor_name, "LICENSE.md"), os.path.join(build_dir, "LICENSE.md"))
 
 	os.makedirs(xlink_dir, exist_ok=True)
 	shutil.copyfile(os.path.join(SRC_DIR, "xlink", "game.xlink"), os.path.join(xlink_dir, "game.xlink"))
