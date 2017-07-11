@@ -527,12 +527,12 @@ def create_parser():
     parser.add_argument('-d', '--dummyflag', action='store_true',
         help='Use in unpatched Radiant: https://github.com/TTimo/GtkRadiant/issues/262')
     parser.add_argument('-p', '--header', help='Prepend a header to the generated file.')
+    parser.add_argument('-f', '--format', help="Output format. GtkRadiant's def (by default) or Hammer's fgd", default='gtkradiant')
 
-    parser.add_argument('-T', '--gtypes', action='store_true', help='Output types of values')
-    parser.add_argument('-D', '--gdefaults', action='store_true', help='Output default values')
-    parser.add_argument('-R', '--granges', action='store_true', help='Output possible value ranges')
-    parser.add_argument('-E', '--gexamples', action='store_true', help='Output example values')
-    parser.add_argument('-o', '--outformat', help='Output format. def (by default) or fgd', default='def')
+    parser.add_argument('-T', '--types', dest='gtypes', action='store_true', help='Output types of values')
+    parser.add_argument('-D', '--defaults', dest='gdefaults', action='store_true', help='Output default values')
+    parser.add_argument('-R', '--ranges', dest='granges', action='store_true', help='Output possible value ranges')
+    parser.add_argument('-E', '--examples', dest='gexamples', action='store_true', help='Output example values')
     return parser
 
 def get_additional_file_name(mainname, f):
@@ -661,15 +661,18 @@ if args.validate:
         print('==================')
         print('Warning count: {}'.format(len(warns)))
         exit(1)
+
 elif args.coverage:
     for e in elist:
         entity_type_coverage(e, deftypes)
+
 elif args.generate:
     if args.header:
         with open(args.header, "r") as fp:
             for line in fp.readlines():
                 print("// {}".format(line).rstrip())
         print()
+
     opts = {
         'pr_types': args.gtypes,
         'pr_defaults': args.gdefaults,
@@ -677,11 +680,14 @@ elif args.generate:
         'pr_eg': args.gexamples,
     }
 
-    if args.outformat == 'def':
-        out_printer = DefPrinter()
-    elif args.outformat == 'fgd':
-        out_printer = FgdPrinter()
+    format_printer = {
+        "gtkradiant": DefPrinter,
+        "hammer": FgdPrinter,
+    }
+
+    if args.format in format_printer.keys():
+        out_printer = format_printer[args.format]()
     else:
-        raise Exception('Unknown format: {}'.format(args.outformat))
+        raise Exception('Unknown format: {}'.format(args.format))
     for e in elist:
         out_printer.print_entity(e, deftypes, **opts)
