@@ -13,5 +13,8 @@ all:
 gtkradiant:
 	$(MAKE) -C mkeditorpacks gtkradiant
 
+jackhammer:
+	$(MAKE) -C mkeditorpacks jackhammer
+
 netradiant:
 	$(MAKE) -C mkeditorpacks netradiant
