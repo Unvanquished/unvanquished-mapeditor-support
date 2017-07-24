@@ -749,7 +749,7 @@ angle: Player orientation after spawn. (float (yaw))
 origin: Position. (vec3_float)
 ------ DESCRIPTION ------
 The human spawn point.
-model="models/radiant/telenode.md3"
+model="models/buildables/telenode/telenode.md5mesh"
 */
 
 /*QUAKED team_human_armoury (0 0.2 1) (-40 -40 -13) (40 40 50)
@@ -757,7 +757,7 @@ model="models/radiant/telenode.md3"
 origin: Position. (vec3_float)
 ------ DESCRIPTION ------
 The human armoury.
-model="models/radiant/arm.md3"
+model="models/buildables/arm/arm.iqm"
 */
 
 /*QUAKED team_human_drill (0 0.2 1) (-15 -15 0) (15 15 58)
@@ -765,7 +765,7 @@ model="models/radiant/arm.md3"
 origin: Position. (vec3_float)
 ------ DESCRIPTION ------
 The human drill.
-model="models/radiant/drill.md3"
+model="models/buildables/drill/drill.iqm"
 */
 
 /*QUAKED team_human_medistat (0 0.2 1) (-35 -35 -7) (35 35 2)
@@ -773,7 +773,7 @@ model="models/radiant/drill.md3"
 origin: Position. (vec3_float)
 ------ DESCRIPTION ------
 The human medical station.
-model="models/radiant/medistat.md3"
+model="models/buildables/medistat/medistat.iqm"
 */
 
 /*QUAKED team_human_mgturret (0 0.2 1) (-25 -25 -20) (25 25 20)
@@ -781,7 +781,15 @@ model="models/radiant/medistat.md3"
 origin: Position. (vec3_float)
 ------ DESCRIPTION ------
 The human machinegun turret.
-model="models/radiant/turret.md3"
+model="models/buildables/mgturret/mgturret.iqm"
+*/
+
+/*QUAKED team_human_rocketpod (0 0.2 1) (-25 -25 -20) (25 25 20)
+------ PROPERTIES ------
+origin: Position. (vec3_float)
+------ DESCRIPTION ------
+The human rocket pod.
+model="models/buildables/rocketpod/rocketpod.iqm"
 */
 
 /*QUAKED team_human_reactor (0 0.2 1) (-41 -41 -4) (41 41 100)
@@ -789,7 +797,7 @@ model="models/radiant/turret.md3"
 origin: Position. (vec3_float)
 ------ DESCRIPTION ------
 The human reactor.
-model="models/radiant/reactor.md3"
+model="models/buildables/reactor/reactor.iqm"
 */
 
 /*QUAKED team_human_repeater (0 0.2 1) (-15 -15 -15) (15 15 25)
@@ -797,15 +805,7 @@ model="models/radiant/reactor.md3"
 origin: Position. (vec3_float)
 ------ DESCRIPTION ------
 The human repeater.
-model="models/radiant/repeater.md3"
-*/
-
-/*QUAKED team_human_tesla (0 0.2 1) (-22 -22 -40) (22 22 40)
------- PROPERTIES ------
-origin: Position. (vec3_float)
------- DESCRIPTION ------
-The human tesla generator.
-model="models/radiant/tesla.md3"
+model="models/buildables/repeater/repeater.iqm"
 */
 
 /*QUAKED team_alien_spawn (1 0.2 0) (-15 -15 -15) (15 15 15)
@@ -814,7 +814,7 @@ angle: Player orientation after spawn. (float (yaw))
 origin: Position. (vec3_float)
 ------ DESCRIPTION ------
 The alien spawn point.
-model="models/radiant/egg.md3"
+model="models/buildables/eggpod/eggpod.iqm"
 */
 
 /*QUAKED team_alien_acid_tube (1 0.2 0) (-20 -20 -15) (20 20 15)
@@ -822,7 +822,15 @@ model="models/radiant/egg.md3"
 origin: Position. (vec3_float)
 ------ DESCRIPTION ------
 The alien acid tube.
-model="models/radiant/acidtube.md3"
+model="models/buildables/acid_tube/acid_tube.md5mesh"
+*/
+
+/*QUAKED team_alien_spiker (1 0.2 0) (-20 -20 -15) (20 20 15)
+------ PROPERTIES ------
+origin: Position. (vec3_float)
+------ DESCRIPTION ------
+The alien spiker.
+model="models/buildables/spiker/spiker.iqm"
 */
 
 /*QUAKED team_alien_barricade (1 0.2 0) (-35 -35 -15) (35 35 60)
@@ -830,7 +838,7 @@ model="models/radiant/acidtube.md3"
 origin: Position. (vec3_float)
 ------ DESCRIPTION ------
 The alien barricade.
-model="models/radiant/barricade.md3"
+model="models/buildables/barricade/barricade.iqm"
 */
 
 /*QUAKED team_alien_booster (1 0.2 0) (-26 -26 -9) (26 26 9)
@@ -838,7 +846,7 @@ model="models/radiant/barricade.md3"
 origin: Position. (vec3_float)
 ------ DESCRIPTION ------
 The alien booster.
-model="models/radiant/booster.md3"
+model="models/buildables/booster/booster.iqm"
 */
 
 /*QUAKED team_alien_overmind (1 0.2 0) (-45 -45 -15) (45 45 95)
@@ -846,7 +854,7 @@ model="models/radiant/booster.md3"
 origin: Position. (vec3_float)
 ------ DESCRIPTION ------
 The alien overmind.
-model="models/radiant/overmind.md3"
+model="models/buildables/overmind/overmind.iqm"
 */
 
 /*QUAKED team_alien_trapper (1 0.2 0) (-15 -15 -15) (15 15 15)
@@ -854,7 +862,7 @@ model="models/radiant/overmind.md3"
 origin: Position. (vec3_float)
 ------ DESCRIPTION ------
 The alien trapper.
-model="models/radiant/trapper.md3"
+model="models/buildables/trapper/trapper.md5mesh"
 */
 
 /*QUAKED team_alien_hive (1 0.2 0) (-20 -20 -20) (20 20 20)
@@ -862,7 +870,7 @@ model="models/radiant/trapper.md3"
 origin: Position. (vec3_float)
 ------ DESCRIPTION ------
 The alien hive.
-model="models/radiant/hive.md3"
+model="models/buildables/hive/hive.iqm"
 */
 
 /*QUAKED team_alien_leech (1 0.2 0) (-40 -40 -15) (40 40 15)
@@ -870,7 +878,7 @@ model="models/radiant/hive.md3"
 origin: Position. (vec3_float)
 ------ DESCRIPTION ------
 The alien leech.
-model="models/radiant/leech.md3"
+model="models/buildables/leech/leech.iqm"
 */
 
 /*QUAKED ctrl_limited (0 0.702 0.702) (-8 -8 -8) (8 8 8) SPAWN_DISABLED

@@ -614,84 +614,89 @@
 	origin(string) : Origin :  : "Position."
 ]
 
-@PointClass flags(Angle) size(-40 -40 -4, 40 40 17) color(0 51 255) studio("models/radiant/telenode.md3") offset(0 0 5) = team_human_spawn : "The human spawn point."
+@PointClass flags(Angle) size(-40 -40 -4, 40 40 17) color(0 51 255) studio("models/buildables/telenode/telenode.md5mesh") offset(0 0 5) = team_human_spawn : "The human spawn point."
 [
 	angle(string) : Angle :  : "Player orientation after spawn."
 	origin(string) : Origin :  : "Position."
 ]
 
-@PointClass size(-40 -40 -13, 40 40 50) color(0 51 255) studio("models/radiant/arm.md3") offset(0 0 14) = team_human_armoury : "The human armoury."
+@PointClass size(-40 -40 -13, 40 40 50) color(0 51 255) studio("models/buildables/arm/arm.iqm") offset(0 0 14) = team_human_armoury : "The human armoury."
 [
 	origin(string) : Origin :  : "Position."
 ]
 
-@PointClass size(-15 -15 0, 15 15 58) color(0 51 255) studio("models/radiant/drill.md3") offset(0 0 1) = team_human_drill : "The human drill."
+@PointClass size(-15 -15 0, 15 15 58) color(0 51 255) studio("models/buildables/drill/drill.iqm") offset(0 0 1) = team_human_drill : "The human drill."
 [
 	origin(string) : Origin :  : "Position."
 ]
 
-@PointClass size(-35 -35 -7, 35 35 2) color(0 51 255) studio("models/radiant/medistat.md3") offset(0 0 8) = team_human_medistat : "The human medical station."
+@PointClass size(-35 -35 -7, 35 35 2) color(0 51 255) studio("models/buildables/medistat/medistat.iqm") offset(0 0 8) = team_human_medistat : "The human medical station."
 [
 	origin(string) : Origin :  : "Position."
 ]
 
-@PointClass size(-25 -25 -20, 25 25 20) color(0 51 255) studio("models/radiant/turret.md3") offset(0 0 21) = team_human_mgturret : "The human machinegun turret."
+@PointClass size(-25 -25 -20, 25 25 20) color(0 51 255) studio("models/buildables/mgturret/mgturret.iqm") offset(0 0 21) = team_human_mgturret : "The human machinegun turret."
 [
 	origin(string) : Origin :  : "Position."
 ]
 
-@PointClass size(-41 -41 -4, 41 41 100) color(0 51 255) studio("models/radiant/reactor.md3") offset(0 0 5) = team_human_reactor : "The human reactor."
+@PointClass size(-25 -25 -20, 25 25 20) color(0 51 255) studio("models/buildables/rocketpod/rocketpod.iqm") offset(0 0 21) = team_human_rocketpod : "The human rocket pod."
 [
 	origin(string) : Origin :  : "Position."
 ]
 
-@PointClass size(-15 -15 -15, 15 15 25) color(0 51 255) studio("models/radiant/repeater.md3") offset(0 0 16) = team_human_repeater : "The human repeater."
+@PointClass size(-41 -41 -4, 41 41 100) color(0 51 255) studio("models/buildables/reactor/reactor.iqm") offset(0 0 5) = team_human_reactor : "The human reactor."
 [
 	origin(string) : Origin :  : "Position."
 ]
 
-@PointClass size(-22 -22 -40, 22 22 40) color(0 51 255) studio("models/radiant/tesla.md3") offset(0 0 41) = team_human_tesla : "The human tesla generator."
+@PointClass size(-15 -15 -15, 15 15 25) color(0 51 255) studio("models/buildables/repeater/repeater.iqm") offset(0 0 16) = team_human_repeater : "The human repeater."
 [
 	origin(string) : Origin :  : "Position."
 ]
 
-@PointClass flags(Angle) size(-15 -15 -15, 15 15 15) color(255 51 0) studio("models/radiant/egg.md3") offset(0 0 16) = team_alien_spawn : "The alien spawn point."
+@PointClass flags(Angle) size(-15 -15 -15, 15 15 15) color(255 51 0) studio("models/buildables/eggpod/eggpod.iqm") offset(0 0 16) = team_alien_spawn : "The alien spawn point."
 [
 	angle(string) : Angle :  : "Player orientation after spawn."
 	origin(string) : Origin :  : "Position."
 ]
 
-@PointClass size(-20 -20 -15, 20 20 15) color(255 51 0) studio("models/radiant/acidtube.md3") offset(0 0 16) = team_alien_acid_tube : "The alien acid tube."
+@PointClass size(-20 -20 -15, 20 20 15) color(255 51 0) studio("models/buildables/acid_tube/acid_tube.md5mesh") offset(0 0 16) = team_alien_acid_tube : "The alien acid tube."
 [
 	origin(string) : Origin :  : "Position."
 ]
 
-@PointClass size(-35 -35 -15, 35 35 60) color(255 51 0) studio("models/radiant/barricade.md3") offset(0 0 16) = team_alien_barricade : "The alien barricade."
+@PointClass size(-20 -20 -15, 20 20 15) color(255 51 0) studio("models/buildables/spiker/spiker.iqm") offset(0 0 16) = team_alien_spiker : "The alien spiker."
 [
 	origin(string) : Origin :  : "Position."
 ]
 
-@PointClass size(-26 -26 -9, 26 26 9) color(255 51 0) studio("models/radiant/booster.md3") offset(0 0 10) = team_alien_booster : "The alien booster."
+@PointClass size(-35 -35 -15, 35 35 60) color(255 51 0) studio("models/buildables/barricade/barricade.iqm") offset(0 0 16) = team_alien_barricade : "The alien barricade."
 [
 	origin(string) : Origin :  : "Position."
 ]
 
-@PointClass size(-45 -45 -15, 45 45 95) color(255 51 0) studio("models/radiant/overmind.md3") offset(0 0 16) = team_alien_overmind : "The alien overmind."
+@PointClass size(-26 -26 -9, 26 26 9) color(255 51 0) studio("models/buildables/booster/booster.iqm") offset(0 0 10) = team_alien_booster : "The alien booster."
 [
 	origin(string) : Origin :  : "Position."
 ]
 
-@PointClass size(-15 -15 -15, 15 15 15) color(255 51 0) studio("models/radiant/trapper.md3") offset(0 0 16) = team_alien_trapper : "The alien trapper."
+@PointClass size(-45 -45 -15, 45 45 95) color(255 51 0) studio("models/buildables/overmind/overmind.iqm") offset(0 0 16) = team_alien_overmind : "The alien overmind."
 [
 	origin(string) : Origin :  : "Position."
 ]
 
-@PointClass size(-20 -20 -20, 20 20 20) color(255 51 0) studio("models/radiant/hive.md3") offset(0 0 21) = team_alien_hive : "The alien hive."
+@PointClass size(-15 -15 -15, 15 15 15) color(255 51 0) studio("models/buildables/trapper/trapper.md5mesh") offset(0 0 16) = team_alien_trapper : "The alien trapper."
 [
 	origin(string) : Origin :  : "Position."
 ]
 
-@PointClass size(-40 -40 -15, 40 40 15) color(255 51 0) studio("models/radiant/leech.md3") offset(0 0 16) = team_alien_leech : "The alien leech."
+@PointClass size(-20 -20 -20, 20 20 20) color(255 51 0) studio("models/buildables/hive/hive.iqm") offset(0 0 21) = team_alien_hive : "The alien hive."
+[
+	origin(string) : Origin :  : "Position."
+]
+
+@PointClass size(-40 -40 -15, 40 40 15) color(255 51 0) studio("models/buildables/leech/leech.iqm") offset(0 0 16) = team_alien_leech : "The alien leech."
 [
 	origin(string) : Origin :  : "Position."
 ]
