@@ -930,6 +930,13 @@
   size_max: [25.0, 25.0, 20.0]
   desc: The human machinegun turret.
   specials: {model: models/buildables/mgturret/mgturret.iqm}
+- name: team_human_rocketpod
+  extend: [point]
+  color: *humanColor
+  size_min: [-25.0, -25.0, -20.0]
+  size_max: [25.0, 25.0, 20.0]
+  desc: The human rocket pod.
+  specials: {model: models/buildables/rocketpod/rocketpod.iqm}
 - name: team_human_reactor
   extend: [point]
   color: *humanColor
@@ -944,13 +951,6 @@
   size_max: [15.0, 15.0, 25.0]
   desc: The human repeater.
   specials: {model: models/buildables/repeater/repeater.iqm}
-- name: team_human_tesla
-  extend: [point]
-  color: *humanColor
-  size_min: [-22.0, -22.0, -40.0]
-  size_max: [22.0, 22.0, 40.0]
-  desc: The human tesla generator.
-  specials: {model: models/radiant/tesla.md3}
 - name: team_alien_spawn
   extend: [point]
   color: *alienColor
@@ -967,6 +967,13 @@
   size_max: [20.0, 20.0, 15.0]
   desc: The alien acid tube.
   specials: {model: models/buildables/acid_tube/acid_tube.md5mesh}
+- name: team_alien_spiker
+  extend: [point]
+  color: *alienColor
+  size_min: [-20.0, -20.0, -15.0]
+  size_max: [20.0, 20.0, 15.0]
+  desc: The alien spiker.
+  specials: {model: models/buildables/spiker/spiker.iqm}
 - name: team_alien_barricade
   extend: [point]
   color: *alienColor
