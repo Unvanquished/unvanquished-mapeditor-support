@@ -901,49 +901,49 @@
   props:
     angle: Player orientation after spawn.
   desc: The human spawn point.
-  specials: {model: models/radiant/telenode.md3}
+  specials: {model: models/buildables/telenode/telenode.md5mesh}
 - name: team_human_armoury
   extend: [point]
   color: *humanColor
   size_min: [-40.0, -40.0, -13.0]
   size_max: [40.0, 40.0, 50.0]
   desc: The human armoury.
-  specials: {model: models/radiant/arm.md3}
+  specials: {model: models/buildables/arm/arm.iqm}
 - name: team_human_drill
   extend: [point]
   color: *humanColor
   size_min: [-15.0, -15.0, 0.0]
   size_max: [15.0, 15.0, 58.0]
   desc: The human drill.
-  specials: {model: models/radiant/drill.md3}
+  specials: {model: models/buildables/drill/drill.iqm}
 - name: team_human_medistat
   extend: [point]
   color: *humanColor
   size_min: [-35.0, -35.0, -7.0]
   size_max: [35.0, 35.0, 2.0]
   desc: The human medical station.
-  specials: {model: models/radiant/medistat.md3}
+  specials: {model: models/buildables/medistat/medistat.iqm}
 - name: team_human_mgturret
   extend: [point]
   color: *humanColor
   size_min: [-25.0, -25.0, -20.0]
   size_max: [25.0, 25.0, 20.0]
   desc: The human machinegun turret.
-  specials: {model: models/radiant/turret.md3}
+  specials: {model: models/buildables/mgturret/mgturret.iqm}
 - name: team_human_reactor
   extend: [point]
   color: *humanColor
   size_min: [-41.0, -41.0, -4.0]
   size_max: [41.0, 41.0, 100.0]
   desc: The human reactor.
-  specials: {model: models/radiant/reactor.md3}
+  specials: {model: models/buildables/reactor/reactor.iqm}
 - name: team_human_repeater
   extend: [point]
   color: *humanColor
   size_min: [-15.0, -15.0, -15.0]
   size_max: [15.0, 15.0, 25.0]
   desc: The human repeater.
-  specials: {model: models/radiant/repeater.md3}
+  specials: {model: models/buildables/repeater/repeater.iqm}
 - name: team_human_tesla
   extend: [point]
   color: *humanColor
@@ -959,56 +959,56 @@
   props:
     angle: Player orientation after spawn.
   desc: The alien spawn point.
-  specials: {model: models/radiant/egg.md3}
+  specials: {model: models/buildables/eggpod/eggpod.iqm}
 - name: team_alien_acid_tube
   extend: [point]
   color: *alienColor
   size_min: [-20.0, -20.0, -15.0]
   size_max: [20.0, 20.0, 15.0]
   desc: The alien acid tube.
-  specials: {model: models/radiant/acidtube.md3}
+  specials: {model: models/buildables/acid_tube/acid_tube.md5mesh}
 - name: team_alien_barricade
   extend: [point]
   color: *alienColor
   size_min: [-35.0, -35.0, -15.0]
   size_max: [35.0, 35.0, 60.0]
   desc: The alien barricade.
-  specials: {model: models/radiant/barricade.md3}
+  specials: {model: models/buildables/barricade/barricade.iqm}
 - name: team_alien_booster
   extend: [point]
   color: *alienColor
   size_min: [-26.0, -26.0, -9.0]
   size_max: [26.0, 26.0, 9.0]
   desc: The alien booster.
-  specials: {model: models/radiant/booster.md3}
+  specials: {model: models/buildables/booster/booster.iqm}
 - name: team_alien_overmind
   extend: [point]
   color: *alienColor
   size_min: [-45.0, -45.0, -15.0]
   size_max: [45.0, 45.0, 95.0]
   desc: The alien overmind.
-  specials: {model: models/radiant/overmind.md3}
+  specials: {model: models/buildables/overmind/overmind.iqm}
 - name: team_alien_trapper
   extend: [point]
   color: *alienColor
   size_min: [-15.0, -15.0, -15.0]
   size_max: [15.0, 15.0, 15.0]
   desc: The alien trapper.
-  specials: {model: models/radiant/trapper.md3}
+  specials: {model: models/buildables/trapper/trapper.md5mesh}
 - name: team_alien_hive
   extend: [point]
   color: *alienColor
   size_min: [-20.0, -20.0, -20.0]
   size_max: [20.0, 20.0, 20.0]
   desc: The alien hive.
-  specials: {model: models/radiant/hive.md3}
+  specials: {model: models/buildables/hive/hive.iqm}
 - name: team_alien_leech
   extend: [point]
   color: *alienColor
   size_min: [-40.0, -40.0, -15.0]
   size_max: [40.0, 40.0, 15.0]
   desc: The alien leech.
-  specials: {model: models/radiant/leech.md3}
+  specials: {model: models/buildables/leech/leech.iqm}
 - name: ctrl_limited
   extend: [chain_relay,point]
   color: &ctrl_color 00b3b3
