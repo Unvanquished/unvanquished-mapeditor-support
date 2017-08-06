@@ -114,7 +114,8 @@ def build(editor_name):
 		game_dir = gamename + ".game"
 		game_file = gamename + ".game"
 		xlink_dir = os.path.join(build_dir, game_dir)
-		entities_dir = os.path.join(build_dir, game_dir, basegame)
+		basegame_dir = os.path.join(build_dir, game_dir, basegame)
+		entities_dir = basegame_dir
 		buildmenu_dir = os.path.join(build_dir, game_dir)
 		buildmenu_file = "default_build_menu.xml"
 		games_dir = os.path.join(build_dir, "games")
@@ -174,6 +175,11 @@ def build(editor_name):
 	elif editor_name == "netradiant":
 		os.makedirs(games_dir, exist_ok=True)
 		shutil.copyfile(os.path.join(SRC_DIR, "gamefile", "file.game"), os.path.join(games_dir, game_file))
+
+		deps_file = os.path.join(SRC_DIR, "deps", "DEPS")
+		if os.path.isfile(deps_file):
+			os.makedirs(basegame_dir, exist_ok=True)
+			shutil.copyfile(deps_file, os.path.join(basegame_dir, "DEPS"))
 
 
 parser = argparse.ArgumentParser(description = "make editor packs")
