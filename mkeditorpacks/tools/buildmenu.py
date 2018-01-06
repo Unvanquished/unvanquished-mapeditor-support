@@ -121,7 +121,7 @@ def print_netradiant_file(data):
     project = ET.Element('project', attrib={'version': '2.0'})
 
     q3map2 = ET.SubElement(project, 'var', attrib={'name': 'q3map2'})
-    q3map2.text = '"[RadiantPath]q3map2.[ExecutableType]" -v'
+    q3map2.text = '"[RadiantPath]q3map2.[ExecutableType]" [ExtraQ3map2Args] -v'
     cond = ET.SubElement(q3map2, 'cond', attrib={'value': '[MonitorAddress]'})
     cond.text = ' -connect [MonitorAddress]'
     cond.tail = ' -game unvanquished -fs_basepath "[EnginePath]" -fs_homepath "[UserEnginePath]" '
