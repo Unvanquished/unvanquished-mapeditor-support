@@ -10,6 +10,9 @@ clean:
 all:
 	$(MAKE) -C mkeditorpacks all
 
+darkradiant:
+	$(MAKE) -C mkeditorpacks darkradiant
+
 gtkradiant:
 	$(MAKE) -C mkeditorpacks gtkradiant
 

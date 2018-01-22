@@ -1,0 +1,296 @@
+#!/usr/bin/env python3
+#-*- coding: UTF-8 -*-
+
+# Copyright (c) 2014-2017, Daemon Developers
+# All rights reserved.
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#  * Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#  * Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in the
+#    documentation and/or other materials provided with the distribution.
+#  * Neither the name of the Daemon developers nor the
+#    names of its contributors may be used to endorse or promote products
+#    derived from this software without specific prior written permission.
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+# ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL DAEMON DEVELOPERS BE LIABLE FOR ANY
+# DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+# ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+import yaml
+import re
+import sys
+import os.path
+from xml.etree import ElementTree as ET
+import xml.dom.minidom
+from datetime import datetime
+import argparse
+from collections import OrderedDict
+
+
+supported = {}
+supported["gtkradiant"] = {}
+supported["gtkradiant"]["vfs"] = ["pk3", "pk4", "dpk"]
+supported["gtkradiant"]["vfsalias"] = {"pk3": "pk3", "pk4": "pk3", "dpk": "pk3"}
+supported["gtkradiant"]["texture"] = ["tga", "jpg", "png", "pcx", "bmp"]
+supported["gtkradiant"]["model"] = ["md3", "ase", "lwo", "obj", "3ds", "picoterrain"]
+supported["netradiant"] = {}
+supported["netradiant"]["vfs"] = ["pk3", "pk4", "dpk"]
+supported["netradiant"]["texture"] = ["tga", "jpg", "png", "pcx", "bmp"]
+supported["netradiant"]["model"] = ["iqm", "md3", "ase", "lwo", "obj", "3ds", "picoterrain"]
+supported["darkradiant"] = {}
+supported["darkradiant"]["vfs"] = ["pk3", "pk4", "dpk"]
+supported["darkradiant"]["texture"] = ["tga", "jpg", "png", "pcx", "bmp", "dds"]
+supported["darkradiant"]["model"] = ["md5mesh", "md3", "ase", "lwo", "obj", "3ds", "picoterrain"]
+
+# load yaml data as ordered dict so generated file content keep the same order after each generation (reduces diff noise)
+def yaml_dict_representer(dumper, data):
+    return dumper.represent_dict(data.iteritems())
+
+
+def yaml_dict_constructor(loader, node):
+    return OrderedDict(loader.construct_pairs(node))
+
+
+yaml_mapping_tag = yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG
+yaml.add_representer(OrderedDict, yaml_dict_representer)
+yaml.add_constructor(yaml_mapping_tag, yaml_dict_constructor)
+
+
+def fine_format_xml(root):
+    return xml.dom.minidom.parseString(ET.tostring(root, encoding='unicode')).toprettyxml()
+
+
+def print_file(gamefile, editor):
+    attrib = OrderedDict()
+
+    if editor in [ "netradiant" ]:
+        attrib["entityclasstype"] = "def"
+
+    if editor in [ "darkradiant", "netradiant" ]:
+        attrib["index"] = "1"
+
+        game = yaml.load(gamefile.read())
+        if "game" in game.keys():
+            l0  = game["game"]
+            if "name" in l0.keys():
+                attrib["name"] = l0["name"]
+                attrib["basegamename"] = l0["name"]
+                attrib["unknowngamename"] = " ".join(["Custom", l0["name"], "modification"])
+            if "base" in l0.keys():
+                attrib["basegame"] = l0["base"]
+            if "keyword" in l0.keys():
+                l1 = l0["keyword"]
+                if "editor" in l1.keys():
+                    attrib["type"] = l1["editor"]
+                if "compiler" in l1.keys():
+                    attrib["q3map2_type"] = l1["compiler"]
+
+        if "engine" in game.keys():
+            l0 = game["engine"]
+            for sys in ["linux", "macos", "win"]:
+                if sys == "win":
+                    sysname = "win32"
+                else:
+                    sysname = sys
+                if sys in l0.keys():
+                    l1 = l0[sys]
+                    if "dir" in l1.keys():
+                        attrib["enginepath_" + sysname] = l1["dir"]
+                    if "name" in l1.keys():
+                        attrib["engine_" + sysname] = l1["name"]
+
+    if editor in [ "darkradiant", "netradiant" ]:
+        entfile = open(os.path.join(os.path.dirname(os.path.dirname(gamefile.name)), "entities", "class.yaml"))
+        ent = yaml.load(entfile.read())
+
+        if "home" in game.keys():
+            l0 = game["home"]
+            if "linux" in l0.keys():
+                l1 = l0["linux"]
+                if "legacy" in l1.keys():
+                    attrib["prefix"] = l1["legacy"]
+
+        if "entity" in ent.keys():
+            l0 = ent["entity"]
+            if "type" in l0:
+                attrib["entities"] = l0["type"]
+            if "class" in l0:
+                attrib["entityclass"] = l0["type"]
+
+    shader_dict = {}
+    archive_list = []
+    texture_list = []
+    model_list = []
+    map_list = []
+    brush_list = []
+    patch_list = []
+    if editor in [ "darkradiant", "gtkradiant", "netradiant" ]:
+        vfsfile = open(os.path.join(os.path.dirname(gamefile.name),"vfs.yaml"), "r")
+        vfs = yaml.load(vfsfile.read())
+        if "vfs" in vfs.keys():
+            for i in vfs["vfs"]:
+                if i in supported[editor]["vfs"]:
+                    archive_list.append(i)
+        if "texture" in vfs.keys():
+            for i in vfs["texture"]:
+                if i in supported[editor]["texture"]:
+                    texture_list.append(i)
+        if "model" in vfs.keys():
+            for i in vfs["model"]:
+                if i in supported[editor]["model"]:
+                    model_list.append(i)
+        if "map" in vfs.keys():
+            l0 = vfs["map"]
+            if "type" in l0.keys():
+                map_list = l0["type"]
+            if "brush" in l0.keys():
+                brush_list = l0["brush"]
+            if "patch" in l0.keys():
+                patch_list = l0["patch"]
+        if "shader" in vfs.keys():
+            l0 = vfs["shader"]
+            if "type" in l0.keys():
+                shader_dict["type"] = l0["type"]
+            if "path" in l0.keys():
+                shader_dict["path"] = l0["path"]
+            if "ext" in l0.keys():
+                shader_dict["ext"] = l0["ext"]
+
+    if editor in [ "netradiant", "darkradiant" ]:
+        if archive_list != []:
+            attrib["archivetypes"] = " ".join(archive_list)
+        if model_list != []:
+            attrib["modeltypes"] = " ".join(model_list)
+        if map_list != []:
+            attrib["maptypes"] = " ".join(map_list)
+        if brush_list != []:
+            attrib["brushtypes"] = " ".join(brush_list)
+        if patch_list != []:
+            attrib["patchtypes"] = " ".join(patch_list)
+        if "type" in shader_dict.keys():
+            attrib["shaders"] = shader_dict["type"]
+        if "path" in shader_dict.keys():
+            attrib["shaderpath"] = shader_dict["path"]
+
+    if editor in [ "netradiant" ]:
+        if texture_list != []:
+            attrib["texturetypes"] = " ".join(texture_list)
+
+    if editor in [ "netradiant", "darkradiant" ]:
+        gamefile = ET.Element('game', attrib=attrib)
+
+    if editor in [ "gtkradiant" ]:
+        synapsefile = ET.Element('synapseconfig')
+
+        client_core_elem = ET.SubElement(synapsefile, "client", attrib={"name": "core"})
+        client_image_elem = ET.SubElement(synapsefile, "client", attrib={"name": "image"})
+        client_shaders_elem = ET.SubElement(synapsefile, "client", attrib={"name": "shaders"})
+        client_map_elem = ET.SubElement(synapsefile, "client", attrib={"name": "map"})
+        client_xmap_elem = ET.SubElement(synapsefile, "client", attrib={"name": "xmap"})
+        client_model_elem = ET.SubElement(synapsefile, "client", attrib={"name": "model"})
+
+        client_eclass_elem = ET.SubElement(client_core_elem, "api", attrib={"name": "eclass"})
+        client_eclass_elem.text = "def"
+
+        if texture_list != []:
+            image_elem = ET.SubElement(client_core_elem, "api", attrib={"name": "image"})
+            image_elem.text = " ".join(texture_list)
+            
+        if map_list != []:
+            # only one map type supported, take the first one
+            core_map_elem = ET.SubElement(client_core_elem, "api", attrib={"name": "map"})
+            core_map_elem.text = map_list[0]
+
+        if brush_list != []:
+            # only one surface type supported, take the first one
+            core_surfdialog_elem = ET.SubElement(client_core_elem, "api", attrib={"name": "surfdialog"})
+            core_surfdialog_elem.text = brush_list[0]
+
+        if "type" in shader_dict.keys():
+            core_shader_elem = ET.SubElement(client_core_elem, "api", attrib={"name": "shaders"})
+            core_shader_elem.text = shader_dict["type"]
+            shaders_shader_elem = ET.SubElement(client_shaders_elem, "api", attrib={"name": "shaders"})
+            shaders_shader_elem.text = shader_dict["type"]
+            map_shader_elem = ET.SubElement(client_map_elem, "api", attrib={"name": "shaders"})
+            map_shader_elem.text = shader_dict["type"]
+            xmap_shader_elem = ET.SubElement(client_xmap_elem, "api", attrib={"name": "shaders"})
+            xmap_shader_elem.text = shader_dict["type"]
+            model_shader_elem = ET.SubElement(client_model_elem, "api", attrib={"name": "shaders"})
+            model_shader_elem.text = shader_dict["type"]
+
+        if archive_list != []:
+            # it looks like there is no support for more than
+            # one format, so pick the first one, by the way
+            # pk3 vfs also handles pk4 and dpk
+            archive = supported["gtkradiant"]["vfsalias"][archive_list[0]]
+
+            core_archive_elem = ET.SubElement(client_core_elem, "api", attrib={"name": "VFS"})
+            core_archive_elem.text = archive
+            image_archive_elem = ET.SubElement(client_image_elem, "api", attrib={"name": "VFS"})
+            image_archive_elem.text = archive
+            shaders_archive_elem = ET.SubElement(client_shaders_elem, "api", attrib={"name": "VFS"})
+            shaders_archive_elem.text = archive
+            map_archive_elem = ET.SubElement(client_map_elem, "api", attrib={"name": "VFS"})
+            map_archive_elem.text = archive
+            xmap_archive_elem = ET.SubElement(client_xmap_elem, "api", attrib={"name": "VFS"})
+            xmap_archive_elem.text = archive
+            model_archive_elem = ET.SubElement(client_model_elem, "api", attrib={"name": "VFS"})
+            model_archive_elem.text = archive
+
+    if editor in ["darkradiant"]:
+        if texture_list != []:
+            filetype_elem = ET.SubElement(gamefile, "filetype")
+            texture_filetype_elem = ET.SubElement(filetype_elem, "texture")
+            for i in texture_list:
+                extension_elem = ET.SubElement(texture_filetype_elem, "extension")
+                extension_elem.text = i
+
+        # parent for fonts too
+        filesystem_elem = ET.SubElement(gamefile, "filesystem")
+        if "type" in shader_dict.keys() and "path" in shader_dict.keys():
+            shaders_filesystem_elem = ET.SubElement(filesystem_elem, "shaders")
+            extension_elem = ET.SubElement(shaders_filesystem_elem, "extension")
+            extension_elem.text = shader_dict["ext"]
+            basepath_elem = ET.SubElement(shaders_filesystem_elem, "basepath")
+            basepath_elem.text = shader_dict["path"]
+        # TODO: fonts
+
+    # TODO: darkradiant filters
+
+    if editor in [ "netradiant", "darkradiant" ]:
+        print(fine_format_xml(gamefile))
+
+    if editor in [ "gtkradiant" ]:
+        print(fine_format_xml(synapsefile))
+
+
+def create_parser():
+    parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        description='Generates radiant q3map2 build menu file.')
+
+    parser.add_argument('filename', metavar="game.yaml", type=argparse.FileType('r'), help='game.yaml')
+    group = parser.add_argument_group(title='Radiant')
+    group = group.add_mutually_exclusive_group(required=True)
+    group.add_argument('-d', '--darkradiant', action='store_true', help='DarkRadiant')
+    group.add_argument('-n', '--netradiant', action='store_true', help='NetRadiant')
+    group.add_argument('-g', '--gtkradiant', action='store_true', help='GtkRadiant')
+
+    return parser
+
+args = create_parser().parse_args()
+
+if args.darkradiant:
+    print_file(args.filename, "darkradiant")
+if args.netradiant:
+    print_file(args.filename, "netradiant")
+elif args.gtkradiant:
+    print_file(args.filename, "gtkradiant")

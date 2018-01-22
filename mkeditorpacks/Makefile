@@ -1,6 +1,9 @@
 .DEFAULT_GOAL := all
 
-all: gtkradiant jackhammer netradiant
+all: darkradiant gtkradiant jackhammer netradiant
+
+darkradiant:
+	./mkeditorpacks --darkradiant
 
 gtkradiant:
 	./mkeditorpacks --gtkradiant
