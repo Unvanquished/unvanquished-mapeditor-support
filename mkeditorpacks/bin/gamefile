@@ -39,7 +39,7 @@ from collections import OrderedDict
 supported = {}
 supported["gtkradiant"] = {}
 supported["gtkradiant"]["vfs"] = ["pk3", "pk4", "dpk"]
-supported["gtkradiant"]["vfsalias"] = {"pk3": "pk3", "pk4": "pk3", "dpk": "pk3"}
+supported["gtkradiant"]["vfsalias"] = {"pk4": "pk3", "dpk": "pk3"}
 supported["gtkradiant"]["texture"] = ["tga", "jpg", "png", "pcx", "bmp"]
 supported["gtkradiant"]["model"] = ["md3", "ase", "lwo", "obj", "3ds", "picoterrain"]
 supported["netradiant"] = {}
@@ -231,7 +231,9 @@ def print_file(gamefile, editor):
             # it looks like there is no support for more than
             # one format, so pick the first one, by the way
             # pk3 vfs also handles pk4 and dpk
-            archive = supported["gtkradiant"]["vfsalias"][archive_list[0]]
+            archive = archive_list[0]
+            if archive in supported["gtkradiant"]["vfsalias"].keys():
+                archive = supported["gtkradiant"]["vfsalias"][archive_list[0]]
 
             core_archive_elem = ET.SubElement(client_core_elem, "api", attrib={"name": "VFS"})
             core_archive_elem.text = archive
