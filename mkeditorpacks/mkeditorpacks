@@ -140,7 +140,7 @@ def build(editor_name):
 		entities_path = os.path.join(entities_dir, def_basename[editor_name] + os.path.extsep + def_ext[editor_name])
 
 		if entities == "yaml":
-			command = [ os.path.join(bin_dir, "tools", "entities.py"),
+			command = [ os.path.join(bin_dir, "bin", "entities"),
 				"-g",
 				"-p",
 				os.path.join(SRC_DIR, "entities", "header.txt"),
@@ -164,7 +164,7 @@ def build(editor_name):
 		os.makedirs(buildmenu_dir, exist_ok=True)
 		buildmenu_path = os.path.join(buildmenu_dir, buildmenu_file)
 		command = [
-			os.path.join(bin_dir, "tools", "buildmenu.py"),
+			os.path.join(bin_dir, "bin", "buildmenu"),
 			buildmenu_option[editor_name],
 			os.path.join(SRC_DIR, "buildmenu", "buildmenu.yaml"),
 		]
@@ -178,7 +178,7 @@ def build(editor_name):
 		shutil.copyfile(os.path.join(SRC_DIR, "shaderlist", "shaderlist.txt"), os.path.join(shaderlist_dir, "default_shaderlist.txt"))
 
 		os.makedirs(synapse_dir, exist_ok=True)
-		command = [ os.path.join(bin_dir, "tools", "gamefile.py"),
+		command = [ os.path.join(bin_dir, "bin", "gamefile"),
 			"--gtkradiant",
 			os.path.join(SRC_DIR, "gamefile", "game.yaml") ]
 		result = subprocess.run(command, stdout=subprocess.PIPE)
@@ -188,7 +188,7 @@ def build(editor_name):
 
 	elif editor_name == "darkradiant":
 		os.makedirs(games_dir, exist_ok=True)
-		command = [ os.path.join(bin_dir, "tools", "gamefile.py"),
+		command = [ os.path.join(bin_dir, "bin", "gamefile"),
 			"--darkradiant",
 			os.path.join(SRC_DIR, "gamefile", "game.yaml") ]
 		result = subprocess.run(command, stdout=subprocess.PIPE)
@@ -198,7 +198,7 @@ def build(editor_name):
 
 	elif editor_name == "netradiant":
 		os.makedirs(games_dir, exist_ok=True)
-		command = [ os.path.join(bin_dir, "tools", "gamefile.py"),
+		command = [ os.path.join(bin_dir, "bin", "gamefile"),
 			"--netradiant",
 			os.path.join(SRC_DIR, "gamefile", "game.yaml") ]
 		result = subprocess.run(command, stdout=subprocess.PIPE)
