@@ -163,6 +163,6 @@ text = args.filename.read()
 data = yaml.load(text)
 
 if args.netradiant:
-	print_netradiant_file(data)
+    print_netradiant_file(data)
 elif args.gtkradiant:
-	print_gtkradiant_file(data)
+    print_gtkradiant_file(data)

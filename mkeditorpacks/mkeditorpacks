@@ -35,19 +35,19 @@ import sys
 
 SRC_DIR = os.getenv("SRC_DIR")
 if not SRC_DIR:
-	SRC_DIR = "../src"
+    SRC_DIR = "../src"
 
 DOCS_DIR = os.getenv("DOCS_DIR")
 if not DOCS_DIR:
-	DOCS_DIR = "../docs"
+    DOCS_DIR = "../docs"
 
 BUILD_DIR = os.getenv("BUILD_DIR")
 if not BUILD_DIR:
-	BUILD_DIR = "../build"
+    BUILD_DIR = "../build"
 
 
 def error(message):
-	raise ValueError(message)
+    raise ValueError(message)
 
 
 bin_dir = os.path.abspath(os.path.dirname(os.path.realpath(sys.argv[0])))
@@ -58,7 +58,7 @@ os.chdir(bin_dir)
 
 config = configparser.ConfigParser()
 if not config.read(settings_file):
-	error("missing settings.ini file")
+    error("missing settings.ini file")
 
 settings = config["settings"]
 gamename = settings["gamename"]
@@ -66,150 +66,150 @@ basegame = settings["basegame"]
 entities = settings["entities"]
 
 if "gamename" not in settings.keys():
-	error("missing gamename key in settings.ini")
+    error("missing gamename key in settings.ini")
 
 if "basegame" not in settings.keys():
-	error("missing basegame key in settings.ini")
+    error("missing basegame key in settings.ini")
 
 if "entities" not in settings.keys():
-	error("missing entities key in settings.ini")
+    error("missing entities key in settings.ini")
 
 
 def build(editor_name):
-	build_dir = os.path.join(BUILD_DIR, editor_name)
+    build_dir = os.path.join(BUILD_DIR, editor_name)
 
-	buildmenu_option = {
-		"gtkradiant": "--gtkradiant",
-		"netradiant": "--netradiant",
-	}
+    buildmenu_option = {
+        "gtkradiant": "--gtkradiant",
+        "netradiant": "--netradiant",
+    }
 
-	def_format = {
-		"gtkradiant": "gtkradiant",
-		"netradiant": "gtkradiant",
-		"jackhammer": "hammer",
-	}
+    def_format = {
+        "gtkradiant": "gtkradiant",
+        "netradiant": "gtkradiant",
+        "jackhammer": "hammer",
+    }
 
-	def_basename = {
-		"gtkradiant": "entities",
-		"netradiant": "entities",
-		"jackhammer": gamename,
-	}
+    def_basename = {
+        "gtkradiant": "entities",
+        "netradiant": "entities",
+        "jackhammer": gamename,
+    }
 
-	def_ext = {
-		"gtkradiant": "def",
-		"netradiant": "def",
-		"jackhammer": "fgd",
-	}
+    def_ext = {
+        "gtkradiant": "def",
+        "netradiant": "def",
+        "jackhammer": "fgd",
+    }
 
-	if editor_name == "darkradiant":
-		game_file = gamename + ".game"
-		games_dir = os.path.join(build_dir, "games")
-		gamefile_path = os.path.join(games_dir, game_file)
-	if editor_name == "gtkradiant":
-		xlink_dir = os.path.join(build_dir, "game")
-		entities_dir = os.path.join(build_dir, "install", basegame, "scripts")
-		buildmenu_dir = os.path.join(build_dir, "install", basegame, "scripts")
-		buildmenu_file = "default_project.proj"
-		shaderlist_dir = os.path.join(build_dir, "install", basegame, "scripts")
-		synapse_dir = os.path.join(build_dir, "game")
-		synapsefile_name = "synapse.config"
-		synapsefile_path = os.path.join(synapse_dir, synapsefile_name)
-	elif editor_name == "jackhammer":
-		entities_dir = os.path.join(build_dir, "install")
-	elif editor_name == "netradiant":
-		game_dir = gamename + ".game"
-		game_file = gamename + ".game"
-		xlink_dir = os.path.join(build_dir, game_dir)
-		basegame_dir = os.path.join(build_dir, game_dir, basegame)
-		entities_dir = basegame_dir
-		buildmenu_dir = os.path.join(build_dir, game_dir)
-		buildmenu_file = "default_build_menu.xml"
-		games_dir = os.path.join(build_dir, "games")
-		gamefile_path = os.path.join(games_dir, game_file)
+    if editor_name == "darkradiant":
+        game_file = gamename + ".game"
+        games_dir = os.path.join(build_dir, "games")
+        gamefile_path = os.path.join(games_dir, game_file)
+    if editor_name == "gtkradiant":
+        xlink_dir = os.path.join(build_dir, "game")
+        entities_dir = os.path.join(build_dir, "install", basegame, "scripts")
+        buildmenu_dir = os.path.join(build_dir, "install", basegame, "scripts")
+        buildmenu_file = "default_project.proj"
+        shaderlist_dir = os.path.join(build_dir, "install", basegame, "scripts")
+        synapse_dir = os.path.join(build_dir, "game")
+        synapsefile_name = "synapse.config"
+        synapsefile_path = os.path.join(synapse_dir, synapsefile_name)
+    elif editor_name == "jackhammer":
+        entities_dir = os.path.join(build_dir, "install")
+    elif editor_name == "netradiant":
+        game_dir = gamename + ".game"
+        game_file = gamename + ".game"
+        xlink_dir = os.path.join(build_dir, game_dir)
+        basegame_dir = os.path.join(build_dir, game_dir, basegame)
+        entities_dir = basegame_dir
+        buildmenu_dir = os.path.join(build_dir, game_dir)
+        buildmenu_file = "default_build_menu.xml"
+        games_dir = os.path.join(build_dir, "games")
+        gamefile_path = os.path.join(games_dir, game_file)
 
-	os.makedirs(build_dir, exist_ok=True)
-	shutil.copyfile(os.path.join(DOCS_DIR, editor_name, "README.md"), os.path.join(build_dir, "README.md"))
-	shutil.copyfile(os.path.join(DOCS_DIR, editor_name, "LICENSE.md"), os.path.join(build_dir, "LICENSE.md"))
+    os.makedirs(build_dir, exist_ok=True)
+    shutil.copyfile(os.path.join(DOCS_DIR, editor_name, "README.md"), os.path.join(build_dir, "README.md"))
+    shutil.copyfile(os.path.join(DOCS_DIR, editor_name, "LICENSE.md"), os.path.join(build_dir, "LICENSE.md"))
 
-	if editor_name == "gtkradiant":
-		os.makedirs(xlink_dir, exist_ok=True)
-		shutil.copyfile(os.path.join(SRC_DIR, "xlink", "game.xlink"), os.path.join(xlink_dir, "game.xlink"))
+    if editor_name == "gtkradiant":
+        os.makedirs(xlink_dir, exist_ok=True)
+        shutil.copyfile(os.path.join(SRC_DIR, "xlink", "game.xlink"), os.path.join(xlink_dir, "game.xlink"))
 
-	if editor_name in [ "gtkradiant", "netradiant", "jackhammer" ]:
-		os.makedirs(entities_dir, exist_ok=True)
-		entities_path = os.path.join(entities_dir, def_basename[editor_name] + os.path.extsep + def_ext[editor_name])
+    if editor_name in [ "gtkradiant", "netradiant", "jackhammer" ]:
+        os.makedirs(entities_dir, exist_ok=True)
+        entities_path = os.path.join(entities_dir, def_basename[editor_name] + os.path.extsep + def_ext[editor_name])
 
-		if entities == "yaml":
-			command = [ os.path.join(bin_dir, "bin", "entities"),
-				"-g",
-				"-p",
-				os.path.join(SRC_DIR, "entities", "header.txt"),
-				"-f",
-				def_format[editor_name],
-				"-d", # TODO: is it still needed?
-				"-TDRE",
-				os.path.join(SRC_DIR, "entities", "entities.yaml") ]
-			result = subprocess.run(command, stdout=subprocess.PIPE)
-			f = open(entities_path, "wb")
-			f.write(result.stdout)
-			f.close()
-		elif entities == "def":
-			if editor_name not in [ "gtkradiant", "netradiant" ]:
-				print("only YAML format can be converted to another format")
-				raise
-			else:
-				shutil.copyfile(os.path.join(SRC_DIR, "entities", "entities.def"), "entities.def")
+        if entities == "yaml":
+            command = [ os.path.join(bin_dir, "bin", "entities"),
+                "-g",
+                "-p",
+                os.path.join(SRC_DIR, "entities", "header.txt"),
+                "-f",
+                def_format[editor_name],
+                "-d", # TODO: is it still needed?
+                "-TDRE",
+                os.path.join(SRC_DIR, "entities", "entities.yaml") ]
+            result = subprocess.run(command, stdout=subprocess.PIPE)
+            f = open(entities_path, "wb")
+            f.write(result.stdout)
+            f.close()
+        elif entities == "def":
+            if editor_name not in [ "gtkradiant", "netradiant" ]:
+                print("only YAML format can be converted to another format")
+                raise
+            else:
+                shutil.copyfile(os.path.join(SRC_DIR, "entities", "entities.def"), "entities.def")
 
-	if editor_name in buildmenu_option.keys():
-		os.makedirs(buildmenu_dir, exist_ok=True)
-		buildmenu_path = os.path.join(buildmenu_dir, buildmenu_file)
-		command = [
-			os.path.join(bin_dir, "bin", "buildmenu"),
-			buildmenu_option[editor_name],
-			os.path.join(SRC_DIR, "buildmenu", "buildmenu.yaml"),
-		]
-		result = subprocess.run(command, stdout=subprocess.PIPE)
-		f = open(buildmenu_path, "wb")
-		f.write(result.stdout)
-		f.close()
+    if editor_name in buildmenu_option.keys():
+        os.makedirs(buildmenu_dir, exist_ok=True)
+        buildmenu_path = os.path.join(buildmenu_dir, buildmenu_file)
+        command = [
+            os.path.join(bin_dir, "bin", "buildmenu"),
+            buildmenu_option[editor_name],
+            os.path.join(SRC_DIR, "buildmenu", "buildmenu.yaml"),
+        ]
+        result = subprocess.run(command, stdout=subprocess.PIPE)
+        f = open(buildmenu_path, "wb")
+        f.write(result.stdout)
+        f.close()
 
-	if editor_name == "gtkradiant":
-		os.makedirs(shaderlist_dir, exist_ok=True)
-		shutil.copyfile(os.path.join(SRC_DIR, "shaderlist", "shaderlist.txt"), os.path.join(shaderlist_dir, "default_shaderlist.txt"))
+    if editor_name == "gtkradiant":
+        os.makedirs(shaderlist_dir, exist_ok=True)
+        shutil.copyfile(os.path.join(SRC_DIR, "shaderlist", "shaderlist.txt"), os.path.join(shaderlist_dir, "default_shaderlist.txt"))
 
-		os.makedirs(synapse_dir, exist_ok=True)
-		command = [ os.path.join(bin_dir, "bin", "gamefile"),
-			"--gtkradiant",
-			os.path.join(SRC_DIR, "gamefile", "game.yaml") ]
-		result = subprocess.run(command, stdout=subprocess.PIPE)
-		f = open(synapsefile_path, "wb")
-		f.write(result.stdout)
-		f.close()
+        os.makedirs(synapse_dir, exist_ok=True)
+        command = [ os.path.join(bin_dir, "bin", "gamefile"),
+            "--gtkradiant",
+            os.path.join(SRC_DIR, "gamefile", "game.yaml") ]
+        result = subprocess.run(command, stdout=subprocess.PIPE)
+        f = open(synapsefile_path, "wb")
+        f.write(result.stdout)
+        f.close()
 
-	elif editor_name == "darkradiant":
-		os.makedirs(games_dir, exist_ok=True)
-		command = [ os.path.join(bin_dir, "bin", "gamefile"),
-			"--darkradiant",
-			os.path.join(SRC_DIR, "gamefile", "game.yaml") ]
-		result = subprocess.run(command, stdout=subprocess.PIPE)
-		f = open(gamefile_path, "wb")
-		f.write(result.stdout)
-		f.close()
+    elif editor_name == "darkradiant":
+        os.makedirs(games_dir, exist_ok=True)
+        command = [ os.path.join(bin_dir, "bin", "gamefile"),
+            "--darkradiant",
+            os.path.join(SRC_DIR, "gamefile", "game.yaml") ]
+        result = subprocess.run(command, stdout=subprocess.PIPE)
+        f = open(gamefile_path, "wb")
+        f.write(result.stdout)
+        f.close()
 
-	elif editor_name == "netradiant":
-		os.makedirs(games_dir, exist_ok=True)
-		command = [ os.path.join(bin_dir, "bin", "gamefile"),
-			"--netradiant",
-			os.path.join(SRC_DIR, "gamefile", "game.yaml") ]
-		result = subprocess.run(command, stdout=subprocess.PIPE)
-		f = open(gamefile_path, "wb")
-		f.write(result.stdout)
-		f.close()
+    elif editor_name == "netradiant":
+        os.makedirs(games_dir, exist_ok=True)
+        command = [ os.path.join(bin_dir, "bin", "gamefile"),
+            "--netradiant",
+            os.path.join(SRC_DIR, "gamefile", "game.yaml") ]
+        result = subprocess.run(command, stdout=subprocess.PIPE)
+        f = open(gamefile_path, "wb")
+        f.write(result.stdout)
+        f.close()
 
-		deps_file = os.path.join(SRC_DIR, "deps", "DEPS")
-		if os.path.isfile(deps_file):
-			os.makedirs(basegame_dir, exist_ok=True)
-			shutil.copyfile(deps_file, os.path.join(basegame_dir, "DEPS"))
+        deps_file = os.path.join(SRC_DIR, "deps", "DEPS")
+        if os.path.isfile(deps_file):
+            os.makedirs(basegame_dir, exist_ok=True)
+            shutil.copyfile(deps_file, os.path.join(basegame_dir, "DEPS"))
 
 
 parser = argparse.ArgumentParser(description = "make editor packs")
@@ -222,21 +222,21 @@ args = parser.parse_args()
 built = False
 
 if args.darkradiant:
-	build("darkradiant")
-	built = True
+    build("darkradiant")
+    built = True
 
 if args.gtkradiant:
-	build("gtkradiant")
-	built = True
+    build("gtkradiant")
+    built = True
 
 if args.jackhammer:
-	build("jackhammer")
-	built = True
+    build("jackhammer")
+    built = True
 
 if args.netradiant:
-	build("netradiant")
-	built = True
+    build("netradiant")
+    built = True
 
 if not built:
-	parser.print_help()
-	exit(0)
+    parser.print_help()
+    exit(0)
