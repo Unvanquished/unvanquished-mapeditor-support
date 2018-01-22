@@ -6,7 +6,7 @@ Installation
 
 GtkRadiant automatically fetches gamepacks it supports, you have no need to clone this repo.
 
-List of available games is hardcoded, so GtkRadiant must be patched in order to support Unvanquished. Some work have been started but nothing is usable yet and development stopped. If you have the skill, join [#unvanquished on freenode](http://webchat.freenode.net/?channels=%23unvanquished) to get more information. Prefer using NetRadiant currently.
+Prefer using NetRadiant because it provides a better Unvanquished support. If NetRadiant does not work for you GtkRadiant is a good fallback though.
 
 Using
 -----
