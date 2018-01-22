@@ -11,10 +11,10 @@ Using the support files
 Pick the directory corresponding to your editor and merge the file hierarchy inside the `gamepack` subdirectory into its installation. Further installation instructions are given in a seperate per-editor readme file.
 
 
-* [NetRadiant](build/netradiant/README.md) ★★★★★ (recommended)
-* [GtkRadiant](build/gtkradiant/README.md) ★★★
-* [JackHammer](build/jackhammer/README.md) ★
-* [~~DarkRadiant~~](build/darkradiant/README.md) (not yet usable)
+* [NetRadiant](build/netradiant/README.md) ★★★★★ _(preferred and recommended)_
+* [GtkRadiant](build/gtkradiant/README.md) ★★★ _(serious fallback)_
+* [JackHammer](build/jackhammer/README.md) ★ _(some managed to do something with it)_
+* [~~DarkRadiant~~](build/darkradiant/README.md) _(not yet usable)_
 
 Packages
 --------
