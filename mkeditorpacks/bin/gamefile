@@ -44,12 +44,13 @@ supported["gtkradiant"]["texture"] = ["tga", "jpg", "png", "pcx", "bmp"]
 supported["gtkradiant"]["model"] = ["md3", "ase", "lwo", "obj", "3ds", "picoterrain"]
 supported["netradiant"] = {}
 supported["netradiant"]["vfs"] = ["pk3", "pk4", "dpk"]
-supported["netradiant"]["texture"] = ["tga", "jpg", "png", "pcx", "bmp"]
-supported["netradiant"]["model"] = ["iqm", "md3", "ase", "lwo", "obj", "3ds", "picoterrain"]
+supported["netradiant"]["texture"] = ["tga", "jpg", "png", "pcx", "bmp", "ktx", "dds"]
+supported["netradiant"]["model"] = ["iqm", "md5mesh", "md3", "ase", "lwo", "obj", "3ds", "picoterrain"]
 supported["darkradiant"] = {}
 supported["darkradiant"]["vfs"] = ["pk3", "pk4", "dpk"]
 supported["darkradiant"]["texture"] = ["tga", "jpg", "png", "pcx", "bmp", "dds"]
 supported["darkradiant"]["model"] = ["md5mesh", "md3", "ase", "lwo", "obj", "3ds", "picoterrain"]
+
 
 # load yaml data as ordered dict so generated file content keep the same order after each generation (reduces diff noise)
 def yaml_dict_representer(dumper, data):
