@@ -1,6 +1,5 @@
 vfs:
   - dpk
-  - pk3
 map:
   type:
     - mapq3
