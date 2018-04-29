@@ -16,4 +16,4 @@ engine:
     name: "daemon.exe"
 home:
   linux:
-    legacy: ".unvanquished"
+    legacy: ".local/share/unvanquished"

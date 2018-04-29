@@ -749,7 +749,7 @@ angle: Player orientation after spawn. (float (yaw))
 origin: Position. (vec3_float)
 ------ DESCRIPTION ------
 The human spawn point.
-model="models/buildables/telenode/telenode.md5mesh"
+model="models/buildables/telenode/telenode.iqm"
 */
 
 /*QUAKED team_human_armoury (0 0.2 1) (-40 -40 -13) (40 40 50)
@@ -822,7 +822,7 @@ model="models/buildables/eggpod/eggpod.iqm"
 origin: Position. (vec3_float)
 ------ DESCRIPTION ------
 The alien acid tube.
-model="models/buildables/acid_tube/acid_tube.md5mesh"
+model="models/buildables/acid_tube/acid_tube.iqm"
 */
 
 /*QUAKED team_alien_spiker (1 0.2 0) (-20 -20 -15) (20 20 15)
@@ -862,7 +862,7 @@ model="models/buildables/overmind/overmind.iqm"
 origin: Position. (vec3_float)
 ------ DESCRIPTION ------
 The alien trapper.
-model="models/buildables/trapper/trapper.md5mesh"
+model="models/buildables/trapper/trapper.iqm"
 */
 
 /*QUAKED team_alien_hive (1 0.2 0) (-20 -20 -20) (20 20 20)

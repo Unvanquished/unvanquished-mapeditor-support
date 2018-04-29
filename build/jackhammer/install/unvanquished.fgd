@@ -614,7 +614,7 @@
 	origin(string) : Origin :  : "Position."
 ]
 
-@PointClass flags(Angle) size(-40 -40 -4, 40 40 17) color(0 51 255) studio("models/buildables/telenode/telenode.md5mesh") offset(0 0 5) = team_human_spawn : "The human spawn point."
+@PointClass flags(Angle) size(-40 -40 -4, 40 40 17) color(0 51 255) studio("models/buildables/telenode/telenode.iqm") offset(0 0 5) = team_human_spawn : "The human spawn point."
 [
 	angle(string) : Angle :  : "Player orientation after spawn."
 	origin(string) : Origin :  : "Position."
@@ -661,7 +661,7 @@
 	origin(string) : Origin :  : "Position."
 ]
 
-@PointClass size(-20 -20 -15, 20 20 15) color(255 51 0) studio("models/buildables/acid_tube/acid_tube.md5mesh") offset(0 0 16) = team_alien_acid_tube : "The alien acid tube."
+@PointClass size(-20 -20 -15, 20 20 15) color(255 51 0) studio("models/buildables/acid_tube/acid_tube.iqm") offset(0 0 16) = team_alien_acid_tube : "The alien acid tube."
 [
 	origin(string) : Origin :  : "Position."
 ]
@@ -686,7 +686,7 @@
 	origin(string) : Origin :  : "Position."
 ]
 
-@PointClass size(-15 -15 -15, 15 15 15) color(255 51 0) studio("models/buildables/trapper/trapper.md5mesh") offset(0 0 16) = team_alien_trapper : "The alien trapper."
+@PointClass size(-15 -15 -15, 15 15 15) color(255 51 0) studio("models/buildables/trapper/trapper.iqm") offset(0 0 16) = team_alien_trapper : "The alien trapper."
 [
 	origin(string) : Origin :  : "Position."
 ]

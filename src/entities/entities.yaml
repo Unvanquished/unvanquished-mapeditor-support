@@ -901,7 +901,7 @@
   props:
     angle: Player orientation after spawn.
   desc: The human spawn point.
-  specials: {model: models/buildables/telenode/telenode.md5mesh}
+  specials: {model: models/buildables/telenode/telenode.iqm}
 - name: team_human_armoury
   extend: [point]
   color: *humanColor
@@ -966,7 +966,7 @@
   size_min: [-20.0, -20.0, -15.0]
   size_max: [20.0, 20.0, 15.0]
   desc: The alien acid tube.
-  specials: {model: models/buildables/acid_tube/acid_tube.md5mesh}
+  specials: {model: models/buildables/acid_tube/acid_tube.iqm}
 - name: team_alien_spiker
   extend: [point]
   color: *alienColor
@@ -1001,7 +1001,7 @@
   size_min: [-15.0, -15.0, -15.0]
   size_max: [15.0, 15.0, 15.0]
   desc: The alien trapper.
-  specials: {model: models/buildables/trapper/trapper.md5mesh}
+  specials: {model: models/buildables/trapper/trapper.iqm}
 - name: team_alien_hive
   extend: [point]
   color: *alienColor
