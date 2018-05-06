@@ -1,18 +1,21 @@
 # should not contain -keeplights
 - name: Build without visibility and lights
   opts:
-    - meta: null
+    - bsp: null
       custinfoparms: null
+      meta: null
 - name: Build without lights
   opts:
-    - meta: null
+    - bsp: null
       custinfoparms: null
+      meta: null
     - vis: null
       saveprt: null
 - name: Build with test settings (fast)
   opts:
-    - meta: null
+    - bsp: null
       custinfoparms: null
+      meta: null
     - vis: null
       fast: null
       saveprt: null
@@ -21,8 +24,9 @@
       patchshadows: null
 - name: Build with test settings (normal)
   opts:
-    - meta: null
+    - bsp: null
       custinfoparms: null
+      meta: null
     - vis: null
       saveprt: null
     - light: null
@@ -30,8 +34,9 @@
       patchshadows: null
 - name: Build with test settings (slow)
   opts:
-    - meta: null
+    - bsp: null
       custinfoparms: null
+      meta: null
       samplesize: 16
     - vis: null
       saveprt: null
@@ -46,8 +51,9 @@
       external: null
 - name: Build with final settings (very slow)
   opts:
-    - meta: null
+    - bsp: null
       custinfoparms: null
+      meta: null
       samplesize: 8
     - vis: null
       saveprt: null

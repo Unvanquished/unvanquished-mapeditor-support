@@ -3,29 +3,29 @@
 <project version="2.0">
 <var name="q3map2">"[RadiantPath]q3map2.[ExecutableType]" [ExtraQ3map2Args] -v<cond value="[MonitorAddress]"> -connect [MonitorAddress]</cond> -game unvanquished -fs_basepath "[EnginePath]" -fs_homepath "[UserEnginePath]" <cond value="[GameName]"> -fs_game [GameName]</cond></var>
 <build name="Build without visibility and lights">
-<command>[q3map2] -meta -custinfoparms "[MapFile]"</command>
+<command>[q3map2] -meta -bsp -custinfoparms "[MapFile]"</command>
 </build>
 <build name="Build without lights">
-<command>[q3map2] -meta -custinfoparms "[MapFile]"</command>
+<command>[q3map2] -meta -bsp -custinfoparms "[MapFile]"</command>
 <command>[q3map2] -vis -saveprt "[MapFile]"</command>
 </build>
 <build name="Build with test settings (fast)">
-<command>[q3map2] -meta -custinfoparms "[MapFile]"</command>
+<command>[q3map2] -meta -bsp -custinfoparms "[MapFile]"</command>
 <command>[q3map2] -vis -fast -saveprt "[MapFile]"</command>
 <command>[q3map2] -light -faster -patchshadows "[MapFile]"</command>
 </build>
 <build name="Build with test settings (normal)">
-<command>[q3map2] -meta -custinfoparms "[MapFile]"</command>
+<command>[q3map2] -meta -bsp -custinfoparms "[MapFile]"</command>
 <command>[q3map2] -vis -saveprt "[MapFile]"</command>
 <command>[q3map2] -light -faster -patchshadows "[MapFile]"</command>
 </build>
 <build name="Build with test settings (slow)">
-<command>[q3map2] -meta -custinfoparms -samplesize 16 "[MapFile]"</command>
+<command>[q3map2] -meta -bsp -custinfoparms -samplesize 16 "[MapFile]"</command>
 <command>[q3map2] -vis -saveprt "[MapFile]"</command>
 <command>[q3map2] -light -faster -dirty -patchshadows -samples 2 -samplesize 16 -deluxe -lightmapsize 1024 -external "[MapFile]"</command>
 </build>
 <build name="Build with final settings (very slow)">
-<command>[q3map2] -meta -custinfoparms -samplesize 8 "[MapFile]"</command>
+<command>[q3map2] -meta -bsp -custinfoparms -samplesize 8 "[MapFile]"</command>
 <command>[q3map2] -vis -saveprt "[MapFile]"</command>
 <command>[q3map2] -light -fast -shade -dirty -patchshadows -samples 3 -samplesize 8 -bouncegrid -bounce 16 -deluxe -lightmapsize 1024 -external "[MapFile]"</command>
 </build>
