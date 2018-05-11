@@ -165,7 +165,7 @@ def build(editor_name):
         game_dir = codename + ".game"
         game_file = codename + ".game"
         basegame_dir = os.path.join(build_dir, basegame)
-        entities_dir = basegame_dir
+        entities_dir = os.path.join(basegame_dir, "def")
         games_dir = os.path.join(build_dir, "games")
         gamefile_path = os.path.join(games_dir, game_file)
 
@@ -213,8 +213,8 @@ def build(editor_name):
         os.makedirs(entities_dir, exist_ok=True)
         entities_path = os.path.join(entities_dir, def_basename[editor_name] + os.path.extsep + def_ext[editor_name])
 
-        # translation to to d3def not yet supported
-        if entities == "yaml" and def_format[editor_name] != "d3def":
+        # translation to d3def not yet supported
+        if entities == "yaml":
             command = [
                 os.path.join(bin_dir, "bin", "entities"),
                 "--generate",
