@@ -802,14 +802,6 @@ The human reactor.
 model="models/buildables/reactor/reactor.iqm"
 */
 
-/*QUAKED team_human_repeater (0 0.2 1) (-15 -15 -15) (15 15 25)
------- PROPERTIES ------
-origin: Position. (vec3_float)
------- DESCRIPTION ------
-The human repeater.
-model="models/buildables/repeater/repeater.iqm"
-*/
-
 /*QUAKED team_alien_spawn (1 0.2 0) (-15 -15 -15) (15 15 15)
 ------ PROPERTIES ------
 angle: Player orientation after spawn. (float (yaw))

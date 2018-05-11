@@ -652,11 +652,6 @@
 	origin(string) : Origin :  : "Position."
 ]
 
-@PointClass size(-15 -15 -15, 15 15 25) color(0 51 255) studio("models/buildables/repeater/repeater.iqm") offset(0 0 16) = team_human_repeater : "The human repeater."
-[
-	origin(string) : Origin :  : "Position."
-]
-
 @PointClass flags(Angle) size(-15 -15 -15, 15 15 15) color(255 51 0) studio("models/buildables/eggpod/eggpod.iqm") offset(0 0 16) = team_alien_spawn : "The alien spawn point."
 [
 	angle(string) : Angle :  : "Player orientation after spawn."

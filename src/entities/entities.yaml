@@ -944,13 +944,6 @@
   size_max: [41.0, 41.0, 100.0]
   desc: The human reactor.
   specials: {model: models/buildables/reactor/reactor.iqm}
-- name: team_human_repeater
-  extend: [point]
-  color: *humanColor
-  size_min: [-15.0, -15.0, -15.0]
-  size_max: [15.0, 15.0, 25.0]
-  desc: The human repeater.
-  specials: {model: models/buildables/repeater/repeater.iqm}
 - name: team_alien_spawn
   extend: [point]
   color: *alienColor
