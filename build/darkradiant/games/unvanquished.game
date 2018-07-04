@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<game archivetypes="dpk" basegame="pkg" basegamename="Unvanquished" brushtypes="quake3" engine_linux="daemon" engine_macos="daemon.app" engine_win32="daemon.exe" enginepath_linux="/usr/lib/unvanquished/" enginepath_macos="/Applications/Unvanquished/" enginepath_win32="C:/Program Files/Unvanquished/" entities="quake3" entityclass="quake3" index="1" maptypes="mapq3" modeltypes="md5mesh md3 ase lwo obj picoterrain" name="Unvanquished" patchtypes="quake3" prefix=".local/share/unvanquished" q3map2_type="unvanquished" shaderpath="scripts" shaders="quake3" type="unvanquished" unknowngamename="Custom Unvanquished modification">
+<game archivetypes="dpk" basegame="pkg" basegamename="Unvanquished" brushtypes="quake3" engine_linux="daemon" engine_macos="daemon.app" engine_win32="daemon.exe" enginepath_linux="/usr/lib/unvanquished/" enginepath_macos="/Applications/Unvanquished/" enginepath_win32="C:/Program Files/Unvanquished/" entities="quake3" entityclass="quake3" index="1" maptypes="mapq3" modeltypes="md5mesh md3 ase lwo obj 3ds picoterrain" name="Unvanquished" patchtypes="quake3" prefix=".local/share/unvanquished" q3map2_type="unvanquished" shaderpath="scripts" shaders="quake3" type="unvanquished" unknowngamename="Custom Unvanquished modification">
 	<filetype>
 		<texture>
 			<extension>tga</extension>
