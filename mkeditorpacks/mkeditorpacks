@@ -174,8 +174,15 @@ def build(editor_name):
         f.close()
 
     if editor_name == "gtkradiant":
-        os.makedirs(shaderlist_dir, exist_ok=True)
-        shutil.copyfile(os.path.join(SRC_DIR, "shaderlist", "shaderlist.txt"), os.path.join(shaderlist_dir, "default_shaderlist.txt"))
+        shaderlist_src_path = os.path.join(SRC_DIR, "shaderlist", "shaderlist.txt")
+        shaderlist_build_path = os.path.join(shaderlist_dir, "default_shaderlist.txt")
+
+        if os.path.isfile(shaderlist_src_path):
+            os.makedirs(shaderlist_dir, exist_ok=True)
+            shutil.copyfile(shaderlist_src_path, shaderlist_build_path)
+        else:
+            if os.path.isfile(shaderlist_build_path):
+                os.remove(shaderlist_build_path)
 
         os.makedirs(synapse_dir, exist_ok=True)
         command = [ os.path.join(bin_dir, "bin", "gamefile"),
