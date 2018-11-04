@@ -33,17 +33,21 @@ import subprocess
 import sys
 
 
+ROOT_DIR = os.getenv("ROOT_DIR")
+if not ROOT_DIR:
+    ROOT_DIR = ".."
+
 SRC_DIR = os.getenv("SRC_DIR")
 if not SRC_DIR:
-    SRC_DIR = "../src"
+    SRC_DIR = os.path.join(ROOT_DIR, "src")
 
 DOCS_DIR = os.getenv("DOCS_DIR")
 if not DOCS_DIR:
-    DOCS_DIR = "../docs"
+    DOCS_DIR = os.path.join(ROOT_DIR, "docs")
 
 BUILD_DIR = os.getenv("BUILD_DIR")
 if not BUILD_DIR:
-    BUILD_DIR = "../build"
+    BUILD_DIR = os.path.join(ROOT_DIR, "build")
 
 
 def error(message):
@@ -53,8 +57,6 @@ def error(message):
 bin_dir = os.path.abspath(os.path.dirname(os.path.realpath(sys.argv[0])))
 
 settings_file = os.path.join(SRC_DIR, "settings.ini")
-
-os.chdir(bin_dir)
 
 config = configparser.ConfigParser()
 if not config.read(settings_file):
@@ -128,10 +130,12 @@ def build(editor_name):
         gamefile_path = os.path.join(games_dir, game_file)
 
     os.makedirs(build_dir, exist_ok=True)
-    shutil.copyfile(os.path.join(DOCS_DIR, editor_name, "README.md"), os.path.join(build_dir, "README.md"))
-    shutil.copyfile(os.path.join(DOCS_DIR, editor_name, "LICENSE.md"), os.path.join(build_dir, "LICENSE.md"))
+    for file_name in [ "README.md", "LICENSE.md" ]:
+        doc_file = os.path.join(DOCS_DIR, editor_name, file_name)
+        if os.path.isfile(doc_file):
+            shutil.copyfile(doc_file, os.path.join(build_dir, file_name))
 
-    if editor_name == "gtkradiant":
+    if editor_name in [ "gtkradiant", "netradiant" ]:
         os.makedirs(xlink_dir, exist_ok=True)
         shutil.copyfile(os.path.join(SRC_DIR, "xlink", "game.xlink"), os.path.join(xlink_dir, "game.xlink"))
 
@@ -174,8 +178,15 @@ def build(editor_name):
         f.close()
 
     if editor_name == "gtkradiant":
-        os.makedirs(shaderlist_dir, exist_ok=True)
-        shutil.copyfile(os.path.join(SRC_DIR, "shaderlist", "shaderlist.txt"), os.path.join(shaderlist_dir, "default_shaderlist.txt"))
+        shaderlist_src_path = os.path.join(SRC_DIR, "shaderlist", "shaderlist.txt")
+        shaderlist_build_path = os.path.join(shaderlist_dir, "default_shaderlist.txt")
+
+        if os.path.isfile(shaderlist_src_path):
+            os.makedirs(shaderlist_dir, exist_ok=True)
+            shutil.copyfile(shaderlist_src_path, shaderlist_build_path)
+        else:
+            if os.path.isfile(shaderlist_build_path):
+                os.remove(shaderlist_build_path)
 
         os.makedirs(synapse_dir, exist_ok=True)
         command = [ os.path.join(bin_dir, "bin", "gamefile"),
