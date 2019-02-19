@@ -26,11 +26,11 @@
 
 
 import argparse
-import configparser
 import os
 import shutil
 import subprocess
 import sys
+import yaml
 
 
 ROOT_DIR = os.getenv("ROOT_DIR")
@@ -56,11 +56,17 @@ def error(message):
 
 bin_dir = os.path.abspath(os.path.dirname(os.path.realpath(sys.argv[0])))
 
-settings_file = os.path.join(SRC_DIR, "settings.ini")
+settings_file_basename = "settings.yaml"
+settings_file_path = os.path.join(SRC_DIR, settings_file_basename)
 
-config = configparser.ConfigParser()
-if not config.read(settings_file):
-    error("missing settings.ini file")
+try:
+    stream = open(settings_file_path, "r")
+    try:
+        config = yaml.load(stream)
+    except:
+        error("bad " + settings_file_basename + " file")
+except:
+    error("missing " + settings_file_basename + " file")
 
 settings = config["settings"]
 gamename = settings["gamename"]
@@ -68,13 +74,13 @@ basegame = settings["basegame"]
 entities = settings["entities"]
 
 if "gamename" not in settings.keys():
-    error("missing gamename key in settings.ini")
+    error("missing gamename key in " + settings_file_basename)
 
 if "basegame" not in settings.keys():
-    error("missing basegame key in settings.ini")
+    error("missing basegame key in " + settings_file_basename)
 
 if "entities" not in settings.keys():
-    error("missing entities key in settings.ini")
+    error("missing entities key in " + settings_file_basename)
 
 
 def build(editor_name):
