@@ -35,7 +35,7 @@ import yaml
 
 ROOT_DIR = os.getenv("ROOT_DIR")
 if not ROOT_DIR:
-    ROOT_DIR = ".."
+    ROOT_DIR = cwd = os.getcwd()
 
 SRC_DIR = os.getenv("SRC_DIR")
 if not SRC_DIR:

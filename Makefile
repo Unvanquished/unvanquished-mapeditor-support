@@ -7,16 +7,16 @@ clean:
 	rm -Rf ${BUILD_DIR}
 
 all:
-	$(MAKE) -C mkeditorpacks all
+	./mkeditorpacks/mkeditorpacks all
 
 darkradiant:
-	$(MAKE) -C mkeditorpacks darkradiant
+	./mkeditorpacks/mkeditorpacks darkradiant
 
 gtkradiant:
-	$(MAKE) -C mkeditorpacks gtkradiant
+	./mkeditorpacks/mkeditorpacks gtkradiant
 
 jackhammer:
-	$(MAKE) -C mkeditorpacks jackhammer
+	./mkeditorpacks/mkeditorpacks jackhammer
 
 netradiant:
-	$(MAKE) -C mkeditorpacks netradiant
+	./mkeditorpacks/mkeditorpacks netradiant
