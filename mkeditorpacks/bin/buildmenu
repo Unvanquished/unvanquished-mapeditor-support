@@ -111,7 +111,6 @@ def print_gtkradiant_file(data):
         value = '! ' + ' && ! '.join(stagelist)
         add(name, value)
 
-
     print('<?xml version="1.0"?>')
     print('<!DOCTYPE project SYSTEM "dtds/project.dtd">')
     print(fine_format_xml(project))
@@ -157,6 +156,7 @@ def create_parser():
     group.add_argument('-g', '--gtkradiant', action='store_true', help='GtkRadiant')
 
     return parser
+
 
 args = create_parser().parse_args()
 text = args.filename.read()

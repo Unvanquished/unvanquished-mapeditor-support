@@ -66,9 +66,10 @@ settings_file_basename = "settings.yaml"
 settings_file_path = os.path.join(SRC_DIR, settings_file_basename)
 
 try:
-    stream = open(settings_file_path, "r")
+    settings_file_handle = open(settings_file_path, "r")
     try:
-        config = yaml.load(stream)
+        config = yaml.load(settings_file_handle)
+        settings_file_handle.close()
     except:
         error("bad " + settings_file_basename + " file")
 except:
@@ -78,12 +79,12 @@ if "settings" not in config.keys():
     error("missing settings in " + settings_file_basename)
 
 settings = config["settings"]
-gamename = settings["gamename"]
+codename = settings["codename"]
 basegame = settings["basegame"]
 entities = settings["entities"]
 
-if "gamename" not in settings.keys():
-    error("missing gamename key in " + settings_file_basename)
+if "codename" not in settings.keys():
+    error("missing codename key in " + settings_file_basename)
 
 if "basegame" not in settings.keys():
     error("missing basegame key in " + settings_file_basename)
@@ -121,7 +122,7 @@ def build(editor_name):
     def_basename = {
         "gtkradiant": "entities",
         "netradiant": "entities",
-        "jackhammer": gamename,
+        "jackhammer": codename,
     }
 
     def_ext = {
@@ -131,7 +132,7 @@ def build(editor_name):
     }
 
     if editor_name == "darkradiant":
-        game_file = gamename + ".game"
+        game_file = codename + ".game"
         games_dir = os.path.join(build_dir, "games")
         gamefile_path = os.path.join(games_dir, game_file)
     if editor_name == "gtkradiant":
@@ -146,8 +147,8 @@ def build(editor_name):
     elif editor_name == "jackhammer":
         entities_dir = os.path.join(build_dir, "install")
     elif editor_name == "netradiant":
-        game_dir = gamename + ".game"
-        game_file = gamename + ".game"
+        game_dir = codename + ".game"
+        game_file = codename + ".game"
         xlink_dir = os.path.join(build_dir, game_dir)
         basegame_dir = os.path.join(build_dir, game_dir, basegame)
         entities_dir = basegame_dir
