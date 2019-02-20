@@ -251,10 +251,11 @@ def build(editor_name):
 
 
 parser = argparse.ArgumentParser(description = "make editor packs")
-parser.add_argument("editor_list", metavar="editor", nargs="+", type=str, help="build editor gamepack")
+parser.add_argument("-m", "--makefile", dest="write_makefile", action="store_true", help="write makefile")
+parser.add_argument("editor_list", metavar="editor", nargs="*", type=str, help="build editor gamepack")
 args = parser.parse_args()
 
-built = False
+action_done = False
 
 for editor in enabled_editor_list:
     if editor not in supported_editor_list:
@@ -265,14 +266,44 @@ for editor in args.editor_list:
         for enabled_editor in enabled_editor_list:
             if enabled_editor in supported_editor_list:
                 build(enabled_editor)
-                built = True
+                action_done = True
 
     elif editor not in enabled_editor_list:
         warning("disabled editor " + editor + " in " + settings_file_basename)
     else:
         build(editor)
-        built = True
+        action_done = True
 
-if not built:
+if args.write_makefile:
+    program_path = "./mkeditorpacks/mkeditorpacks"
+
+    makefile_line_list = [
+        ".DEFAULT_GOAL := all",
+        "",
+        "export ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))",
+        "export BUILD_DIR := ${ROOT_DIR}/build",
+        "",
+        "clean:",
+        "\trm -Rf ${BUILD_DIR}",
+        "",
+        "all:",
+        "\t" + program_path + " all",
+        "",
+    ]
+
+    for editor_name in supported_editor_list:
+        if editor_name in enabled_editor_list:
+            makefile_line_list.extend([
+                editor_name + ":",
+                "\t" + program_path + " " + editor_name,
+                "",
+                ])
+
+    makefile_handle = open("Makefile", "w")
+    makefile_handle.writelines("%s\n" % l for l in makefile_line_list)
+
+    action_done = True
+
+if not action_done:
     parser.print_help()
     exit(0)

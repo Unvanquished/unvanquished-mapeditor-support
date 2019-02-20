@@ -9,9 +9,6 @@ clean:
 all:
 	./mkeditorpacks/mkeditorpacks all
 
-darkradiant:
-	./mkeditorpacks/mkeditorpacks darkradiant
-
 gtkradiant:
 	./mkeditorpacks/mkeditorpacks gtkradiant
 
@@ -20,3 +17,4 @@ jackhammer:
 
 netradiant:
 	./mkeditorpacks/mkeditorpacks netradiant
+
