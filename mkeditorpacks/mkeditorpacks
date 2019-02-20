@@ -53,6 +53,12 @@ if not BUILD_DIR:
 def error(message):
     raise ValueError(message)
 
+def warning(message):
+    print("WARNING: " + message + "\n")
+
+def notice(message):
+    print(message)
+
 
 bin_dir = os.path.abspath(os.path.dirname(os.path.realpath(sys.argv[0])))
 
@@ -68,6 +74,9 @@ try:
 except:
     error("missing " + settings_file_basename + " file")
 
+if "settings" not in config.keys():
+    error("missing settings in " + settings_file_basename)
+
 settings = config["settings"]
 gamename = settings["gamename"]
 basegame = settings["basegame"]
@@ -82,8 +91,20 @@ if "basegame" not in settings.keys():
 if "entities" not in settings.keys():
     error("missing entities key in " + settings_file_basename)
 
+if "entities" not in settings.keys():
+    error("missing entities key in " + settings_file_basename)
+
+if "editors" not in config.keys():
+    warning("missing editors in " + settings_file_basename)
+    enabled_editor_list = []
+else:
+    enabled_editor_list = config["editors"]
+
+supported_editor_list = [ "darkradiant", "gtkradiant", "jackhammer", "netradiant" ]
 
 def build(editor_name):
+    notice("building " + editor_name)
+
     build_dir = os.path.join(BUILD_DIR, editor_name)
 
     buildmenu_option = {
@@ -230,29 +251,27 @@ def build(editor_name):
 
 
 parser = argparse.ArgumentParser(description = "make editor packs")
-parser.add_argument("-d", "--darkradiant", dest="darkradiant", help="build DarkRadiant gamepack", action="store_true")
-parser.add_argument("-g", "--gtkradiant", dest="gtkradiant", help="build GtkRadiant gamepack", action="store_true")
-parser.add_argument("-j", "--jackhammer", dest="jackhammer", help="build JackHammer gamepack", action="store_true")
-parser.add_argument("-n", "--netradiant", dest="netradiant", help="build NetRadiant gamepack", action="store_true")
+parser.add_argument("editor_list", metavar="editor", nargs="+", type=str, help="build editor gamepack")
 args = parser.parse_args()
 
 built = False
 
-if args.darkradiant:
-    build("darkradiant")
-    built = True
+for editor in enabled_editor_list:
+    if editor not in supported_editor_list:
+        warning("unsupported editor " + editor + " in " + settings_file_basename)
 
-if args.gtkradiant:
-    build("gtkradiant")
-    built = True
+for editor in args.editor_list:
+    if editor == "all":
+        for enabled_editor in enabled_editor_list:
+            if enabled_editor in supported_editor_list:
+                build(enabled_editor)
+                built = True
 
-if args.jackhammer:
-    build("jackhammer")
-    built = True
-
-if args.netradiant:
-    build("netradiant")
-    built = True
+    elif editor not in enabled_editor_list:
+        warning("disabled editor " + editor + " in " + settings_file_basename)
+    else:
+        build(editor)
+        built = True
 
 if not built:
     parser.print_help()

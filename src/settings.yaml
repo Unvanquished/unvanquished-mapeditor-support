@@ -5,3 +5,8 @@ settings:
   basegame: "pkg"
   # entities format: "yaml" or "def"
   entities: "yaml"
+editors:
+  - "darkradiant"
+  - "gtkradiant"
+  - "jackhammer"
+  - "netradiant"
