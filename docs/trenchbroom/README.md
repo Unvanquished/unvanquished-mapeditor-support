@@ -6,7 +6,7 @@ Installation
 
 TrenchBroom is not yet usable for Unvanquished, but if you're a developer you can be interested by the game file for testing purpose.
 
-Download the [game directoru](games/Unvanquished) and put it in `app/resources/games/` directory within TrenchBroom one.
+Download the [game directory](games/Unvanquished) and put it in `app/resources/games/` directory within TrenchBroom one.
 
 Using
 -----
