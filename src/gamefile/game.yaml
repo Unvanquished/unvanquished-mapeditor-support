@@ -1,9 +1,10 @@
 game:
   name: "Unvanquished"
   keyword:
-    editor: unvanquished
-    compiler: unvanquished
+    editor: "unvanquished"
+    compiler: "unvanquished"
   base: "pkg"
+  textures: "textures"
 engine:
   linux:
     dir: "/usr/lib/unvanquished/"
@@ -11,7 +12,7 @@ engine:
   macos:
     dir: "/Applications/Unvanquished/"
     name: "daemon.app"
-  win:
+  windows:
     dir: "C:/Program Files/Unvanquished/"
     name: "daemon.exe"
 home:

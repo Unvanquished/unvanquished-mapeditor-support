@@ -62,80 +62,104 @@ def notice(message):
 
 bin_dir = os.path.abspath(os.path.dirname(os.path.realpath(sys.argv[0])))
 
-settings_file_basename = "settings.yaml"
-settings_file_path = os.path.join(SRC_DIR, settings_file_basename)
+config_file_basename = "config.yaml"
+config_file_path = os.path.join(SRC_DIR, config_file_basename)
 
 try:
-    settings_file_handle = open(settings_file_path, "r")
+    config_file_handle = open(config_file_path, "r")
     try:
-        config = yaml.load(settings_file_handle)
-        settings_file_handle.close()
+        config_dict = yaml.load(config_file_handle)
+        config_file_handle.close()
     except:
-        error("bad " + settings_file_basename + " file")
+        error("bad " + config_file_basename + " file")
 except:
-    error("missing " + settings_file_basename + " file")
+    error("missing " + config_file_basename + " file")
 
-if "settings" not in config.keys():
-    error("missing settings in " + settings_file_basename)
+game_file_basename = "gamefile" + os.path.sep + "game.yaml"
+game_file_path = os.path.join(SRC_DIR, game_file_basename)
 
-settings = config["settings"]
-codename = settings["codename"]
-basegame = settings["basegame"]
-entities = settings["entities"]
+try:
+    game_file_handle = open(game_file_path, "r")
+    try:
+        game_dict = yaml.load(game_file_handle)
+        game_file_handle.close()
+    except:
+        error("bad " + game_file_basename + " file")
+except:
+    error("missing " + game_file_basename + " file")
 
-if "codename" not in settings.keys():
-    error("missing codename key in " + settings_file_basename)
+if "settings" not in config_dict.keys():
+    error("missing settings entry in " + config_file_basename)
 
-if "basegame" not in settings.keys():
-    error("missing basegame key in " + settings_file_basename)
+if "game" not in game_dict.keys():
+    error("missing game entry in " + game_file_basename)
 
-if "entities" not in settings.keys():
-    error("missing entities key in " + settings_file_basename)
+if "keyword" not in game_dict["game"].keys():
+    error("missing game/keyword entry in " + game_file_basename)
+else:
+    settings_dict = config_dict["settings"]
 
-if "entities" not in settings.keys():
-    error("missing entities key in " + settings_file_basename)
+if "name" not in game_dict["game"].keys():
+    error("missing game/name key in " + game_file_basename)
+else:
+    gamename = game_dict["game"]["name"]
 
-if "editors" not in config.keys():
-    warning("missing editors in " + settings_file_basename)
+if "editor" not in game_dict["game"]["keyword"].keys():
+    error("missing game/name/editor key in " + game_file_basename)
+else:
+    codename = game_dict["game"]["keyword"]["editor"]
+
+if "base" not in game_dict["game"].keys():
+    error("missing game/base key in " + game_file_basename)
+else:
+    basegame = game_dict["game"]["base"]
+
+if "entities" not in settings_dict.keys():
+    error("missing entities key in " + config_file_basename)
+else:
+    entities = settings_dict["entities"]
+
+if "editors" not in config_dict.keys():
+    warning("missing editors in " + config_file_basename)
     enabled_editor_list = []
 else:
-    enabled_editor_list = config["editors"]
+    enabled_editor_list = config_dict["editors"]
 
-supported_editor_list = [ "darkradiant", "gtkradiant", "jackhammer", "netradiant" ]
+supported_editor_list = [ "darkradiant", "gtkradiant", "jackhammer", "netradiant", "trenchbroom" ]
 
 def build(editor_name):
     notice("building " + editor_name)
 
     build_dir = os.path.join(BUILD_DIR, editor_name)
 
-    buildmenu_option = {
-        "gtkradiant": "--gtkradiant",
-        "netradiant": "--netradiant",
-    }
-
     def_format = {
         "gtkradiant": "gtkradiant",
-        "netradiant": "gtkradiant",
         "jackhammer": "hammer",
+        "netradiant": "gtkradiant",
+        "trenchbroom": "gtkradiant",
     }
 
     def_basename = {
         "gtkradiant": "entities",
-        "netradiant": "entities",
         "jackhammer": codename,
+        "netradiant": "entities",
+        # TODO: what if white spaces?
+        "trenchbroom": gamename,
     }
 
     def_ext = {
         "gtkradiant": "def",
-        "netradiant": "def",
         "jackhammer": "fgd",
+        "netradiant": "def",
+        "trenchbroom": "def",
     }
 
     if editor_name == "darkradiant":
         game_file = codename + ".game"
         games_dir = os.path.join(build_dir, "games")
         gamefile_path = os.path.join(games_dir, game_file)
-    if editor_name == "gtkradiant":
+
+    elif editor_name == "gtkradiant":
         xlink_dir = os.path.join(build_dir, "game")
         entities_dir = os.path.join(build_dir, "install", basegame, "scripts")
         buildmenu_dir = os.path.join(build_dir, "install", basegame, "scripts")
@@ -144,8 +168,10 @@ def build(editor_name):
         synapse_dir = os.path.join(build_dir, "game")
         synapsefile_name = "synapse.config"
         synapsefile_path = os.path.join(synapse_dir, synapsefile_name)
+
     elif editor_name == "jackhammer":
         entities_dir = os.path.join(build_dir, "install")
+
     elif editor_name == "netradiant":
         game_dir = codename + ".game"
         game_file = codename + ".game"
@@ -156,6 +182,12 @@ def build(editor_name):
         buildmenu_file = "default_build_menu.xml"
         games_dir = os.path.join(build_dir, "games")
         gamefile_path = os.path.join(games_dir, game_file)
+    
+    elif editor_name == "trenchbroom":
+        games_dir = os.path.join(build_dir, "games")
+        game_dir = os.path.join(games_dir, gamename)
+        gamefile_path = os.path.join(game_dir, "GameConfig.cfg")
+        entities_dir = game_dir
 
     os.makedirs(build_dir, exist_ok=True)
     for file_name in [ "README.md", "LICENSE.md" ]:
@@ -167,7 +199,7 @@ def build(editor_name):
         os.makedirs(xlink_dir, exist_ok=True)
         shutil.copyfile(os.path.join(SRC_DIR, "xlink", "game.xlink"), os.path.join(xlink_dir, "game.xlink"))
 
-    if editor_name in [ "gtkradiant", "netradiant", "jackhammer" ]:
+    if editor_name in [ "gtkradiant", "netradiant", "jackhammer", "trenchbroom" ]:
         os.makedirs(entities_dir, exist_ok=True)
         entities_path = os.path.join(entities_dir, def_basename[editor_name] + os.path.extsep + def_ext[editor_name])
 
@@ -186,18 +218,18 @@ def build(editor_name):
             f.write(result.stdout)
             f.close()
         elif entities == "def":
-            if editor_name not in [ "gtkradiant", "netradiant" ]:
+            if editor_name not in [ "gtkradiant", "netradiant", "trenchbroom" ]:
                 print("only YAML format can be converted to another format")
                 raise
             else:
                 shutil.copyfile(os.path.join(SRC_DIR, "entities", "entities.def"), "entities.def")
 
-    if editor_name in buildmenu_option.keys():
+    if editor_name in [ "gtkradiant", "netradiant" ]:
         os.makedirs(buildmenu_dir, exist_ok=True)
         buildmenu_path = os.path.join(buildmenu_dir, buildmenu_file)
         command = [
             os.path.join(bin_dir, "bin", "buildmenu"),
-            buildmenu_option[editor_name],
+            "--" + editor_name,
             os.path.join(SRC_DIR, "buildmenu", "buildmenu.yaml"),
         ]
         result = subprocess.run(command, stdout=subprocess.PIPE)
@@ -217,38 +249,35 @@ def build(editor_name):
                 os.remove(shaderlist_build_path)
 
         os.makedirs(synapse_dir, exist_ok=True)
-        command = [ os.path.join(bin_dir, "bin", "gamefile"),
-            "--gtkradiant",
-            os.path.join(SRC_DIR, "gamefile", "game.yaml") ]
-        result = subprocess.run(command, stdout=subprocess.PIPE)
-        f = open(synapsefile_path, "wb")
-        f.write(result.stdout)
-        f.close()
+        gamefile_path = synapsefile_path
 
     elif editor_name == "darkradiant":
         os.makedirs(games_dir, exist_ok=True)
-        command = [ os.path.join(bin_dir, "bin", "gamefile"),
-            "--darkradiant",
-            os.path.join(SRC_DIR, "gamefile", "game.yaml") ]
-        result = subprocess.run(command, stdout=subprocess.PIPE)
-        f = open(gamefile_path, "wb")
-        f.write(result.stdout)
-        f.close()
 
     elif editor_name == "netradiant":
         os.makedirs(games_dir, exist_ok=True)
-        command = [ os.path.join(bin_dir, "bin", "gamefile"),
-            "--netradiant",
-            os.path.join(SRC_DIR, "gamefile", "game.yaml") ]
-        result = subprocess.run(command, stdout=subprocess.PIPE)
-        f = open(gamefile_path, "wb")
-        f.write(result.stdout)
-        f.close()
 
         deps_file = os.path.join(SRC_DIR, "deps", "DEPS")
         if os.path.isfile(deps_file):
             os.makedirs(basegame_dir, exist_ok=True)
             shutil.copyfile(deps_file, os.path.join(basegame_dir, "DEPS"))
+
+    if editor_name in [ "gtkradiant", "darkradiant", "netradiant", "trenchbroom" ]:
+        command = [ os.path.join(bin_dir, "bin", "gamefile"),
+            "--" + editor_name,
+            os.path.join(SRC_DIR, "gamefile", "game.yaml") ]
+
+        result = subprocess.run(command, stdout=subprocess.PIPE)
+        f = open(gamefile_path, "wb")
+        f.write(result.stdout)
+        f.close()
+
+    if editor_name == "trenchbroom":
+        icon_file = os.path.join(SRC_DIR, os.path.join("resources", "trenchbroom", "icon" + os.path.extsep + "png"))
+        file_name = "Icon" + os.path.extsep + "png"
+
+        if os.path.isfile(icon_file):
+            shutil.copyfile(icon_file, os.path.join(build_dir, game_dir, file_name))
 
 
 parser = argparse.ArgumentParser(description = "make editor packs")
@@ -260,7 +289,7 @@ action_done = False
 
 for editor in enabled_editor_list:
     if editor not in supported_editor_list:
-        warning("unsupported editor " + editor + " in " + settings_file_basename)
+        warning("unsupported editor " + editor + " in " + config_file_basename)
 
 for editor in args.editor_list:
     if editor == "all":
@@ -270,13 +299,15 @@ for editor in args.editor_list:
                 action_done = True
 
     elif editor not in enabled_editor_list:
-        warning("disabled editor " + editor + " in " + settings_file_basename)
-    else:
+        warning("disabled editor " + editor + " in " + config_file_basename)
+
+    if editor != "all":
         build(editor)
         action_done = True
 
 if args.write_makefile:
-    program_path = "./mkeditorpacks/mkeditorpacks"
+    program_basename = "mkeditorpacks"
+    program_path = os.path.curdir + os.path.sep + program_basename + os.path.sep + program_basename
 
     makefile_line_list = [
         ".DEFAULT_GOAL := all",

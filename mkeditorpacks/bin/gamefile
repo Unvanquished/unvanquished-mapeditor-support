@@ -50,6 +50,10 @@ supported["darkradiant"] = {}
 supported["darkradiant"]["vfs"] = ["pk3", "pk4", "dpk"]
 supported["darkradiant"]["texture"] = ["tga", "jpg", "png", "pcx", "bmp", "dds"]
 supported["darkradiant"]["model"] = ["md5mesh", "md3", "ase", "lwo", "obj", "3ds", "picoterrain"]
+supported["trenchbroom"] = {}
+supported["trenchbroom"]["vfs"] = ["pk3", "pk4", "dpk"]
+supported["trenchbroom"]["texture"] = []
+supported["trenchbroom"]["model"] = ["md3"]
 
 
 # load yaml data as ordered dict so generated file content keep the same order after each generation (reduces diff noise)
@@ -76,36 +80,49 @@ def print_file(gamefile, editor):
     if editor in [ "netradiant" ]:
         attrib["entityclasstype"] = "def"
 
-    if editor in [ "darkradiant", "netradiant" ]:
+    if editor in [ "darkradiant", "netradiant", "trenchbroom" ]:
         attrib["index"] = "1"
 
         game = yaml.load(gamefile.read())
         if "game" in game.keys():
             l0  = game["game"]
+
             if "name" in l0.keys():
                 attrib["name"] = l0["name"]
                 attrib["basegamename"] = l0["name"]
                 attrib["unknowngamename"] = " ".join(["Custom", l0["name"], "modification"])
+
             if "base" in l0.keys():
                 attrib["basegame"] = l0["base"]
+
+            if "textures" in l0.keys():
+                textures_dir = l0["textures"]
+
             if "keyword" in l0.keys():
                 l1 = l0["keyword"]
+
                 if "editor" in l1.keys():
                     attrib["type"] = l1["editor"]
+
                 if "compiler" in l1.keys():
                     attrib["q3map2_type"] = l1["compiler"]
 
         if "engine" in game.keys():
             l0 = game["engine"]
-            for sys in ["linux", "macos", "win"]:
-                if sys == "win":
+
+            for sys in ["linux", "macos", "windows"]:
+                if sys == "windows":
                     sysname = "win32"
+
                 else:
                     sysname = sys
+
                 if sys in l0.keys():
                     l1 = l0[sys]
+
                     if "dir" in l1.keys():
                         attrib["enginepath_" + sysname] = l1["dir"]
+
                     if "name" in l1.keys():
                         attrib["engine_" + sysname] = l1["name"]
 
@@ -134,51 +151,68 @@ def print_file(gamefile, editor):
     map_list = []
     brush_list = []
     patch_list = []
-    if editor in [ "darkradiant", "gtkradiant", "netradiant" ]:
+
+    if editor in [ "darkradiant", "gtkradiant", "netradiant", "trenchbroom" ]:
         vfsfile = open(os.path.join(os.path.dirname(gamefile.name),"vfs.yaml"), "r")
         vfs = yaml.load(vfsfile.read())
+
         if "vfs" in vfs.keys():
             for i in vfs["vfs"]:
                 if i in supported[editor]["vfs"]:
                     archive_list.append(i)
+
         if "texture" in vfs.keys():
             for i in vfs["texture"]:
                 if i in supported[editor]["texture"]:
                     texture_list.append(i)
+
         if "model" in vfs.keys():
             for i in vfs["model"]:
                 if i in supported[editor]["model"]:
                     model_list.append(i)
+
         if "map" in vfs.keys():
             l0 = vfs["map"]
+
             if "type" in l0.keys():
                 map_list = l0["type"]
+
             if "brush" in l0.keys():
                 brush_list = l0["brush"]
+
             if "patch" in l0.keys():
                 patch_list = l0["patch"]
+
         if "shader" in vfs.keys():
             l0 = vfs["shader"]
             if "type" in l0.keys():
                 shader_dict["type"] = l0["type"]
+
             if "path" in l0.keys():
                 shader_dict["path"] = l0["path"]
+
             if "ext" in l0.keys():
                 shader_dict["ext"] = l0["ext"]
 
     if editor in [ "netradiant", "darkradiant" ]:
         if archive_list != []:
             attrib["archivetypes"] = " ".join(archive_list)
+
         if model_list != []:
             attrib["modeltypes"] = " ".join(model_list)
+
         if map_list != []:
             attrib["maptypes"] = " ".join(map_list)
+
         if brush_list != []:
             attrib["brushtypes"] = " ".join(brush_list)
+
         if patch_list != []:
             attrib["patchtypes"] = " ".join(patch_list)
+
         if "type" in shader_dict.keys():
             attrib["shaders"] = shader_dict["type"]
+
         if "path" in shader_dict.keys():
             attrib["shaderpath"] = shader_dict["path"]
 
@@ -253,6 +287,7 @@ def print_file(gamefile, editor):
         if texture_list != []:
             filetype_elem = ET.SubElement(gamefile, "filetype")
             texture_filetype_elem = ET.SubElement(filetype_elem, "texture")
+
             for i in texture_list:
                 extension_elem = ET.SubElement(texture_filetype_elem, "extension")
                 extension_elem.text = i
@@ -265,9 +300,67 @@ def print_file(gamefile, editor):
             extension_elem.text = shader_dict["ext"]
             basepath_elem = ET.SubElement(shaders_filesystem_elem, "basepath")
             basepath_elem.text = shader_dict["path"]
+
         # TODO: fonts
 
-    # TODO: darkradiant filters
+        # TODO: darkradiant filters
+
+    if editor in [ "trenchbroom" ]:
+        import json
+        json_dict = OrderedDict()
+        json_dict["version"] = 2
+        json_dict["name"] = attrib["name"]
+
+        # TODO: check if exists
+        json_dict["icon"] = "Icon.png"
+
+        if "mapq3" in map_list:
+            json_dict["experimental"] = True
+            json_dict["fileformats"] = []
+
+            format_dict=OrderedDict()
+            format_dict["format"] = "Quake3"
+            legacy_format_dict=OrderedDict()
+            legacy_format_dict["format"] = "Quake3 (legacy)"
+
+            json_dict["fileformats"].append(format_dict)
+            json_dict["fileformats"].append(legacy_format_dict)
+
+        json_dict["filesystem"] = OrderedDict()
+
+        json_dict["filesystem"]["search_path"] =  attrib["basegame"]
+
+        for archive_format in archive_list:
+        # FIXME: It picks the last one at this time
+            pass
+
+        # FIXME: It expects an archive_format to be found and supported
+        if archive_format in ["pk3", "pk4", "dpk"]:
+            json_dict["filesystem"]["packageformat"] =  OrderedDict()
+            json_dict["filesystem"]["packageformat"]["extension"] = archive_format
+            json_dict["filesystem"]["packageformat"]["format"] = "zip"
+
+        json_dict["textures"] = OrderedDict()
+        json_dict["textures"]["package"] = OrderedDict()
+        json_dict["textures"]["package"]["type"] = "directory"
+        json_dict["textures"]["package"]["root"] = textures_dir
+
+        if shader_dict["type"] == "quake3":
+            json_dict["textures"]["format"] = OrderedDict()
+            json_dict["textures"]["format"]["extensions"] = [ "" ]
+            json_dict["textures"]["format"]["format"] = [ "q3shader" ]
+            json_dict["textures"]["attribute"] = "_tb_textures"
+
+        json_dict["entities"] = OrderedDict()
+        entities_file_name = attrib["basegamename"] + os.path.extsep + "def"
+        json_dict["entities"]["definitions"] = entities_file_name
+
+        # TODO: does it make sense to customize it?
+        json_dict["entities"]["defaultcolor"] = "0.6 0.6 0.6 1.0"
+        json_dict["entities"]["modelformats"] = model_list
+
+        print(json.dumps(json_dict, indent=4))
+    
 
     if editor in [ "netradiant", "darkradiant" ]:
         print(fine_format_xml(gamefile))
@@ -278,14 +371,15 @@ def print_file(gamefile, editor):
 
 def create_parser():
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-        description='Generates radiant q3map2 build menu file.')
+        description="Generates radiant q3map2 build menu file.")
 
-    parser.add_argument('filename', metavar="game.yaml", type=argparse.FileType('r'), help='game.yaml')
-    group = parser.add_argument_group(title='Radiant')
+    parser.add_argument("filename", metavar="game.yaml", type=argparse.FileType("r"), help="game.yaml")
+    group = parser.add_argument_group(title="Radiant")
     group = group.add_mutually_exclusive_group(required=True)
-    group.add_argument('-d', '--darkradiant', action='store_true', help='DarkRadiant')
-    group.add_argument('-n', '--netradiant', action='store_true', help='NetRadiant')
-    group.add_argument('-g', '--gtkradiant', action='store_true', help='GtkRadiant')
+    group.add_argument("-d", "--darkradiant", action="store_true", help="DarkRadiant")
+    group.add_argument("-n", "--netradiant", action="store_true", help="NetRadiant")
+    group.add_argument("-g", "--gtkradiant", action="store_true", help="GtkRadiant")
+    group.add_argument("-t", "--trenchbroom", action="store_true", help="TrenchBroom")
 
     return parser
 
@@ -293,7 +387,12 @@ args = create_parser().parse_args()
 
 if args.darkradiant:
     print_file(args.filename, "darkradiant")
-if args.netradiant:
+
+elif args.netradiant:
     print_file(args.filename, "netradiant")
+
 elif args.gtkradiant:
     print_file(args.filename, "gtkradiant")
+
+elif args.trenchbroom:
+    print_file(args.filename, "trenchbroom")
