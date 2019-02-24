@@ -50,11 +50,15 @@ if not BUILD_DIR:
     BUILD_DIR = os.path.join(ROOT_DIR, "build")
 
 
-def error(message):
-    raise ValueError(message)
+def error(message, abort=True):
+    print("ERROR: " + message)
+    if abort:
+        raise ValueError(message)
+
 
 def warning(message):
-    print("WARNING: " + message + "\n")
+    print("WARNING: " + message)
+
 
 def notice(message):
     print(message)
@@ -133,10 +137,10 @@ def build(editor_name):
     build_dir = os.path.join(BUILD_DIR, editor_name)
 
     def_format = {
-        "gtkradiant": "gtkradiant",
-        "jackhammer": "hammer",
-        "netradiant": "gtkradiant",
-        "trenchbroom": "gtkradiant",
+        "gtkradiant": "def",
+        "jackhammer": "fgd",
+        "netradiant": "def",
+        "trenchbroom": "def",
     }
 
     def_basename = {
@@ -204,15 +208,16 @@ def build(editor_name):
         entities_path = os.path.join(entities_dir, def_basename[editor_name] + os.path.extsep + def_ext[editor_name])
 
         if entities == "yaml":
-            command = [ os.path.join(bin_dir, "bin", "entities"),
+            command = [
+                os.path.join(bin_dir, "bin", "entities"),
                 "-g",
-                "-p",
-                os.path.join(SRC_DIR, "entities", "header.txt"),
-                "-f",
-                def_format[editor_name],
                 "-d", # TODO: is it still needed?
                 "-TDRE",
-                os.path.join(SRC_DIR, "entities", "entities.yaml") ]
+                "-p",
+                os.path.join(SRC_DIR, "entities", "header.txt"),
+                os.path.join(SRC_DIR, "entities", "entities.yaml"),
+                def_format[editor_name],
+            ]
             result = subprocess.run(command, stdout=subprocess.PIPE)
             f = open(entities_path, "wb")
             f.write(result.stdout)
@@ -229,8 +234,8 @@ def build(editor_name):
         buildmenu_path = os.path.join(buildmenu_dir, buildmenu_file)
         command = [
             os.path.join(bin_dir, "bin", "buildmenu"),
-            "--" + editor_name,
             os.path.join(SRC_DIR, "buildmenu", "buildmenu.yaml"),
+            editor_name,
         ]
         result = subprocess.run(command, stdout=subprocess.PIPE)
         f = open(buildmenu_path, "wb")
@@ -263,9 +268,11 @@ def build(editor_name):
             shutil.copyfile(deps_file, os.path.join(basegame_dir, "DEPS"))
 
     if editor_name in [ "gtkradiant", "darkradiant", "netradiant", "trenchbroom" ]:
-        command = [ os.path.join(bin_dir, "bin", "gamefile"),
-            "--" + editor_name,
-            os.path.join(SRC_DIR, "gamefile", "game.yaml") ]
+        command = [
+            os.path.join(bin_dir, "bin", "gamefile"),
+            os.path.join(SRC_DIR, "gamefile", "game.yaml"),
+            editor_name,
+        ]
 
         result = subprocess.run(command, stdout=subprocess.PIPE)
         f = open(gamefile_path, "wb")
@@ -280,9 +287,13 @@ def build(editor_name):
             shutil.copyfile(icon_file, os.path.join(build_dir, game_dir, file_name))
 
 
-parser = argparse.ArgumentParser(description = "make editor packs")
-parser.add_argument("-m", "--makefile", dest="write_makefile", action="store_true", help="write makefile")
-parser.add_argument("editor_list", metavar="editor", nargs="*", type=str, help="build editor gamepack")
+supported_editor_keyword_list = [ "all"] + supported_editor_list
+editor_help_string = ", ".join(supported_editor_keyword_list)
+
+parser = argparse.ArgumentParser(description = "Make map editor packs.")
+parser.add_argument("-m", "--makefile", dest="write_makefile", action="store_true", help="Write makefile")
+parser.add_argument("editor_list", metavar="editor", nargs="*", type=str, help="Editor name (" + editor_help_string + ")")
+
 args = parser.parse_args()
 
 action_done = False
@@ -292,18 +303,24 @@ for editor in enabled_editor_list:
         warning("unsupported editor " + editor + " in " + config_file_basename)
 
 for editor in args.editor_list:
+    if editor not in supported_editor_keyword_list:
+        parser.print_usage()
+        error("unsupported editor " + editor, abort=False)
+        exit(2)
+
     if editor == "all":
         for enabled_editor in enabled_editor_list:
             if enabled_editor in supported_editor_list:
                 build(enabled_editor)
                 action_done = True
+        continue
 
-    elif editor not in enabled_editor_list:
-        warning("disabled editor " + editor + " in " + config_file_basename)
-
-    if editor != "all":
+    elif editor in enabled_editor_list:
         build(editor)
         action_done = True
+        continue
+
+    warning("disabled editor " + editor + " in " + config_file_basename)
 
 if args.write_makefile:
     program_basename = "mkeditorpacks"
@@ -337,5 +354,5 @@ if args.write_makefile:
     action_done = True
 
 if not action_done:
-    parser.print_help()
-    exit(0)
+    parser.print_usage()
+    exit(2)

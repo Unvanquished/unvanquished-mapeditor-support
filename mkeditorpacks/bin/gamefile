@@ -369,30 +369,14 @@ def print_file(gamefile, editor):
         print(fine_format_xml(synapsefile))
 
 
-def create_parser():
-    parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-        description="Generates radiant q3map2 build menu file.")
+supported_editor_list = ["darkradiant", "netradiant", "gtkradiant", "trenchbroom"]
 
-    parser.add_argument("filename", metavar="game.yaml", type=argparse.FileType("r"), help="game.yaml")
-    group = parser.add_argument_group(title="Radiant")
-    group = group.add_mutually_exclusive_group(required=True)
-    group.add_argument("-d", "--darkradiant", action="store_true", help="DarkRadiant")
-    group.add_argument("-n", "--netradiant", action="store_true", help="NetRadiant")
-    group.add_argument("-g", "--gtkradiant", action="store_true", help="GtkRadiant")
-    group.add_argument("-t", "--trenchbroom", action="store_true", help="TrenchBroom")
+parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    description="Generates radiant q3map2 build menu file.")
 
-    return parser
+parser.add_argument("filename", metavar="game.yaml", type=argparse.FileType("r"), help="YAML file path")
+parser.add_argument("editor", choices=supported_editor_list, help="Editor name")
 
-args = create_parser().parse_args()
+args = parser.parse_args()
 
-if args.darkradiant:
-    print_file(args.filename, "darkradiant")
-
-elif args.netradiant:
-    print_file(args.filename, "netradiant")
-
-elif args.gtkradiant:
-    print_file(args.filename, "gtkradiant")
-
-elif args.trenchbroom:
-    print_file(args.filename, "trenchbroom")
+print_file(args.filename, args.editor)

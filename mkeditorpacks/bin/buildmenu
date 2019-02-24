@@ -144,25 +144,22 @@ def print_netradiant_file(data):
     print('<?xml version="1.0"?>')
     print(fine_format_xml(project))
 
+editor_printer_dict = {
+    "gtkradiant": print_gtkradiant_file,
+    "netradiant": print_netradiant_file,
+}
 
-def create_parser():
-    parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-        description='Generates radiant q3map2 build menu file.')
+supported_editor_list = editor_printer_dict.keys()
 
-    parser.add_argument('filename', metavar="buildmenu.yaml", type=argparse.FileType('r'), help='buildmenu.yaml')
-    group = parser.add_argument_group(title='Radiant')
-    group = group.add_mutually_exclusive_group(required=True)
-    group.add_argument('-n', '--netradiant', action='store_true', help='NetRadiant')
-    group.add_argument('-g', '--gtkradiant', action='store_true', help='GtkRadiant')
+parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    description="Generates radiant q3map2 build menu file.")
 
-    return parser
+parser.add_argument("filename", metavar="buildmenu.yaml", type=argparse.FileType("r"), help="YAML file path")
+parser.add_argument("editor", choices=editor_printer_dict.keys(), help="Editor name")
 
+args = parser.parse_args()
 
-args = create_parser().parse_args()
 text = args.filename.read()
 data = yaml.load(text)
 
-if args.netradiant:
-    print_netradiant_file(data)
-elif args.gtkradiant:
-    print_gtkradiant_file(data)
+editor_printer_dict[args.editor](data)

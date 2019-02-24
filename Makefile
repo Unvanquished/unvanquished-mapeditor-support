@@ -21,3 +21,6 @@ jackhammer:
 netradiant:
 	./mkeditorpacks/mkeditorpacks netradiant
 
+trenchbroom:
+	./mkeditorpacks/mkeditorpacks trenchbroom
+

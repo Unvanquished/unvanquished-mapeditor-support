@@ -513,28 +513,6 @@ def entity_type_coverage(e, dt):
 # main
 
 
-def create_parser():
-    parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-        description='Generates radiant entity definition files from a yaml input file.')
-
-    group = parser.add_argument_group(title='action')
-    group = group.add_mutually_exclusive_group(required=True)
-    group.add_argument('-s', '--validate', action='store_true', help='Validate yaml syntax')
-    group.add_argument('-g', '--generate', action='store_true', help='Generate entities file')
-    group.add_argument('-c', '--coverage', action='store_true', help='Analyse completeness of data')
-
-    parser.add_argument('yamlname', default='entities.yaml', nargs='?', help='Path to input file')
-    parser.add_argument('-d', '--dummyflag', action='store_true',
-        help='Use in unpatched Radiant: https://github.com/TTimo/GtkRadiant/issues/262')
-    parser.add_argument('-p', '--header', help='Prepend a header to the generated file.')
-    parser.add_argument('-f', '--format', help="Output format. GtkRadiant's def (by default) or Hammer's fgd", default='gtkradiant')
-
-    parser.add_argument('-T', '--types', dest='gtypes', action='store_true', help='Output types of values')
-    parser.add_argument('-D', '--defaults', dest='gdefaults', action='store_true', help='Output default values')
-    parser.add_argument('-R', '--ranges', dest='granges', action='store_true', help='Output possible value ranges')
-    parser.add_argument('-E', '--examples', dest='gexamples', action='store_true', help='Output example values')
-    return parser
-
 def get_additional_file_name(mainname, f):
     d = os.path.dirname(mainname)
     fname = os.path.basename(mainname).split('.')
@@ -626,10 +604,10 @@ def cleanup_null_props(data):
                 del props[k]
         e['props'] = props
 
-def load_yamls(name):
-    data = load_yaml_file(args.yamlname)
-    deftypes = load_yaml_file(get_additional_file_name(args.yamlname, 'deftypes'))
-    common = load_yaml_file(get_additional_file_name(args.yamlname, 'common'))
+def load_yamls(filename):
+    data = load_yaml_file(filename)
+    deftypes = load_yaml_file(get_additional_file_name(filename, 'deftypes'))
+    common = load_yaml_file(get_additional_file_name(filename, 'common'))
 
     fix_flag_lists(data)
     fix_flag_lists(common)
@@ -641,8 +619,36 @@ def load_yamls(name):
 
     return data, deftypes
 
-args = create_parser().parse_args()
-elist, deftypes = load_yamls(args.yamlname)
+
+format_printer = {
+    "def": DefPrinter,
+    "fgd": FgdPrinter,
+}
+
+parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    description="Generates editor entity definition files.")
+
+group = parser.add_argument_group(title="action")
+group = group.add_mutually_exclusive_group(required=True)
+group.add_argument("-s", "--validate", action="store_true", help="Validate YAML syntax")
+group.add_argument("-g", "--generate", action="store_true", help="Generate entities file")
+group.add_argument("-c", "--coverage", action="store_true", help="Analyse completeness of data")
+
+parser.add_argument("-T", "--types", dest="gtypes", action="store_true", help="Output types of values")
+parser.add_argument("-D", "--defaults", dest="gdefaults", action="store_true", help="Output default values")
+parser.add_argument("-R", "--ranges", dest="granges", action="store_true", help="Output possible value ranges")
+parser.add_argument("-E", "--examples", dest="gexamples", action="store_true", help="Output example values")
+
+parser.add_argument("-d", "--dummyflag", action="store_true",
+    help="Use in unpatched Radiant: https://github.com/TTimo/GtkRadiant/issues/262")
+
+parser.add_argument("-p", "--header", help="Prepend a header to the generated file")
+
+parser.add_argument("filename", metavar="entities.yaml", help="Path to input file")
+parser.add_argument("format", choices=format_printer.keys(), help="Output format")
+
+args = parser.parse_args()
+elist, deftypes = load_yamls(args.filename)
 
 dont_place_dummy_flag = not args.dummyflag
 
@@ -678,11 +684,6 @@ elif args.generate:
         'pr_defaults': args.gdefaults,
         'pr_ranges': args.granges,
         'pr_eg': args.gexamples,
-    }
-
-    format_printer = {
-        "gtkradiant": DefPrinter,
-        "hammer": FgdPrinter,
     }
 
     if args.format in format_printer.keys():
