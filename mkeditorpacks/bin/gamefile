@@ -263,9 +263,9 @@ def print_file(gamefile, editor):
             model_shader_elem.text = shader_dict["type"]
 
         if archive_list != []:
-            # it looks like there is no support for more than
-            # one format, so pick the first one, by the way
-            # pk3 vfs also handles pk4 and dpk
+            # it looks like there is no support for more than one
+            # format in gtkradiant, so pick the first one, by the
+            # way gtkradiant pk3 vfs also handles pk4 and dpk
             archive = archive_list[0]
             if archive in supported["gtkradiant"]["vfsalias"].keys():
                 archive = supported["gtkradiant"]["vfsalias"][archive_list[0]]

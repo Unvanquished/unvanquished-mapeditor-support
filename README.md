@@ -13,7 +13,7 @@ Pick the directory corresponding to your editor and merge the file hierarchy ins
 
 * [NetRadiant](build/netradiant/README.md) ★★★★★ _(preferred and recommended)_
 * [GtkRadiant](build/gtkradiant/README.md) ★★★ _(serious fallback)_
-* [JackHammer](build/jackhammer/README.md) ★ _(some managed to do something with it)_
+* [J.A.C.K.](build/jackhammer/README.md) ★ _(some managed to do something with it)_
 * [~~DarkRadiant~~](build/darkradiant/README.md) _(not yet usable)_
 * [~~TrenchBroom~~](build/trenchbroom/README.md) _(not yet usable)_
 

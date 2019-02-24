@@ -16,8 +16,8 @@ Make sure it's writable for you.
 
 Keep in mind game directory must contain `pkg` directory (like `baseq3` was in Quake 3 dir).
 
-Unvanquished has advanced file layout for maps and resources. Every map resides in separate .pk3.
-Filename must obey the rule: `map-<mapname>_<mapversion>.pk3`, eg. `map-station_4.pk3`.
+Unvanquished has advanced file layout for maps and resources. Every map resides in separate .dpk.
+Filename must obey the rule: `map-<mapname>_<mapversion>.dpk`, eg. `map-station_4.dpk`.
 
-Unpacked files you are working with must be put into `map-<mapname>_<mapversion>.pk3dir` directory,
+Unpacked files you are working with must be put into `map-<mapname>_<mapversion>.dpkdir` directory,
 otherwise game will not find them.
