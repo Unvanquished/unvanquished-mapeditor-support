@@ -211,7 +211,6 @@ def build(editor_name):
             command = [
                 os.path.join(bin_dir, "bin", "entities"),
                 "-g",
-                "-d", # TODO: is it still needed?
                 "-TDRE",
                 "-p",
                 os.path.join(SRC_DIR, "entities", "header.txt"),
