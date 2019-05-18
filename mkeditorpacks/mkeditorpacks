@@ -226,7 +226,7 @@ def build(editor_name):
                 print("only YAML format can be converted to another format")
                 raise
             else:
-                shutil.copyfile(os.path.join(SRC_DIR, "entities", "entities.def"), "entities.def")
+                shutil.copyfile(os.path.join(SRC_DIR, "entities", "entities.def"), entities_path)
 
     if editor_name in [ "gtkradiant", "netradiant" ]:
         os.makedirs(buildmenu_dir, exist_ok=True)
