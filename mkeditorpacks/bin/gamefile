@@ -132,10 +132,8 @@ def print_file(gamefile, editor):
 
         if "home" in game.keys():
             l0 = game["home"]
-            if "linux" in l0.keys():
-                l1 = l0["linux"]
-                if "legacy" in l1.keys():
-                    attrib["prefix"] = l1["legacy"]
+            if "legacy" in l0.keys():
+                attrib["prefix"] = l0["legacy"]
 
         if "entity" in ent.keys():
             l0 = ent["entity"]
