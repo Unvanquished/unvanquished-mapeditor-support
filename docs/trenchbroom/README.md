@@ -13,7 +13,7 @@ Using
 
 Set the engine path in TrenchBroom preferences.
 
-Keep in mind game directory must contain `pkg` directory (like `baseq3` was in Quake 3 dir).
+Keep in mind game directory must contains a `pkg` directory.
 
 Unvanquished has advanced file layout for maps and resources. Every map resides in separate .dpk.
 Filename must obey the rule: `map-<mapname>_<mapversion>.dpk`, eg. `map-station_4.dpk`.

@@ -8,12 +8,12 @@ DarkRadiant is not yet usable for Unvanquished, but if you're a developer you ca
 
 Download the [game file](games/unvanquished.game) and put it in `install/games/` directory within darkadiant one.
 
+Set the engine path in DarkRadiant preferences.
+
 Using
 -----
 
-Set the engine path in DarkRadiant preferences.
-
-Keep in mind game directory must contain `pkg` directory (like `baseq3` was in Quake 3 dir).
+Keep in mind game directory must contains a `pkg` directory.
 
 Unvanquished has advanced file layout for maps and resources. Every map resides in separate .dpk.
 Filename must obey the rule: `map-<mapname>_<mapversion>.dpk`, eg. `map-station_4.dpk`.

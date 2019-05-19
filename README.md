@@ -22,7 +22,7 @@ Packages
 
 Packages are available for
 
-* [Archlinux & Netradiant](https://aur.archlinux.org/packages/netradiant-unvanquished-git/)
+* [Archlinux & NetRadiant](https://aur.archlinux.org/packages/netradiant-unvanquished-git/)
 
 Contributing
 ------------
