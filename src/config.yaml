@@ -1,5 +1,5 @@
 settings:
-  # entities format: "yaml" or "def"
+  # entities format: "yaml" or "q3def"
   entities: "yaml"
 editors:
   - "darkradiant"

@@ -118,7 +118,7 @@ def sort_properties(props):
         yield key, props[key]
 
 
-class DefPrinter:
+class Q3DefPrinter:
     def print_entity_head(self, e):
         name = escape_token(e['name'])
         color = '({} {} {})'.format(*(fmt_float(f) for f in color_to_float_triple(e['color'])))
@@ -621,7 +621,7 @@ def load_yamls(filename):
 
 
 format_printer = {
-    "def": DefPrinter,
+    "q3def": Q3DefPrinter,
     "fgd": FgdPrinter,
 }
 

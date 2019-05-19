@@ -137,13 +137,15 @@ def build(editor_name):
     build_dir = os.path.join(BUILD_DIR, editor_name)
 
     def_format = {
-        "gtkradiant": "def",
+        "darkradiant": "d3def",
+        "gtkradiant": "q3def",
         "jackhammer": "fgd",
-        "netradiant": "def",
-        "trenchbroom": "def",
+        "netradiant": "q3def",
+        "trenchbroom": "q3def",
     }
 
     def_basename = {
+        "darkradiant": "entities",
         "gtkradiant": "entities",
         "jackhammer": codename,
         "netradiant": "entities",
@@ -152,6 +154,7 @@ def build(editor_name):
     }
 
     def_ext = {
+        "darkradiant": "def",
         "gtkradiant": "def",
         "jackhammer": "fgd",
         "netradiant": "def",
@@ -159,7 +162,10 @@ def build(editor_name):
     }
 
     if editor_name == "darkradiant":
+        game_dir = codename + ".game"
         game_file = codename + ".game"
+        basegame_dir = os.path.join(build_dir, basegame)
+        entities_dir = basegame_dir
         games_dir = os.path.join(build_dir, "games")
         gamefile_path = os.path.join(games_dir, game_file)
 
@@ -203,11 +209,12 @@ def build(editor_name):
         os.makedirs(xlink_dir, exist_ok=True)
         shutil.copyfile(os.path.join(SRC_DIR, "xlink", "game.xlink"), os.path.join(xlink_dir, "game.xlink"))
 
-    if editor_name in [ "gtkradiant", "netradiant", "jackhammer", "trenchbroom" ]:
+    if editor_name in def_format.keys():
         os.makedirs(entities_dir, exist_ok=True)
         entities_path = os.path.join(entities_dir, def_basename[editor_name] + os.path.extsep + def_ext[editor_name])
 
-        if entities == "yaml":
+        # translation to to d3def not yet supported
+        if entities == "yaml" and def_format[editor_name] != "d3def":
             command = [
                 os.path.join(bin_dir, "bin", "entities"),
                 "--generate",
@@ -224,10 +231,20 @@ def build(editor_name):
             f = open(entities_path, "wb")
             f.write(result.stdout)
             f.close()
-        elif entities == "def":
+
+        elif entities == "q3def":
             if editor_name not in [ "gtkradiant", "netradiant", "trenchbroom" ]:
                 print("only YAML format can be converted to another format")
                 raise
+
+            else:
+                shutil.copyfile(os.path.join(SRC_DIR, "entities", "entities.def"), entities_path)
+
+        elif entities == "d3def":
+            if editor_name not in [ "darkradiant" ]:
+                print("only YAML format can be converted to another format")
+                raise
+
             else:
                 shutil.copyfile(os.path.join(SRC_DIR, "entities", "entities.def"), entities_path)
 
@@ -251,6 +268,7 @@ def build(editor_name):
         if os.path.isfile(shaderlist_src_path):
             os.makedirs(shaderlist_dir, exist_ok=True)
             shutil.copyfile(shaderlist_src_path, shaderlist_build_path)
+
         else:
             if os.path.isfile(shaderlist_build_path):
                 os.remove(shaderlist_build_path)
@@ -265,6 +283,7 @@ def build(editor_name):
         os.makedirs(games_dir, exist_ok=True)
 
         deps_file = os.path.join(SRC_DIR, "deps", "DEPS")
+
         if os.path.isfile(deps_file):
             os.makedirs(basegame_dir, exist_ok=True)
             shutil.copyfile(deps_file, os.path.join(basegame_dir, "DEPS"))
