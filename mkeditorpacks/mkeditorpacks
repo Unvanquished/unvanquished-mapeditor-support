@@ -210,9 +210,12 @@ def build(editor_name):
         if entities == "yaml":
             command = [
                 os.path.join(bin_dir, "bin", "entities"),
-                "-g",
-                "-TDRE",
-                "-p",
+                "--generate",
+                "--types",
+                "--defaults",
+                "--ranges",
+                "--examples",
+                "--header",
                 os.path.join(SRC_DIR, "entities", "header.txt"),
                 os.path.join(SRC_DIR, "entities", "entities.yaml"),
                 def_format[editor_name],
