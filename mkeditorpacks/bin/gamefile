@@ -83,7 +83,7 @@ def print_file(gamefile, editor):
     if editor in [ "darkradiant", "netradiant", "trenchbroom" ]:
         attrib["index"] = "1"
 
-        game = yaml.load(gamefile.read())
+        game = yaml.load(gamefile.read(), Loader=yaml.FullLoader)
         if "game" in game.keys():
             l0  = game["game"]
 
@@ -128,7 +128,7 @@ def print_file(gamefile, editor):
 
     if editor in [ "darkradiant", "netradiant" ]:
         entfile = open(os.path.join(os.path.dirname(os.path.dirname(gamefile.name)), "entities", "class.yaml"))
-        ent = yaml.load(entfile.read())
+        ent = yaml.load(entfile.read(), Loader=yaml.FullLoader)
 
         if "home" in game.keys():
             l0 = game["home"]
@@ -152,7 +152,7 @@ def print_file(gamefile, editor):
 
     if editor in [ "darkradiant", "gtkradiant", "netradiant", "trenchbroom" ]:
         vfsfile = open(os.path.join(os.path.dirname(gamefile.name),"vfs.yaml"), "r")
-        vfs = yaml.load(vfsfile.read())
+        vfs = yaml.load(vfsfile.read(), Loader=yaml.FullLoader)
 
         if "vfs" in vfs.keys():
             for i in vfs["vfs"]:

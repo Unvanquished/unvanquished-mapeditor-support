@@ -527,7 +527,7 @@ def load_yaml_file(name):
         return {}
     with open(name, 'r') as f:
         text = f.read()
-        data = yaml.load(text)
+        data = yaml.load(text, Loader=yaml.FullLoader)
     return data
 
 def fix_flag_lists(data):

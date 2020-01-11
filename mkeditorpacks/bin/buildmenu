@@ -160,6 +160,6 @@ parser.add_argument("editor", choices=editor_printer_dict.keys(), help="Editor n
 args = parser.parse_args()
 
 text = args.filename.read()
-data = yaml.load(text)
+data = yaml.load(text, Loader=yaml.FullLoader)
 
 editor_printer_dict[args.editor](data)
