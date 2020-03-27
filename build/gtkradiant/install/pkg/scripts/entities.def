@@ -49,7 +49,7 @@
 //   or via the discord channel:
 //     https://discord.gg/pHwf5K2
 
-/*QUAKED worldspawn (0 0 0) ?
+/*QUAKED worldspawn (0 0 0)
 ------ PROPERTIES ------
 _q3map2_cmdline: 
 alienBuildPoints: The maximum amount of sentience available to the overmind.
@@ -150,7 +150,7 @@ Non-displayed point light source. Unlike usual light affects only entities (ligh
 The -pointscale and -scale arguments to Q3Map2 affect the brightness of these lights. The -skyscale argument affects brightness of entity sun lights.
 */
 
-/*QUAKED func_bobbing (0 0.498 0.8) ? X_AXIS Y_AXIS
+/*QUAKED func_bobbing (0 0.498 0.8) X_AXIS Y_AXIS
 ------ FLAGS ------
 X_AXIS: Entity will bob along the X axis.
 Y_AXIS: Entity will bob along the Y axis.
@@ -176,7 +176,7 @@ For "_celshader" read http://q3map2.robotrenegade.com/docs/shader_manual/cel-sha
 Entity supports [terrain] properties. They're not so useful here, but you can refer to func_group for descriptions.
 */
 
-/*QUAKED func_button (0 0.498 0.8) ?
+/*QUAKED func_button (0 0.498 0.8)
 ------ PROPERTIES ------
 target: [required] Must have entity to fire at. (string (target))
 angle: Determines moving direction of button (around Z axis: 0=+x, 90=+y, 180=-x, 270=-y; special values: up = -1, down = -2). (float (yaw), -2..360)
@@ -200,7 +200,7 @@ For "_celshader" read http://q3map2.robotrenegade.com/docs/shader_manual/cel-sha
 Entity supports [terrain] properties. They're not so useful here, but you can refer to func_group for descriptions.
 */
 
-/*QUAKED func_destructable (0 0.498 0.8) ? SPAWN_DISABLED
+/*QUAKED func_destructable (0 0.498 0.8) SPAWN_DISABLED
 ------ FLAGS ------
 SPAWN_DISABLED: Hidden by default. Can be shown via activation as target.
 ------ PROPERTIES ------
@@ -219,7 +219,7 @@ For "_celshader" read http://q3map2.robotrenegade.com/docs/shader_manual/cel-sha
 Entity supports [terrain] properties. They're not so useful here, but you can refer to func_group for descriptions.
 */
 
-/*QUAKED func_door (0 0.498 0.8) ? START_OPEN - CRUSHER
+/*QUAKED func_door (0 0.498 0.8) START_OPEN - CRUSHER
 ------ FLAGS ------
 START_OPEN: The door will spawn in the open state and operate in reverse.
 CRUSHER: Door will not reverse direction when blocked and will keep damaging player or building until it dies or gets out of the way.
@@ -251,7 +251,7 @@ For "_celshader" read http://q3map2.robotrenegade.com/docs/shader_manual/cel-sha
 Entity supports [terrain] properties. They're not so useful here, but you can refer to func_group for descriptions.
 */
 
-/*QUAKED func_door_model (0 0.498 0.8) ?
+/*QUAKED func_door_model (0 0.498 0.8)
 ------ PROPERTIES ------
 model2: [required] The door model. (string, eg: models/mapobjects/pipe/pipe02.md3)
 modelOrigin: [required] "model2" position. (vec3_float, def: 0 0 0)
@@ -277,7 +277,7 @@ A model based door entity. By default, the door will activate when player walks 
 Every func_door_model needs its model to be positioned, scaled and orientated using the modelOrigin, scale and angle/angles keys repsectively.
 */
 
-/*QUAKED func_door_rotating (0 0.498 0.8) ? START_OPEN - CRUSHER REVERSE - X_AXIS Y_AXIS
+/*QUAKED func_door_rotating (0 0.498 0.8) START_OPEN - CRUSHER REVERSE - X_AXIS Y_AXIS
 ------ FLAGS ------
 START_OPEN: the door will spawn in the open state and operate in reverse.
 CRUSHER: Door will not reverse direction when blocked and will keep damaging player or building until it dies or gets out of the way.
@@ -312,7 +312,7 @@ For "_celshader" read http://q3map2.robotrenegade.com/docs/shader_manual/cel-sha
 Entity supports [terrain] properties. They're not so useful here, but you can refer to func_group for descriptions.
 */
 
-/*QUAKED func_dynamic (0 0.498 0.8) ?
+/*QUAKED func_dynamic (0 0.498 0.8)
 ------ PROPERTIES ------
 color: Colour of emitted light. Emission activated by either color or light set. Don't forget to set origin. (vec3_float, def: 1 1 1)
 group: Name of entity group. Allows to activate all entities of group at once.
@@ -330,7 +330,7 @@ For "_celshader" read http://q3map2.robotrenegade.com/docs/shader_manual/cel-sha
 Entity supports [terrain] properties. They're not so useful here, but you can refer to func_group for descriptions.
 */
 
-/*QUAKED func_group (0 0.498 0.8) ?
+/*QUAKED func_group (0 0.498 0.8)
 ------ PROPERTIES ------
 _celshader: [q3map] Sets the cel shader used for this geometry. Note: omit the "textures/" prefix. Example: http://q3map2.robotrenegade.com/docs/shader_manual/cel-shading.html (string, eg: mymap/ink)
 _cs: [q3map] or "_castShadows". Group number entity cast shadow to. Negative value uses same group but disables world. 0 disables shadow casting. (int)
@@ -348,7 +348,7 @@ For "_celshader" read http://q3map2.robotrenegade.com/docs/shader_manual/cel-sha
 For [terrain] read http://icculus.org/gtkradiant/documentation/Terrain_Manual/start.html [terrain] is done entirely by [q3map]. Don't forget to set q3map_indexmap in shader.
 */
 
-/*QUAKED func_pendulum (0 0.498 0.8) ?
+/*QUAKED func_pendulum (0 0.498 0.8)
 ------ PROPERTIES ------
 origin: [required] Rotation axis position. (vec3_float, def: 0 0 0)
 angle: Short version of "angles". (float (yaw), -180.0..180.0, def: 0)
@@ -373,7 +373,7 @@ For "_celshader" read http://q3map2.robotrenegade.com/docs/shader_manual/cel-sha
 Entity supports [terrain] properties. They're not so useful here, but you can refer to func_group for descriptions.
 */
 
-/*QUAKED func_plat (0 0.498 0.8) ? DONT_WAIT - CRUSHER
+/*QUAKED func_plat (0 0.498 0.8) DONT_WAIT - CRUSHER
 ------ FLAGS ------
 DONT_WAIT: The platform will not wait for a client to leave before returning to its original position.
 CRUSHER: Door will not reverse direction when blocked and will keep damaging player or building until it dies or gets out of the way.
@@ -404,7 +404,7 @@ For "_celshader" read http://q3map2.robotrenegade.com/docs/shader_manual/cel-sha
 Entity supports [terrain] properties. They're not so useful here, but you can refer to func_group for descriptions.
 */
 
-/*QUAKED func_rotating (0 0.498 0.8) ? - - X_AXIS Y_AXIS
+/*QUAKED func_rotating (0 0.498 0.8) - - X_AXIS Y_AXIS
 ------ FLAGS ------
 X_AXIS: Entity will rotate around the X axis.
 Y_AXIS: Entity will rotate around the Y axis.
@@ -428,7 +428,7 @@ For "_celshader" read http://q3map2.robotrenegade.com/docs/shader_manual/cel-sha
 Entity supports [terrain] properties. They're not so useful here, but you can refer to func_group for descriptions.
 */
 
-/*QUAKED func_spawn (0 0.498 0.8) ? SPAWN_ENABLED DONT_KILL
+/*QUAKED func_spawn (0 0.498 0.8) SPAWN_ENABLED DONT_KILL
 ------ FLAGS ------
 SPAWN_ENABLED: By default brush is present in level.
 DONT_KILL: Disable killing on appearing.
@@ -444,7 +444,7 @@ For "_celshader" read http://q3map2.robotrenegade.com/docs/shader_manual/cel-sha
 Entity supports [terrain] properties. They're not so useful here, but you can refer to func_group for descriptions.
 */
 
-/*QUAKED func_static (0 0.498 0.8) ?
+/*QUAKED func_static (0 0.498 0.8)
 ------ PROPERTIES ------
 color: Colour of emitted light. Emission activated by either color or light set. Don't forget to set origin. (vec3_float, def: 1 1 1)
 gradingDistance: Distance where grading effect appears. (float, def: 250)
@@ -468,7 +468,7 @@ For "_celshader" read http://q3map2.robotrenegade.com/docs/shader_manual/cel-sha
 Entity supports [terrain] properties. They're not so useful here, but you can refer to func_group for descriptions.
 */
 
-/*QUAKED func_train (0 0.498 0.8) ? START_OFF BLOCK_STOPS
+/*QUAKED func_train (0 0.498 0.8) START_OFF BLOCK_STOPS
 ------ FLAGS ------
 START_OFF: The train will spawn in the off state
 BLOCK_STOPS: Train simply stops if blocked, instead of killing.
@@ -931,7 +931,7 @@ wait: Delay before target activation. (time_2float (time [variance]), def: 1)
 When activated waits amount of time then activates its own targets.
 */
 
-/*QUAKED env_afx_ammo (0.357 0.486 0.176) ? EVERY_SECOND DISABLE_ENERGO DISABLE_NON_ENERGO
+/*QUAKED env_afx_ammo (0.357 0.486 0.176) EVERY_SECOND DISABLE_ENERGO DISABLE_NON_ENERGO
 ------ FLAGS ------
 EVERY_SECOND: Act every second instead of every frame.
 DISABLE_ENERGO: Disable recharging energetic weapons.
@@ -943,7 +943,7 @@ targetname: Give it a name to be able to toggle its activity. (string)
 Gives ammo to the player who activates it (e.g. via button).
 */
 
-/*QUAKED trigger_ammo (0.357 0.486 0.176) ? EVERY_SECOND DISABLE_ENERGO DISABLE_NON_ENERGO
+/*QUAKED trigger_ammo (0.357 0.486 0.176) EVERY_SECOND DISABLE_ENERGO DISABLE_NON_ENERGO
 DEPRECATED! DEPRECATED! DEPRECATED!
 RECOMMENDED TO USE: env_afx_ammo
 ------ FLAGS ------
@@ -957,7 +957,7 @@ targetname: Give it a name to be able to toggle its activity. (string)
 Gives ammo to the player who activates it (e.g. via button).
 */
 
-/*QUAKED env_afx_gravity (0.498 0.498 0.498) ?
+/*QUAKED env_afx_gravity (0.498 0.498 0.498)
 ------ PROPERTIES ------
 amount: The gravity within this entity. (int, def: 800)
 targetname: Give it a name to be able to toggle its activity. (string)
@@ -965,7 +965,7 @@ targetname: Give it a name to be able to toggle its activity. (string)
 Area with different gravity within.
 */
 
-/*QUAKED trigger_gravity (0.498 0.498 0.498) ?
+/*QUAKED trigger_gravity (0.498 0.498 0.498)
 DEPRECATED! DEPRECATED! DEPRECATED!
 RECOMMENDED TO USE: env_afx_gravity
 ------ PROPERTIES ------
@@ -975,7 +975,7 @@ targetname: Give it a name to be able to toggle its activity. (string)
 Area with different gravity within.
 */
 
-/*QUAKED env_afx_heal (0.176 0.486 0.314) ? SPAWN_DISABLED EVERY_SECOND
+/*QUAKED env_afx_heal (0.176 0.486 0.314) SPAWN_DISABLED EVERY_SECOND
 ------ FLAGS ------
 SPAWN_DISABLED: Disabled by default.
 EVERY_SECOND: Heal every second instead of every frame.
@@ -986,7 +986,7 @@ targetname: Give it a name to be able to toggle its activity. (string)
 Heals players touching entity.
 */
 
-/*QUAKED trigger_heal (0.176 0.486 0.314) ? SPAWN_DISABLED EVERY_SECOND
+/*QUAKED trigger_heal (0.176 0.486 0.314) SPAWN_DISABLED EVERY_SECOND
 DEPRECATED! DEPRECATED! DEPRECATED!
 RECOMMENDED TO USE: env_afx_heal
 ------ FLAGS ------
@@ -999,7 +999,7 @@ targetname: Give it a name to be able to toggle its activity. (string)
 Heals players touching entity.
 */
 
-/*QUAKED env_afx_hurt (0.784 0.067 0.067) ? SPAWN_DISABLED - NO_SOUND NO_PROTECTION EVERY_SECOND
+/*QUAKED env_afx_hurt (0.784 0.067 0.067) SPAWN_DISABLED - NO_SOUND NO_PROTECTION EVERY_SECOND
 ------ FLAGS ------
 SPAWN_DISABLED: Disabled by default.
 NO_SOUND: No sound played.
@@ -1012,7 +1012,7 @@ targetname: Give it a name to be able to toggle its activity. (string)
 Hurts players or buildings touching entity.
 */
 
-/*QUAKED trigger_hurt (0.784 0.067 0.067) ? SPAWN_DISABLED - NO_SOUND NO_PROTECTION EVERY_SECOND
+/*QUAKED trigger_hurt (0.784 0.067 0.067) SPAWN_DISABLED - NO_SOUND NO_PROTECTION EVERY_SECOND
 DEPRECATED! DEPRECATED! DEPRECATED!
 RECOMMENDED TO USE: env_afx_hurt
 ------ FLAGS ------
@@ -1027,7 +1027,7 @@ targetname: Give it a name to be able to toggle its activity. (string)
 Hurts players or buildings touching entity.
 */
 
-/*QUAKED env_afx_push (0.498 0.498 0.498) ? SPAWN_DISABLED
+/*QUAKED env_afx_push (0.498 0.498 0.498) SPAWN_DISABLED
 ------ FLAGS ------
 SPAWN_DISABLED: Disabled by default.
 ------ PROPERTIES ------
@@ -1038,7 +1038,7 @@ wait: Delay between triggerings. (time_2float (time [variance]), def: [0.5, 0])
 This is used to create jump pads and launch ramps.
 */
 
-/*QUAKED trigger_push (0.498 0.498 0.498) ? SPAWN_DISABLED
+/*QUAKED trigger_push (0.498 0.498 0.498) SPAWN_DISABLED
 DEPRECATED! DEPRECATED! DEPRECATED!
 RECOMMENDED TO USE: env_afx_push
 ------ FLAGS ------
@@ -1051,7 +1051,7 @@ wait: Delay between triggerings. (time_2float (time [variance]), def: [0.5, 0])
 This is used to create jump pads and launch ramps.
 */
 
-/*QUAKED env_afx_teleport (0.459 0.286 0.157) ? SPECTATORS_ONLY SPAWN_DISABLED
+/*QUAKED env_afx_teleport (0.459 0.286 0.157) SPECTATORS_ONLY SPAWN_DISABLED
 ------ FLAGS ------
 SPECTATORS_ONLY: Affect only spectators. Spectator teleporters are not normally placed in the editor, but are created automatically near doors to allow spectators to move through them.
 
@@ -1065,7 +1065,7 @@ Teleports player touching entity.
 Set "angles" property of target to define player direction after teleportation.
 */
 
-/*QUAKED trigger_teleport (0.459 0.286 0.157) ? SPECTATORS_ONLY SPAWN_DISABLED
+/*QUAKED trigger_teleport (0.459 0.286 0.157) SPECTATORS_ONLY SPAWN_DISABLED
 DEPRECATED! DEPRECATED! DEPRECATED!
 RECOMMENDED TO USE: env_afx_teleport
 ------ FLAGS ------
@@ -1378,7 +1378,7 @@ shader: Name of original shader. (string)
 Entity remaps shader when activated.
 */
 
-/*QUAKED sensor_buildable (0.263 0.667 0) ? SPAWN_DISABLED NEGATE
+/*QUAKED sensor_buildable (0.263 0.667 0) SPAWN_DISABLED NEGATE
 ------ FLAGS ------
 SPAWN_DISABLED: Disabled by default.
 NEGATE: Negate sensor condition.
@@ -1393,7 +1393,7 @@ If condition is satisfied fires targets continuously with "wait" period.
 If NEGATE used, sensor still needs to be touched to activate.
 */
 
-/*QUAKED trigger_buildable (0.263 0.667 0) ? SPAWN_DISABLED NEGATE
+/*QUAKED trigger_buildable (0.263 0.667 0) SPAWN_DISABLED NEGATE
 DEPRECATED! DEPRECATED! DEPRECATED!
 RECOMMENDED TO USE: sensor_buildable
 ------ FLAGS ------
@@ -1449,7 +1449,7 @@ team: 1 for aliens, 2 for humans. 0 or omit to detect draw. (int)
 Fires its targets when the team wins.
 */
 
-/*QUAKED sensor_player (0.263 0.667 0) ? SPAWN_DISABLED NEGATE
+/*QUAKED sensor_player (0.263 0.667 0) SPAWN_DISABLED NEGATE
 ------ FLAGS ------
 SPAWN_DISABLED: Disabled by default.
 NEGATE: Negate sensor condition.
@@ -1465,7 +1465,7 @@ Triggered by a specific class or subset of classes. If no classes key is supplie
 Triggered by a player carrying some item (weapon or upgrade) or subset of items. If no equipment key is supplied every human will trigger this entity.
 */
 
-/*QUAKED trigger_class (0.263 0.667 0) ? SPAWN_DISABLED NEGATE
+/*QUAKED trigger_class (0.263 0.667 0) SPAWN_DISABLED NEGATE
 DEPRECATED! DEPRECATED! DEPRECATED!
 RECOMMENDED TO USE: sensor_player
 ------ FLAGS ------
@@ -1483,7 +1483,7 @@ Triggered by a specific class or subset of classes. If no classes key is supplie
 Triggered by a player carrying some item (weapon or upgrade) or subset of items. If no equipment key is supplied every human will trigger this entity.
 */
 
-/*QUAKED trigger_equipment (0.263 0.667 0) ? SPAWN_DISABLED NEGATE
+/*QUAKED trigger_equipment (0.263 0.667 0) SPAWN_DISABLED NEGATE
 DEPRECATED! DEPRECATED! DEPRECATED!
 RECOMMENDED TO USE: sensor_player
 ------ FLAGS ------
@@ -1501,7 +1501,7 @@ Triggered by a specific class or subset of classes. If no classes key is supplie
 Triggered by a player carrying some item (weapon or upgrade) or subset of items. If no equipment key is supplied every human will trigger this entity.
 */
 
-/*QUAKED trigger_multiple (0.263 0.667 0) ? HUMANS ALIENS
+/*QUAKED trigger_multiple (0.263 0.667 0) HUMANS ALIENS
 DEPRECATED! DEPRECATED! DEPRECATED!
 RECOMMENDED TO USE: sensor_player
 ------ FLAGS ------
@@ -1641,7 +1641,7 @@ Sound generating entity.
 The path portion value of the "noise" key can be replaced by the implicit folder character "*" for triggered sounds that belong to a particular player model. For example, if you want to create a "bottomless pit" in which the player screams and dies when he falls into, you would place a sensor_player over the floor of the pit and target a spx_speaker with it. Then, you would set the "noise" key to "*falling1.wav". The * character means the current player model's sound folder. So if your current player model is Granger, * = sound/player/builder, if your current player model is Battlesuit Human, * = sound/player/human_bsuit, etc. This cool feature provides an excellent way to create "player-specific" triggered sounds in your levels. Implies ACTIVATOR_SPEAKER on.
 */
 
-/*QUAKED _decal (0 1 0) ?
+/*QUAKED _decal (0 1 0)
 ------ PROPERTIES ------
 target: Projection direction, pos_target. (string (target))
 ------ DESCRIPTION ------
