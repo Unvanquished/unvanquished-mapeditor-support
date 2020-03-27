@@ -90,26 +90,39 @@ def print_gtkradiant_file(data):
     add('autosave', '@userhomepath@basedir/maps/autosave.map') # bad. should be replaced
     add('mapspath', '@userhomepath@basedir/maps/') # bad. should be replaced
 
-    for cmd in data:
-        name = 'bsp_Q3Map2: ' + cmd['name']
+    for run in data:
+        found_supported_cmd = False
+        name = 'bsp_Q3Map2: ' + run['name']
         stagelist = []
-        for stage in cmd['opts']:
-            olist = [
-                '"@apppath@q3map2"',
-                '-v',
-                '#',
-                '-game unvanquished',
-                '-fs_basepath "@enginepath"',
-            ]
-            for o, v in sort_stage_keys(stage.items()):
-                t = '-' + o
-                if v is not None:
-                    t += ' {}'.format(v)
-                olist.append(t)
-            olist.append('$')
-            stagelist.append(' '.join(olist))
-        value = '! ' + ' && ! '.join(stagelist)
-        add(name, value)
+
+        for stage in run['stages']:
+
+            if stage['cmd'] == "q3map2":
+                found_supported_cmd = True
+
+                olist = [
+                    '"@apppath@q3map2"',
+                    '-v',
+                    '#',
+                    '-game unvanquished',
+                    '-fs_basepath "@enginepath"',
+                ]
+
+                opts = stage["opts"]
+
+                for o, v in sort_stage_keys(opts.items()):
+                    t = '-' + o
+
+                    if v is not None:
+                        t += ' {}'.format(v)
+                    olist.append(t)
+
+                olist.append('$')
+                stagelist.append(' '.join(olist))
+
+        if found_supported_cmd:
+            value = '! ' + ' && ! '.join(stagelist)
+            add(name, value)
 
     print('<?xml version="1.0"?>')
     print('<!DOCTYPE project SYSTEM "dtds/project.dtd">')
@@ -119,27 +132,56 @@ def print_gtkradiant_file(data):
 def print_netradiant_file(data):
     project = ET.Element('project', attrib={'version': '2.0'})
 
-    q3map2 = ET.SubElement(project, 'var', attrib={'name': 'q3map2'})
-    q3map2.text = '"[RadiantPath]q3map2.[ExecutableType]" [ExtraQ3map2Args] -v'
-    cond = ET.SubElement(q3map2, 'cond', attrib={'value': '[MonitorAddress]'})
-    cond.text = ' -connect [MonitorAddress]'
-    cond.tail = ' -game unvanquished -fs_basepath "[EnginePath]" -fs_homepath "[UserEnginePath]" '
-    cond2 = ET.SubElement(q3map2, 'cond', attrib={'value': '[GameName]'})
-    cond2.text = ' -fs_game [GameName]'
+    found_q3map2 = False
+    found_daemonmap = False
 
-    for cmd in data:
-        build = ET.SubElement(project, 'build', attrib={'name': cmd['name']})
-        for stage in cmd['opts']:
-            olist = ['[q3map2]']
-            for o, v in sort_stage_keys(stage.items()):
-                t = '-' + o
-                if v is not None:
-                    t += ' {}'.format(v)
-                olist.append(t)
-            olist.append('"[MapFile]"')
+    for run in data:
+        for stage in run['stages']:
+            if [ stage['cmd'] == 'q3map2' ]:
+                found_q3map2 = True
 
-            command = ET.SubElement(build, 'command')
-            command.text = ' '.join(olist)
+            if [ stage['cmd'] == 'daemonmap' ]:
+                found_daemonmap = True
+
+    if found_q3map2:
+        q3map2 = ET.SubElement(project, 'var', attrib={'name': 'q3map2'})
+        q3map2.text = '"[RadiantPath]q3map2.[ExecutableType]" [ExtraQ3map2Args] -v'
+        cond = ET.SubElement(q3map2, 'cond', attrib={'value': '[MonitorAddress]'})
+        cond.text = ' -connect [MonitorAddress]'
+        cond.tail = ' -game unvanquished -fs_basepath "[EnginePath]" -fs_homepath "[UserEnginePath]" '
+        cond2 = ET.SubElement(q3map2, 'cond', attrib={'value': '[GameName]'})
+        cond2.text = ' -fs_game [GameName]'
+
+    if found_daemonmap:
+        daemonmap = ET.SubElement(project, 'var', attrib={'name': 'daemonmap'})
+        daemonmap.text = '"[RadiantPath]daemonmap.[ExecutableType]" [ExtraQ3map2Args] -v'
+        cond = ET.SubElement(daemonmap, 'cond', attrib={'value': '[MonitorAddress]'})
+        cond.text = ' -connect [MonitorAddress]'
+        cond.tail = ' -game unvanquished -fs_basepath "[EnginePath]" -fs_homepath "[UserEnginePath]" '
+        cond2 = ET.SubElement(daemonmap, 'cond', attrib={'value': '[GameName]'})
+        cond2.text = ' -fs_game [GameName]'
+
+    for run in data:
+        build = ET.SubElement(project, 'build', attrib={'name': run['name']})
+
+        for stage in run['stages']:
+            cmd = stage["cmd"]
+
+            if cmd in ['q3map2', 'daemonmap'] :
+                olist = ['[' + cmd + ']']
+                opts = stage["opts"]
+
+                for o, v in sort_stage_keys(opts.items()):
+                    t = '-' + o
+
+                    if v is not None:
+                        t += ' {}'.format(v)
+                    olist.append(t)
+
+                olist.append('"[MapFile]"')
+
+                command = ET.SubElement(build, 'command')
+                command.text = ' '.join(olist)
 
     print('<?xml version="1.0"?>')
     print(fine_format_xml(project))

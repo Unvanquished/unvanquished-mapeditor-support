@@ -1,94 +1,144 @@
 # should not contain -keeplights
 - name: BSP leak test
-  opts:
-    - bsp: null
-      leaktest: null
-      custinfoparms: null
+  stages:
+    - cmd: q3map2
+      opts:
+        bsp: null
+        leaktest: null
+        custinfoparms: null
+
 - name: Build without visibility and lights
-  opts:
-    - bsp: null
-      leaktest: null
-      custinfoparms: null
-      meta: null
+  stages:
+    - cmd: q3map2
+      opts:
+        bsp: null
+        leaktest: null
+        custinfoparms: null
+        meta: null
+
 - name: Build without lights
-  opts:
-    - bsp: null
-      leaktest: null
-      custinfoparms: null
-      meta: null
-    - vis: null
-      saveprt: null
+  stages:
+    - cmd: q3map2
+      opts:
+        bsp: null
+        leaktest: null
+        custinfoparms: null
+        meta: null
+    - cmd: q3map2
+      opts:
+        vis: null
+        saveprt: null
+
 - name: Build with test settings (fast)
-  opts:
-    - bsp: null
-      leaktest: null
-      custinfoparms: null
-      meta: null
-    - vis: null
-      fast: null
-      saveprt: null
-    - light: null
-      faster: null
-      patchshadows: null
+  stages:
+    - cmd: q3map2
+      opts:
+        bsp: null
+        leaktest: null
+        custinfoparms: null
+        meta: null
+    - cmd: q3map2
+      opts:
+        vis: null
+        fast: null
+        saveprt: null
+    - cmd: q3map2
+      opts:
+        light: null
+        faster: null
+        patchshadows: null
+
 - name: Build with test settings (normal)
-  opts:
-    - bsp: null
-      leaktest: null
-      custinfoparms: null
-      meta: null
-    - vis: null
-      saveprt: null
-    - light: null
-      faster: null
-      patchshadows: null
+  stages:
+    - cmd: q3map2
+      opts:
+        bsp: null
+        leaktest: null
+        custinfoparms: null
+        meta: null
+    - cmd: q3map2
+      opts:
+        vis: null
+        saveprt: null
+    - cmd: q3map2
+      opts:
+        light: null
+        faster: null
+        patchshadows: null
+
 - name: Build with test settings (slow)
-  opts:
-    - bsp: null
-      leaktest: null
-      custinfoparms: null
-      meta: null
-      samplesize: 16
-    - vis: null
-      saveprt: null
-    - light: null
-      faster: null
-      dirty: null
-      patchshadows: null
-      samples: 2
-      samplesize: 16
-      deluxe: null
-      lightmapsize: 1024
-      external: null
+  stages:
+    - cmd: q3map2
+      opts:
+        bsp: null
+        leaktest: null
+        custinfoparms: null
+        meta: null
+        samplesize: 16
+    - cmd: q3map2
+      opts:
+        vis: null
+        saveprt: null
+    - cmd: q3map2
+      opts:
+        light: null
+        faster: null
+        dirty: null
+        patchshadows: null
+        samples: 2
+        samplesize: 16
+        deluxe: null
+        lightmapsize: 1024
+        external: null
+
 - name: Build with final settings (very slow)
-  opts:
-    - bsp: null
-      leaktest: null
-      custinfoparms: null
-      meta: null
-      samplesize: 8
-    - vis: null
-      saveprt: null
-    - light: null
-      fast: null
-      shade: null
-      dirty: null
-      patchshadows: null
-      samples: 3
-      samplesize: 8
-      bouncegrid: null
-      bounce: 16
-      deluxe: null
-      lightmapsize: 1024
-      external: null
+  stages:
+    - cmd: q3map2
+      opts:
+        bsp: null
+        leaktest: null
+        custinfoparms: null
+        meta: null
+        samplesize: 8
+    - cmd: q3map2
+      opts:
+        vis: null
+        saveprt: null
+    - cmd: q3map2
+      opts:
+        light: null
+        fast: null
+        shade: null
+        dirty: null
+        patchshadows: null
+        samples: 3
+        samplesize: 8
+        bouncegrid: null
+        bounce: 16
+        deluxe: null
+        lightmapsize: 1024
+        external: null
+
 - name: Minimap (small)
-  opts:
-    - minimap: null
-      size: 256
-      sharpen: 1
-      border: 0
+  stages:
+    - cmd: q3map2
+      opts:
+        minimap: null
+        size: 256
+        sharpen: 1
+        border: 0
+
 - name: Minimap (big)
-  opts:
-    - minimap: null
-      size: 1024
-      sharpen: 1
-      border: 0
+  stages:
+    - cmd: q3map2
+      opts:
+        minimap: null
+        size: 1024
+        sharpen: 1
+        border: 0
+
+- name: Navmeshes
+  stages:
+    - cmd: daemonmap
+      opts:
+        nav: null
