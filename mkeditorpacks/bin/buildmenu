@@ -64,7 +64,7 @@ def fine_format_xml(root):
 def sort_stage_keys(stage):
     result = []
     for k, v in stage:
-        if k in ('meta', 'vis', 'light', 'minimap'):
+        if k in ('bsp', 'vis', 'light', 'minimap'):
             result.insert(0, (k, v))
         else:
             result.append((k, v))
