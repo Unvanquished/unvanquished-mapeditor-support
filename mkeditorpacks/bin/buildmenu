@@ -71,7 +71,7 @@ def sort_stage_keys(stage):
     return result
 
 
-def print_gtkradiant_file(data):
+def print_gtkradiant_file(q3map2_keyword, data):
     project = ET.Element('project')
 
     def add(name, value):
@@ -129,7 +129,7 @@ def print_gtkradiant_file(data):
     print(fine_format_xml(project))
 
 
-def print_netradiant_file(data):
+def print_netradiant_file(q3map2_keyword, data):
     project = ET.Element('project', attrib={'version': '2.0'})
 
     found_q3map2 = False
@@ -148,7 +148,7 @@ def print_netradiant_file(data):
         q3map2.text = '"[RadiantPath]q3map2.[ExecutableType]" [ExtraQ3map2Args] -v'
         cond = ET.SubElement(q3map2, 'cond', attrib={'value': '[MonitorAddress]'})
         cond.text = ' -connect [MonitorAddress]'
-        cond.tail = ' -game unvanquished -fs_basepath "[EnginePath]" -fs_homepath "[UserEnginePath]" '
+        cond.tail = ' -game ' + q3map2_keyword + ' -fs_basepath "[EnginePath]" -fs_homepath "[UserEnginePath]" '
         cond2 = ET.SubElement(q3map2, 'cond', attrib={'value': '[GameName]'})
         cond2.text = ' -fs_game [GameName]'
 
@@ -157,7 +157,7 @@ def print_netradiant_file(data):
         daemonmap.text = '"[RadiantPath]daemonmap.[ExecutableType]" [ExtraQ3map2Args] -v'
         cond = ET.SubElement(daemonmap, 'cond', attrib={'value': '[MonitorAddress]'})
         cond.text = ' -connect [MonitorAddress]'
-        cond.tail = ' -game unvanquished -fs_basepath "[EnginePath]" -fs_homepath "[UserEnginePath]" '
+        cond.tail = ' -game ' + q3map2_keyword + ' -fs_basepath "[EnginePath]" -fs_homepath "[UserEnginePath]" '
         cond2 = ET.SubElement(daemonmap, 'cond', attrib={'value': '[GameName]'})
         cond2.text = ' -fs_game [GameName]'
 
@@ -196,12 +196,17 @@ supported_editor_list = editor_printer_dict.keys()
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     description="Generates radiant q3map2 build menu file.")
 
-parser.add_argument("filename", metavar="buildmenu.yaml", type=argparse.FileType("r"), help="YAML file path")
+parser.add_argument("game", metavar="game.yaml", type=argparse.FileType("r"), help="YAML file path")
+parser.add_argument("buildmenu", metavar="buildmenu.yaml", type=argparse.FileType("r"), help="YAML file path")
 parser.add_argument("editor", choices=editor_printer_dict.keys(), help="Editor name")
 
 args = parser.parse_args()
 
-text = args.filename.read()
+text = args.game.read()
+data = yaml.load(text, Loader=yaml.FullLoader)
+q3map2_keyword = data["game"]["keyword"]["compiler"]
+
+text = args.buildmenu.read()
 data = yaml.load(text, Loader=yaml.FullLoader)
 
-editor_printer_dict[args.editor](data)
+editor_printer_dict[args.editor](q3map2_keyword, data)

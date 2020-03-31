@@ -253,6 +253,7 @@ def build(editor_name):
         buildmenu_path = os.path.join(buildmenu_dir, buildmenu_file)
         command = [
             os.path.join(bin_dir, "bin", "buildmenu"),
+            os.path.join(SRC_DIR, "gamefile", "game.yaml"),
             os.path.join(SRC_DIR, "buildmenu", "buildmenu.yaml"),
             editor_name,
         ]
