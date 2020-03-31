@@ -137,10 +137,9 @@ def print_netradiant_file(q3map2_keyword, data):
 
     for run in data:
         for stage in run['stages']:
-            if [ stage['cmd'] == 'q3map2' ]:
+            if stage['cmd'] == 'q3map2':
                 found_q3map2 = True
-
-            if [ stage['cmd'] == 'daemonmap' ]:
+            elif stage['cmd'] == 'daemonmap':
                 found_daemonmap = True
 
     if found_q3map2:
