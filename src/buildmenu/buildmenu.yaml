@@ -119,21 +119,12 @@
         lightmapsize: 1024
         external: null
 
-- name: Minimap (small)
+- name: Minimap
   stages:
     - cmd: q3map2
       opts:
         minimap: null
         size: 256
-        sharpen: 1
-        border: 0
-
-- name: Minimap (big)
-  stages:
-    - cmd: q3map2
-      opts:
-        minimap: null
-        size: 1024
         sharpen: 1
         border: 0
 

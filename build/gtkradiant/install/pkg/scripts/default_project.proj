@@ -3,7 +3,7 @@
 
 <project>
 <key name="version" value="2" />
-<key name="template_version" value="7463" />
+<key name="template_version" value="7472" />
 <key name="basepath" value="$TEMPLATEenginepath$TEMPLATEbasedir/" />
 <key name="rshcmd" value="" />
 <key name="entitypath" value="$TEMPLATEtoolspath$TEMPLATEbasedir/scripts/entities.def" />
@@ -17,6 +17,5 @@
 <key name="bsp_Q3Map2: Build with test settings (normal)" value="! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -bsp -leaktest -custinfoparms -meta $ &amp;&amp; ! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -vis -saveprt $ &amp;&amp; ! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -light -faster -patchshadows $" />
 <key name="bsp_Q3Map2: Build with test settings (slow)" value="! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -bsp -leaktest -custinfoparms -meta -samplesize 16 $ &amp;&amp; ! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -vis -saveprt $ &amp;&amp; ! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -light -faster -dirty -patchshadows -samples 2 -samplesize 16 -deluxe -lightmapsize 1024 -external $" />
 <key name="bsp_Q3Map2: Build with final settings (very slow)" value="! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -bsp -leaktest -custinfoparms -meta -samplesize 8 $ &amp;&amp; ! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -vis -saveprt $ &amp;&amp; ! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -light -fast -shade -dirty -patchshadows -samples 3 -samplesize 8 -bouncegrid -bounce 16 -deluxe -lightmapsize 1024 -external $" />
-<key name="bsp_Q3Map2: Minimap (small)" value="! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -minimap -size 256 -sharpen 1 -border 0 $" />
-<key name="bsp_Q3Map2: Minimap (big)" value="! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -minimap -size 1024 -sharpen 1 -border 0 $" />
+<key name="bsp_Q3Map2: Minimap" value="! &quot;$TEMPLATEapppath$TEMPLATEq3map2&quot; -v # -game unvanquished -fs_basepath &quot;$TEMPLATEenginepath&quot; -minimap -size 256 -sharpen 1 -border 0 $" />
 </project>

@@ -33,11 +33,8 @@
 <command>[q3map2] -vis -saveprt "[MapFile]"</command>
 <command>[q3map2] -light -fast -shade -dirty -patchshadows -samples 3 -samplesize 8 -bouncegrid -bounce 16 -deluxe -lightmapsize 1024 -external "[MapFile]"</command>
 </build>
-<build name="Minimap (small)">
+<build name="Minimap">
 <command>[q3map2] -minimap -size 256 -sharpen 1 -border 0 "[MapFile]"</command>
-</build>
-<build name="Minimap (big)">
-<command>[q3map2] -minimap -size 1024 -sharpen 1 -border 0 "[MapFile]"</command>
 </build>
 <build name="Navmeshes">
 <command>[daemonmap] -nav "[MapFile]"</command>
