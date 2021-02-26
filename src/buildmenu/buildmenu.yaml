@@ -124,7 +124,7 @@
     - cmd: q3map2
       opts:
         minimap: null
-        size: 256
+        size: 512
         sharpen: 1
         border: 0
 
