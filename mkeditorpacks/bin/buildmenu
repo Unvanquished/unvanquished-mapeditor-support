@@ -92,6 +92,10 @@ def print_gtkradiant_file(q3map2_keyword, data):
 
     for run in data:
         found_supported_cmd = False
+
+        if run['name'] == "-":
+            continue
+
         name = 'bsp_Q3Map2: ' + run['name']
         stagelist = []
 
@@ -136,6 +140,9 @@ def print_netradiant_file(q3map2_keyword, data):
     found_daemonmap = False
 
     for run in data:
+        if run['name'] == "-":
+            continue
+
         for stage in run['stages']:
             if stage['cmd'] == 'q3map2':
                 found_q3map2 = True
@@ -162,6 +169,9 @@ def print_netradiant_file(q3map2_keyword, data):
 
     for run in data:
         build = ET.SubElement(project, 'build', attrib={'name': run['name']})
+
+        if run['name'] == "-":
+            continue
 
         for stage in run['stages']:
             cmd = stage["cmd"]
