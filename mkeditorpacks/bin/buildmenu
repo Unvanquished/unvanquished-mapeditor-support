@@ -90,7 +90,11 @@ def print_gtkradiant_file(q3map2_keyword, data):
     add('autosave', '@userhomepath@basedir/maps/autosave.map') # bad. should be replaced
     add('mapspath', '@userhomepath@basedir/maps/') # bad. should be replaced
 
+    reversed_data = []
     for run in data:
+        reversed_data = [ run ] + reversed_data
+
+    for run in reversed_data:
         found_supported_cmd = False
 
         if run['name'] == "-":
