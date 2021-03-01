@@ -1,5 +1,4 @@
-# should not contain -keeplights
-- name: BSP leak test
+- name: "Leak test"
   stages:
     - cmd: q3map2
       opts:
@@ -7,16 +6,9 @@
         leaktest: null
         custinfoparms: null
 
-- name: Build without visibility and lights
-  stages:
-    - cmd: q3map2
-      opts:
-        bsp: null
-        leaktest: null
-        custinfoparms: null
-        meta: null
+- name: "-"
 
-- name: Build without lights
+- name: "Map: novis (build without visibility)"
   stages:
     - cmd: q3map2
       opts:
@@ -24,12 +16,24 @@
         leaktest: null
         custinfoparms: null
         meta: null
+        fastmeta: null
+
+- name: "Map: nolight (build without lights)"
+  stages:
+    - cmd: q3map2
+      opts:
+        bsp: null
+        leaktest: null
+        custinfoparms: null
+        meta: null
+        fastmeta: null
     - cmd: q3map2
       opts:
         vis: null
+        fast: null
         saveprt: null
 
-- name: Build with test settings (fast)
+- name: "Map: nodeluxe (build without deluxe maps)"
   stages:
     - cmd: q3map2
       opts:
@@ -37,6 +41,7 @@
         leaktest: null
         custinfoparms: null
         meta: null
+        fastmeta: null
     - cmd: q3map2
       opts:
         vis: null
@@ -46,9 +51,12 @@
       opts:
         light: null
         faster: null
+        fastlightmapsearch: null
         patchshadows: null
+        lightmapsize: 1024
+        external: null
 
-- name: Build with test settings (normal)
+- name: "Map: nosample (build without supersampling)"
   stages:
     - cmd: q3map2
       opts:
@@ -56,17 +64,23 @@
         leaktest: null
         custinfoparms: null
         meta: null
+        fastmeta: null
     - cmd: q3map2
       opts:
         vis: null
+        fast: null
         saveprt: null
     - cmd: q3map2
       opts:
         light: null
         faster: null
+        fastlightmapsearch: null
         patchshadows: null
+        deluxe: null
+        lightmapsize: 1024
+        external: null
 
-- name: Build with test settings (slow)
+- name: "Map: nobounce (build without light bouncing)"
   stages:
     - cmd: q3map2
       opts:
@@ -83,6 +97,7 @@
       opts:
         light: null
         faster: null
+        fastlightmapsearch: null
         dirty: null
         patchshadows: null
         samples: 2
@@ -91,7 +106,9 @@
         lightmapsize: 1024
         external: null
 
-- name: Build with final settings (very slow)
+- name: "-"
+
+- name: "Map: release"
   stages:
     - cmd: q3map2
       opts:
@@ -107,7 +124,9 @@
     - cmd: q3map2
       opts:
         light: null
-        fast: null
+        fastbounce: null
+        fastlightmapsearch: null
+        nobouncestore: null
         shade: null
         dirty: null
         patchshadows: null
@@ -119,16 +138,13 @@
         lightmapsize: 1024
         external: null
 
-- name: Minimap
+- name: "Minimap: release"
   stages:
     - cmd: q3map2
       opts:
         minimap: null
-        size: 512
-        sharpen: 1
-        border: 0
 
-- name: Navmeshes
+- name: "Navmeshes: release"
   stages:
     - cmd: daemonmap
       opts:
