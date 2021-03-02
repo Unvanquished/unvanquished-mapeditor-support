@@ -88,6 +88,7 @@
         leaktest: null
         custinfoparms: null
         meta: null
+        maxarea: null
         samplesize: 16
     - cmd: q3map2
       opts:
@@ -102,6 +103,7 @@
         patchshadows: null
         samples: 2
         samplesize: 16
+        randomsamples: null
         deluxe: null
         lightmapsize: 1024
         external: null
@@ -116,6 +118,7 @@
         leaktest: null
         custinfoparms: null
         meta: null
+        maxarea: null
         samplesize: 8
     - cmd: q3map2
       opts:
@@ -132,6 +135,7 @@
         patchshadows: null
         samples: 3
         samplesize: 8
+        randomsamples: null
         bouncegrid: null
         bounce: 16
         deluxe: null
