@@ -6,7 +6,7 @@
 <build name="Leak test">
 <command>[q3map2] -bsp -leaktest -custinfoparms "[MapFile]"</command>
 </build>
-<build name="-" />
+<separator />
 <build name="Map: novis (build without visibility)">
 <command>[q3map2] -bsp -leaktest -custinfoparms -meta -fastmeta "[MapFile]"</command>
 </build>
@@ -29,7 +29,7 @@
 <command>[q3map2] -vis -saveprt "[MapFile]"</command>
 <command>[q3map2] -light -faster -fastlightmapsearch -dirty -patchshadows -samples 2 -samplesize 16 -deluxe -lightmapsize 1024 -external "[MapFile]"</command>
 </build>
-<build name="-" />
+<separator />
 <build name="Map: release">
 <command>[q3map2] -bsp -leaktest -custinfoparms -meta -samplesize 8 "[MapFile]"</command>
 <command>[q3map2] -vis -saveprt "[MapFile]"</command>
