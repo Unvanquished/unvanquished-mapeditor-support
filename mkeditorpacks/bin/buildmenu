@@ -172,11 +172,11 @@ def print_netradiant_file(q3map2_keyword, data):
         cond2.text = ' -fs_game [GameName]'
 
     for run in data:
-        build = ET.SubElement(project, 'build', attrib={'name': run['name']})
-
         if run['name'] == "-":
+            separator = ET.SubElement(project, 'separator')
             continue
 
+        build = ET.SubElement(project, 'build', attrib={'name': run['name']})
         for stage in run['stages']:
             cmd = stage["cmd"]
 
