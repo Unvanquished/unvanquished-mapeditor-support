@@ -3,6 +3,7 @@
 # TODO: check target_print for 2 players
 - name: worldspawn
   extend: [indexmap2]
+  d3Class: idWorldspawn
   color: '000000'
   props:
     deluxeMapping: bool # not gtk q3map2
@@ -126,6 +127,7 @@
 - name: light
 # bug: marked as deprecated in code. src/gamelogic/game/g_spawn.c:368
   extend: [point]
+  d3Class: idLight
   color: a6a6ff
   flags: &light_flags
   - LINEAR: Use a linear falloff. Default is inverse distance squared (more realistic).
@@ -246,6 +248,7 @@
     Projected light requires most of its properties set, such as "light_target", "light_up", "light_right".
 - name: lightJunior
   extend: [point]
+  d3Class: idLight
   color: 00b34c
   size_min: [-6.0, -6.0, -6.0]
   size_max: [6.0, 6.0, 6.0]
@@ -755,6 +758,7 @@
 - name: pos_player_intermission
 # TODO: can be disabled by firing?
   extend: [chain_autonom,point]
+  d3Class: idPlayerStart
   color: ff00ff
   props:
     angle: *angle
@@ -766,9 +770,12 @@
 - name: info_player_intermission
   aliasof: pos_player_intermission
   deprecated: y
+  d3Class: idPlayerStart
 - name: pos_location
 # TODO: any effect on fire?
+# NOTE: Doom 3 maps use info_location
   extend: [chain_autonom,point]
+  d3Class: idLocationEntity
   color: 007f00
   props:
     count: >
@@ -790,21 +797,26 @@
     is used for the location. If none is in sight, the closest in distance is used.
 - name: target_location
   aliasof: pos_location
+  d3Class: idLocationEntity
   deprecated: y
 - name: pos_player_spawn
 # bug: useless entity, must be deprecated
   extend: [chain_autonom,point]
+  d3Class: idPlayerStart
   color: ff00ff
   desc: >
     Use pos_player_intermission instead.
 - name: info_player_deathmatch
   aliasof: pos_player_spawn
   deprecated: y
+  d3Class: idPlayerStart
 - name: info_player_start
   aliasof: pos_player_spawn
   deprecated: y
+  d3Class: idPlayerStart
 - name: pos_target
   extend: [chain_target,point]
+  d3Class: idTarget
   color: 007f00
   props:
     angle: *angle
@@ -819,15 +831,18 @@
 - name: info_notnull
   aliasof: pos_target
   deprecated: y
+  d3Class: idStaticEntity
 - name: misc_teleporter_dest
   aliasof: pos_target
   deprecated: y
+  d3Class: idTarget
   color: ff7f3f
   size_min: [-32.0, -32.0, -24.0]
   size_max: [32.0, 32.0, -16.0]
 - name: info_null
   aliasof: pos_target
   deprecated: y
+  d3Class: idStaticEntity
   desc: >
     Same as pos_target, but used only at q3map2 stage. I.e. you can use it only for lights.
 - name: target_print
@@ -835,6 +850,7 @@
   deprecated: y
   color: 007f00
   extend: [chain_passive,point]
+  d3Class: idTarget
   flags:
   - HUMAN_TEAM: Only the human team players will see the message. # OK, but TODO check net game
   - ALIEN_TEAM: Only the alien team players will see the message. # OK, but TODO check net game
@@ -850,6 +866,7 @@
 #   target mechanism is sufficient. Also, entity is deprecated, skip this bug?
   deprecated: y
   extend: [chain_passive,point]
+  d3Class: idTarget
   color: 7f7f7f
   props:
     target: This points to the aiming entity to which the player will jump.
@@ -871,6 +888,7 @@
 - name: target_teleporter
   deprecated: y
   extend: [chain_passive,point]
+  d3Class: idTarget
   color: 007f00
   props:
     target: This must point to a misc_teleporter_dest entity.
@@ -884,6 +902,7 @@
 - name: target_hurt
   deprecated: y
   extend: [chain_passive,point]
+  d3Class: idTarget
   color: ff0000
   props:
     dmg: Amount of damage to deal.
@@ -895,6 +914,7 @@
     When triggered, this hurts the entity that caused the trigger.
 - name: team_human_spawn
   extend: [point]
+  d3Class: idSpawnableEntity
   color: *humanColor
   size_min: [-40.0, -40.0, -4.0]
   size_max: [40.0, 40.0, 17.0]
@@ -904,6 +924,7 @@
   specials: {model: models/buildables/telenode/telenode.iqm}
 - name: team_human_armoury
   extend: [point]
+  d3Class: idSpawnableEntity
   color: *humanColor
   size_min: [-40.0, -40.0, -13.0]
   size_max: [40.0, 40.0, 50.0]
@@ -911,6 +932,7 @@
   specials: {model: models/buildables/arm/arm.iqm}
 - name: team_human_drill
   extend: [point]
+  d3Class: idSpawnableEntity
   color: *humanColor
   size_min: [-15.0, -15.0, 0.0]
   size_max: [15.0, 15.0, 58.0]
@@ -918,6 +940,7 @@
   specials: {model: models/buildables/drill/drill.iqm}
 - name: team_human_medistat
   extend: [point]
+  d3Class: idSpawnableEntity
   color: *humanColor
   size_min: [-35.0, -35.0, -7.0]
   size_max: [35.0, 35.0, 2.0]
@@ -925,6 +948,7 @@
   specials: {model: models/buildables/medistat/medistat.iqm}
 - name: team_human_mgturret
   extend: [point]
+  d3Class: idSpawnableEntity
   color: *humanColor
   size_min: [-25.0, -25.0, -20.0]
   size_max: [25.0, 25.0, 20.0]
@@ -932,6 +956,7 @@
   specials: {model: models/buildables/mgturret/mgturret.iqm}
 - name: team_human_rocketpod
   extend: [point]
+  d3Class: idSpawnableEntity
   color: *humanColor
   size_min: [-25.0, -25.0, -20.0]
   size_max: [25.0, 25.0, 20.0]
@@ -939,6 +964,7 @@
   specials: {model: models/buildables/rocketpod/rocketpod.iqm}
 - name: team_human_reactor
   extend: [point]
+  d3Class: idSpawnableEntity
   color: *humanColor
   size_min: [-41.0, -41.0, -4.0]
   size_max: [41.0, 41.0, 100.0]
@@ -946,6 +972,7 @@
   specials: {model: models/buildables/reactor/reactor.iqm}
 - name: team_alien_spawn
   extend: [point]
+  d3Class: idSpawnableEntity
   color: *alienColor
   size_min: [-15.0, -15.0, -15.0]
   size_max: [15.0, 15.0, 15.0]
@@ -955,6 +982,7 @@
   specials: {model: models/buildables/eggpod/eggpod.iqm}
 - name: team_alien_acid_tube
   extend: [point]
+  d3Class: idSpawnableEntity
   color: *alienColor
   size_min: [-20.0, -20.0, -15.0]
   size_max: [20.0, 20.0, 15.0]
@@ -962,6 +990,7 @@
   specials: {model: models/buildables/acid_tube/acid_tube.iqm}
 - name: team_alien_spiker
   extend: [point]
+  d3Class: idSpawnableEntity
   color: *alienColor
   size_min: [-20.0, -20.0, -15.0]
   size_max: [20.0, 20.0, 15.0]
@@ -969,6 +998,7 @@
   specials: {model: models/buildables/spiker/spiker.iqm}
 - name: team_alien_barricade
   extend: [point]
+  d3Class: idSpawnableEntity
   color: *alienColor
   size_min: [-35.0, -35.0, -15.0]
   size_max: [35.0, 35.0, 60.0]
@@ -976,6 +1006,7 @@
   specials: {model: models/buildables/barricade/barricade.iqm}
 - name: team_alien_booster
   extend: [point]
+  d3Class: idSpawnableEntity
   color: *alienColor
   size_min: [-26.0, -26.0, -9.0]
   size_max: [26.0, 26.0, 9.0]
@@ -983,6 +1014,7 @@
   specials: {model: models/buildables/booster/booster.iqm}
 - name: team_alien_overmind
   extend: [point]
+  d3Class: idSpawnableEntity
   color: *alienColor
   size_min: [-45.0, -45.0, -15.0]
   size_max: [45.0, 45.0, 95.0]
@@ -990,6 +1022,7 @@
   specials: {model: models/buildables/overmind/overmind.iqm}
 - name: team_alien_trapper
   extend: [point]
+  d3Class: idSpawnableEntity
   color: *alienColor
   size_min: [-15.0, -15.0, -15.0]
   size_max: [15.0, 15.0, 15.0]
@@ -997,6 +1030,7 @@
   specials: {model: models/buildables/trapper/trapper.iqm}
 - name: team_alien_hive
   extend: [point]
+  d3Class: idSpawnableEntity
   color: *alienColor
   size_min: [-20.0, -20.0, -20.0]
   size_max: [20.0, 20.0, 20.0]
@@ -1004,6 +1038,7 @@
   specials: {model: models/buildables/hive/hive.iqm}
 - name: team_alien_leech
   extend: [point]
+  d3Class: idSpawnableEntity
   color: *alienColor
   size_min: [-40.0, -40.0, -15.0]
   size_max: [40.0, 40.0, 15.0]
@@ -1039,6 +1074,7 @@
     When activated waits amount of time then activates its own targets.
 - name: target_relay
   aliasof: ctrl_relay
+  d3Class: idTarget
   deprecated: y
   flags: &target_relay_flags
   - ONLY_HUMANS: Can be activated only by a human.
@@ -1051,6 +1087,7 @@
     wait: 0
 - name: target_delay
   aliasof: ctrl_relay
+  d3Class: idTarget
   deprecated: y
   flags: *target_relay_flags
   props:
@@ -1169,6 +1206,7 @@
     Set "angles" property of target to define player direction after teleportation.
 - name: trigger_teleport
   aliasof: env_afx_teleport
+  d3Class: idTrigger
   deprecated: y
 - name: fx_rumble
 # bug: this is not an earthquake, this is jumping
@@ -1183,16 +1221,19 @@
   desc: When triggered, this initiates a level-wide rumble effect. All players are affected.
 - name: target_rumble
   aliasof: fx_rumble
+  d3Class: idTarget
   deprecated: y
 - name: game_end
 # improvement: make it able to end game in draw with team=0 or omitted
   extend: [chain_passive,point]
+  d3Class: idTrigger
   color: &game_color ff0000
   props:
     team: &Team_number 1 for aliens, 2 for humans.
   desc: When triggered, this causes an unconditional win for the team.
 - name: target_alien_win
   aliasof: game_end
+  d3Class: idTarget
   deprecated: y
   color: *alienColor
   props:
@@ -1200,6 +1241,7 @@
   descreplace: {'the team': 'the alien team'}
 - name: target_human_win
   aliasof: game_end
+  d3Class: idTarget
   deprecated: y
   color: *humanColor
   props:
@@ -1221,6 +1263,7 @@
     'Gives funds to': 'Instantly kills'
 - name: target_kill
   aliasof: game_kill
+  d3Class: idTarget
   deprecated: y
 - name: game_score
 # possible improvement: measure amount directly in score points
@@ -1236,6 +1279,7 @@
     'funds': 'score points'
 - name: target_score
   aliasof: game_score
+  d3Class: idTarget
   deprecated: y
 - name: gfx_animated_model
   extend: [chain_autonom,point]
@@ -1384,6 +1428,7 @@
   deprecated: y
 - name: gfx_portal_camera
   extend: [chain_target,point]
+  d3Class: idCamera
   color: ff7f3f
   flags:
   - FRAME25: Slow rotation.
@@ -1410,6 +1455,7 @@
     By default camera is wiggling. Use spawnflags to make it rotate or stand still.
 - name: misc_portal_camera
   aliasof: gfx_portal_camera
+  d3Class: idCamera
   deprecated: y
 - name: gfx_portal_surface
   extend: [chain_autonom,point]
@@ -1441,6 +1487,7 @@
     Entity remaps shader when activated.
 - name: sensor_buildable
   extend: [chain_active]
+  d3Class: idTrigger
   color: &sensor_color 43aa00
   flags: &Some_sensors_flags
   - SPAWN_DISABLED: *Spawn_disabled
@@ -1462,6 +1509,7 @@
     If NEGATE used, sensor still needs to be touched to activate.
 - name: trigger_buildable
   aliasof: sensor_buildable
+  d3Class: idTrigger
   deprecated: y
 - name: sensor_creep
 # bug: cannot be toggled via targetname
@@ -1487,6 +1535,7 @@
     Fires its targets when the team wins.
 - name: trigger_win
   aliasof: sensor_end
+  d3Class: idTrigger
   deprecated: y
 - name: sensor_player
   extend: [chain_active]
@@ -1514,12 +1563,15 @@
     items. If no equipment key is supplied every human will trigger this entity.
 - name: trigger_class
   aliasof: sensor_player
+  d3Class: idTrigger
   deprecated: y
 - name: trigger_equipment
   aliasof: sensor_player
+  d3Class: idTrigger
   deprecated: y
 - name: trigger_multiple
   aliasof: sensor_player
+  d3Class: idTrigger
   deprecated: y
   color: *sensor_color
   flags:
@@ -1536,12 +1588,14 @@
 # bug: sensor never triggers
 # src/gamelogic/game/g_spawn_sensor.c:590
   extend: [chain_active,point]
+  d3Class: idTrigger
   color: *sensor_color
   flags:
   - SPAWN_DISABLED: *Spawn_disabled
 - name: sensor_stage
 # possible improvement: detect substages, stages down
   extend: [chain_active,point]
+  d3Class: idTrigger
   color: *sensor_color
   flags: *Some_sensors_flags
   props:
@@ -1554,6 +1608,7 @@
     Triggers when the team reaches the stage. Stage down doesn't trigger.
 - name: trigger_stage
   aliasof: sensor_stage
+  d3Class: idTrigger
   deprecated: y
   props:
     targetname: Can also be triggered as target.
@@ -1566,11 +1621,13 @@
     Fires the targets at game start.
 - name: trigger_always
   aliasof: sensor_start
+  d3Class: idTrigger
   deprecated: y
 - name: sensor_support
 # bug: cannot be toggled via targetname
 # bug: remove this entity? there is a sensor_creep already
   extend: [chain_active,point]
+  d3Class: idTrigger
   color: *sensor_color
   flags:
   - SPAWN_DISABLED: *Spawn_disabled
@@ -1583,6 +1640,7 @@
     If condition is satisfied fires targets continuously.
 - name: sensor_timer
   extend: [chain_active,point]
+  d3Class: idTrigger
   color: *sensor_color
   flags:
   - START_ON: Timer will start on in the game and continuously fire its targets.
@@ -1594,8 +1652,10 @@
 - name: func_timer
 # maybe bug: not marked as deprecated in source code
   aliasof: sensor_timer
+  d3Class: idTrigger
 - name: sfx_speaker
   extend: [chain_autonom,point]
+  d3Class: idSpeaker
   color: 00b3b3
   flags:
   - PRESTARTED_LOOP: Same as LOOP, but speaker is active by default.
@@ -1626,6 +1686,7 @@
     levels. Implies ACTIVATOR_SPEAKER on.
 - name: target_speaker
   aliasof: sfx_speaker
+  d3Class: idSpeaker
   deprecated: y
 - name: _decal
   color: 00ff00
