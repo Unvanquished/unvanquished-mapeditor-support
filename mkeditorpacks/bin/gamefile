@@ -209,10 +209,12 @@ def print_file(gamefile, editor):
             attrib["patchtypes"] = " ".join(patch_list)
 
         if "type" in shader_dict.keys():
-            attrib["shaders"] = shader_dict["type"]
+            # only one shader type for the moment
+            attrib["shaders"] = shader_dict["type"][0]
 
         if "path" in shader_dict.keys():
-            attrib["shaderpath"] = shader_dict["path"]
+            # only one shader path for the moment
+            attrib["shaderpath"] = shader_dict["path"][0]
 
     if editor in [ "netradiant" ]:
         if texture_list != []:
@@ -250,15 +252,16 @@ def print_file(gamefile, editor):
 
         if "type" in shader_dict.keys():
             core_shader_elem = ET.SubElement(client_core_elem, "api", attrib={"name": "shaders"})
-            core_shader_elem.text = shader_dict["type"]
+            # only one shader type for the moment
+            core_shader_elem.text = shader_dict["type"][0]
             shaders_shader_elem = ET.SubElement(client_shaders_elem, "api", attrib={"name": "shaders"})
-            shaders_shader_elem.text = shader_dict["type"]
+            shaders_shader_elem.text = shader_dict["type"][0]
             map_shader_elem = ET.SubElement(client_map_elem, "api", attrib={"name": "shaders"})
-            map_shader_elem.text = shader_dict["type"]
+            map_shader_elem.text = shader_dict["type"][0]
             xmap_shader_elem = ET.SubElement(client_xmap_elem, "api", attrib={"name": "shaders"})
-            xmap_shader_elem.text = shader_dict["type"]
+            xmap_shader_elem.text = shader_dict["type"][0]
             model_shader_elem = ET.SubElement(client_model_elem, "api", attrib={"name": "shaders"})
-            model_shader_elem.text = shader_dict["type"]
+            model_shader_elem.text = shader_dict["type"][0]
 
         if archive_list != []:
             # it looks like there is no support for more than one
@@ -294,10 +297,13 @@ def print_file(gamefile, editor):
         filesystem_elem = ET.SubElement(gamefile, "filesystem")
         if "type" in shader_dict.keys() and "path" in shader_dict.keys():
             shaders_filesystem_elem = ET.SubElement(filesystem_elem, "shaders")
+            # no type for the moment
+            # only one shader extension for the moment
             extension_elem = ET.SubElement(shaders_filesystem_elem, "extension")
-            extension_elem.text = shader_dict["ext"]
+            extension_elem.text = shader_dict["ext"][0]
+            # only one shader path for the moment
             basepath_elem = ET.SubElement(shaders_filesystem_elem, "basepath")
-            basepath_elem.text = shader_dict["path"]
+            basepath_elem.text = shader_dict["path"][0]
 
         # TODO: fonts
 
@@ -343,7 +349,8 @@ def print_file(gamefile, editor):
         json_dict["textures"]["package"]["type"] = "directory"
         json_dict["textures"]["package"]["root"] = textures_dir
 
-        if shader_dict["type"] == "quake3":
+        # only one shader type for the moment
+        if shader_dict["type"][0] == "quake3":
             json_dict["textures"]["format"] = OrderedDict()
             json_dict["textures"]["format"]["extensions"] = [ "" ]
             json_dict["textures"]["format"]["format"] = [ "q3shader" ]
