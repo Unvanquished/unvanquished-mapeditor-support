@@ -192,7 +192,7 @@ def build(editor_name):
         buildmenu_file = "default_build_menu.xml"
         games_dir = os.path.join(build_dir, "games")
         gamefile_path = os.path.join(games_dir, game_file)
-    
+
     elif editor_name == "trenchbroom":
         games_dir = os.path.join(build_dir, "games")
         game_dir = os.path.join(games_dir, gamename)
