@@ -1,0 +1,98 @@
+World geometry:
+  -
+    type: "entityclass"
+    match: "worldspawn"
+    action: "hide"
+Models:
+  -
+    type: "entityclass" 
+    match: "func_static" 
+    action: "hide"
+Caulk:
+  -
+    type: "texture"
+    match: "textures/common/caulk"
+    action: "hide"
+Lights:
+  -
+    type: "entityclass"
+    match: "light"
+    action: "hide"
+  -
+    type: "entityclass"
+    match: "light_.*"
+    action: "hide"
+All entities:
+  -
+    type: "entityclass"
+    match: ".*"
+    action: "hide"
+  -
+    type: "entityclass"
+    match: "worldspawn"
+    action: "show"
+Areaportals (Q3A style):
+  -
+    type: "texture"
+    match: "textures/common/areaportal"
+    action: "hide"
+Decals:
+  -
+    type: "texture"
+    match: "textures(.*)decals(.*)"
+    action: "hide"
+Common Textures:
+  -
+    type: "texture" 
+    match: "textures/common/(.*)" 
+    action: "hide"
+Clip Textures:
+  -
+    type: "texture"
+    match: "textures/common/(.*)clip$"
+    action: "hide"
+Hint Textures:
+  -
+    type: "texture" 
+    match: "textures/common/hint(.*)" 
+    action: "hide"
+Ladder Textures:
+  -
+    type: "texture"
+    match: "textures/common/ladder(.*)"
+    action: "hide"
+Nobuild Textures:
+  -
+    type: "texture"
+    match: "textures/common/no(.*)build"
+    action: "hide"
+Nodraw Textures:
+  -
+    type: "texture"
+    match: "textures/common/nodraw(.*)"
+    action: "hide"
+Slick Textures:
+  -
+    type: "texture"
+    match: "textures/common/slick(.*)"
+    action: "hide"
+Terrain Textures:
+  -
+    type: "texture"
+    match: "textures/common/terrain(.*)"
+    action: "hide"
+Trigger Textures:
+  -
+    type: "texture"
+    match: "textures/common/trigger(.*)"
+    action: "hide"
+Patches:
+  -
+    type: "object"
+    match: "patch"
+    action: "hide"
+Brushes:
+  -
+    type: "object"
+    match: "brush"
+    action: "hide"

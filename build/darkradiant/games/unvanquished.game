@@ -1,6 +1,12 @@
 <?xml version="1.0" ?>
 <game index="1" name="Unvanquished" basegamename="Unvanquished" unknowngamename="Custom Unvanquished modification" basegame="pkg" type="unvanquished" q3map2_type="unvanquished" enginepath_linux="/usr/lib/unvanquished/" engine_linux="daemon" enginepath_macos="/Applications/Unvanquished/" engine_macos="daemon.app" enginepath_win32="C:/Program Files/Unvanquished/" engine_win32="daemon.exe" prefix=".unvanquished" entities="quake3" entityclass="quake3" archivetypes="dpk" modeltypes="md5mesh md3 ase lwo obj 3ds picoterrain" maptypes="mapq3" brushtypes="quake3" patchtypes="quake3" shaders="quake3" shaderpath="scripts">
-	<filetype>
+	<mapFormat>
+		<version value="2"/>
+		<fileExtension value="map"/>
+		<mapFolder value="maps"/>
+		<prefabFolder value="prefabs"/>
+	</mapFormat>
+	<filetypes>
 		<texture>
 			<extension>tga</extension>
 			<extension>jpg</extension>
@@ -9,12 +15,74 @@
 			<extension>bmp</extension>
 			<extension>dds</extension>
 		</texture>
-	</filetype>
+	</filetypes>
 	<filesystem>
 		<shaders>
 			<extension>shader</extension>
 			<basepath>scripts</basepath>
 		</shaders>
 	</filesystem>
+	<defaults>
+		<maxWorldCoord value="65536"/>
+		<minWorldCoord value="-65536"/>
+	</defaults>
+	<filtersystem>
+		<filter name="World geometry">
+			<filterCriterion type="entityclass" match="worldspawn" action="hide"/>
+		</filter>
+		<filter name="Models">
+			<filterCriterion type="entityclass" match="func_static" action="hide"/>
+		</filter>
+		<filter name="Caulk">
+			<filterCriterion type="texture" match="textures/common/caulk" action="hide"/>
+		</filter>
+		<filter name="Lights"/>
+		<filter name="Lights">
+			<filterCriterion type="entityclass" match="light_.*" action="hide"/>
+		</filter>
+		<filter name="All entities"/>
+		<filter name="All entities">
+			<filterCriterion type="entityclass" match="worldspawn" action="show"/>
+		</filter>
+		<filter name="Areaportals (Q3A style)">
+			<filterCriterion type="texture" match="textures/common/areaportal" action="hide"/>
+		</filter>
+		<filter name="Decals">
+			<filterCriterion type="texture" match="textures(.*)decals(.*)" action="hide"/>
+		</filter>
+		<filter name="Common Textures">
+			<filterCriterion type="texture" match="textures/common/(.*)" action="hide"/>
+		</filter>
+		<filter name="Clip Textures">
+			<filterCriterion type="texture" match="textures/common/(.*)clip$" action="hide"/>
+		</filter>
+		<filter name="Hint Textures">
+			<filterCriterion type="texture" match="textures/common/hint(.*)" action="hide"/>
+		</filter>
+		<filter name="Ladder Textures">
+			<filterCriterion type="texture" match="textures/common/ladder(.*)" action="hide"/>
+		</filter>
+		<filter name="Nobuild Textures">
+			<filterCriterion type="texture" match="textures/common/no(.*)build" action="hide"/>
+		</filter>
+		<filter name="Nodraw Textures">
+			<filterCriterion type="texture" match="textures/common/nodraw(.*)" action="hide"/>
+		</filter>
+		<filter name="Slick Textures">
+			<filterCriterion type="texture" match="textures/common/slick(.*)" action="hide"/>
+		</filter>
+		<filter name="Terrain Textures">
+			<filterCriterion type="texture" match="textures/common/terrain(.*)" action="hide"/>
+		</filter>
+		<filter name="Trigger Textures">
+			<filterCriterion type="texture" match="textures/common/trigger(.*)" action="hide"/>
+		</filter>
+		<filter name="Patches">
+			<filterCriterion type="object" match="patch" action="hide"/>
+		</filter>
+		<filter name="Brushes">
+			<filterCriterion type="object" match="brush" action="hide"/>
+		</filter>
+	</filtersystem>
 </game>
 

@@ -3,10 +3,17 @@ vfs:
 map:
   type:
     - mapq3
+  path:
+    - maps
+  ext:
+    - map
   brush:
     - quake3
   patch:
     - quake3
+prefab:
+  path:
+    - prefabs
 shader:
   type:
     - quake3

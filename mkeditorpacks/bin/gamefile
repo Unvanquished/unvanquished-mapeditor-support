@@ -74,7 +74,7 @@ def fine_format_xml(root):
     return xml.dom.minidom.parseString(ET.tostring(root, encoding='unicode')).toprettyxml()
 
 
-def print_file(gamefile, editor):
+def print_file(yamlfile, editor):
     attrib = OrderedDict()
 
     if editor in [ "netradiant" ]:
@@ -83,7 +83,7 @@ def print_file(gamefile, editor):
     if editor in [ "darkradiant", "netradiant", "trenchbroom" ]:
         attrib["index"] = "1"
 
-        game = yaml.load(gamefile.read(), Loader=yaml.FullLoader)
+        game = yaml.load(yamlfile.read(), Loader=yaml.FullLoader)
         if "game" in game.keys():
             l0  = game["game"]
 
@@ -127,7 +127,7 @@ def print_file(gamefile, editor):
                         attrib["engine_" + sysname] = l1["name"]
 
     if editor in [ "darkradiant", "netradiant" ]:
-        entfile = open(os.path.join(os.path.dirname(os.path.dirname(gamefile.name)), "entities", "class.yaml"))
+        entfile = open(os.path.join(os.path.dirname(os.path.dirname(yamlfile.name)), "entities", "class.yaml"))
         ent = yaml.load(entfile.read(), Loader=yaml.FullLoader)
 
         if "home" in game.keys():
@@ -142,16 +142,15 @@ def print_file(gamefile, editor):
             if "class" in l0:
                 attrib["entityclass"] = l0["type"]
 
+    map_dict = {}
+    prefab_dict = {}
     shader_dict = {}
     archive_list = []
     texture_list = []
     model_list = []
-    map_list = []
-    brush_list = []
-    patch_list = []
 
     if editor in [ "darkradiant", "gtkradiant", "netradiant", "trenchbroom" ]:
-        vfsfile = open(os.path.join(os.path.dirname(gamefile.name),"vfs.yaml"), "r")
+        vfsfile = open(os.path.join(os.path.dirname(yamlfile.name),"vfs.yaml"), "r")
         vfs = yaml.load(vfsfile.read(), Loader=yaml.FullLoader)
 
         if "vfs" in vfs.keys():
@@ -169,17 +168,31 @@ def print_file(gamefile, editor):
                 if i in supported[editor]["model"]:
                     model_list.append(i)
 
+        # it is required by DarkRadiant or it will crash at startup
         if "map" in vfs.keys():
             l0 = vfs["map"]
 
             if "type" in l0.keys():
-                map_list = l0["type"]
+                map_dict["type"] = l0["type"]
+
+            if "path" in l0.keys():
+                map_dict["path"] = l0["path"]
+
+            if "ext" in l0.keys():
+                map_dict["ext"] = l0["ext"]
 
             if "brush" in l0.keys():
-                brush_list = l0["brush"]
+                map_dict["brush"] = l0["brush"]
 
             if "patch" in l0.keys():
-                patch_list = l0["patch"]
+                map_dict["patch"] = l0["patch"]
+
+        # it is required by DarkRadiant or it will crash at startup
+        if "prefab" in vfs.keys():
+            l0 = vfs["prefab"]
+
+            if "path" in l0.keys():
+                prefab_dict["path"] = l0["path"]
 
         if "shader" in vfs.keys():
             l0 = vfs["shader"]
@@ -199,14 +212,14 @@ def print_file(gamefile, editor):
         if model_list != []:
             attrib["modeltypes"] = " ".join(model_list)
 
-        if map_list != []:
-            attrib["maptypes"] = " ".join(map_list)
+        if map_dict["type"] != []:
+            attrib["maptypes"] = " ".join(map_dict["type"])
 
-        if brush_list != []:
-            attrib["brushtypes"] = " ".join(brush_list)
+        if map_dict["brush"] != []:
+            attrib["brushtypes"] = " ".join(map_dict["brush"])
 
-        if patch_list != []:
-            attrib["patchtypes"] = " ".join(patch_list)
+        if map_dict["patch"] != []:
+            attrib["patchtypes"] = " ".join(map_dict["patch"])
 
         if "type" in shader_dict.keys():
             # only one shader type for the moment
@@ -239,16 +252,16 @@ def print_file(gamefile, editor):
         if texture_list != []:
             image_elem = ET.SubElement(client_core_elem, "api", attrib={"name": "image"})
             image_elem.text = " ".join(texture_list)
-            
-        if map_list != []:
+
+        if map_dict["type"] != []:
             # only one map type supported, take the first one
             core_map_elem = ET.SubElement(client_core_elem, "api", attrib={"name": "map"})
-            core_map_elem.text = map_list[0]
+            core_map_elem.text = map_dict["type"][0]
 
-        if brush_list != []:
+        if map_dict["brush"] != []:
             # only one surface type supported, take the first one
             core_surfdialog_elem = ET.SubElement(client_core_elem, "api", attrib={"name": "surfdialog"})
-            core_surfdialog_elem.text = brush_list[0]
+            core_surfdialog_elem.text = map_dict["brush"][0]
 
         if "type" in shader_dict.keys():
             core_shader_elem = ET.SubElement(client_core_elem, "api", attrib={"name": "shaders"})
@@ -285,29 +298,66 @@ def print_file(gamefile, editor):
             model_archive_elem.text = archive
 
     if editor in ["darkradiant"]:
+        maptype_elem = ET.SubElement(gamefile, "mapFormat")
+
+        if map_dict["type"][0] == "mapq3":
+            ET.SubElement(maptype_elem, "version", attrib={"value": "2"})
+
+        for map_ext in map_dict["ext"]:
+            ET.SubElement(maptype_elem, "fileExtension", attrib={"value": map_ext})
+
+        for map_path in map_dict["path"]:
+            ET.SubElement(maptype_elem, "mapFolder", attrib={"value": map_path})
+
+        for prefab_path in prefab_dict["path"]:
+            ET.SubElement(maptype_elem, "prefabFolder", attrib={"value": prefab_path})
+
         if texture_list != []:
-            filetype_elem = ET.SubElement(gamefile, "filetype")
+            filetype_elem = ET.SubElement(gamefile, "filetypes")
             texture_filetype_elem = ET.SubElement(filetype_elem, "texture")
 
-            for i in texture_list:
+            for texture_ext in texture_list:
                 extension_elem = ET.SubElement(texture_filetype_elem, "extension")
-                extension_elem.text = i
+                extension_elem.text = texture_ext
 
         # parent for fonts too
         filesystem_elem = ET.SubElement(gamefile, "filesystem")
         if "type" in shader_dict.keys() and "path" in shader_dict.keys():
+            # TODO: fonts
+
+            # materials
             shaders_filesystem_elem = ET.SubElement(filesystem_elem, "shaders")
-            # no type for the moment
-            # only one shader extension for the moment
+
+            # no shader type?
+
+            # only one shader extension?
             extension_elem = ET.SubElement(shaders_filesystem_elem, "extension")
             extension_elem.text = shader_dict["ext"][0]
-            # only one shader path for the moment
+
+            # only one shader path?
             basepath_elem = ET.SubElement(shaders_filesystem_elem, "basepath")
-            basepath_elem.text = shader_dict["path"][0]
+            shader_path = shader_dict["path"][0]
 
-        # TODO: fonts
+            basepath_elem.text = shader_path
 
-        # TODO: darkradiant filters
+        # it is required by DarkRadiant or the map will not be rendered properly
+        defaultfile = open(os.path.join(os.path.dirname(yamlfile.name),"default.yaml"), "r")
+        default_dict = yaml.load(defaultfile.read(), Loader=yaml.FullLoader)
+
+        defaults_elem = ET.SubElement(gamefile, "defaults")
+        for default_name in default_dict:
+            ET.SubElement(defaults_elem, default_name, attrib={"value": default_dict[default_name]})
+
+        filterfile = open(os.path.join(os.path.dirname(yamlfile.name),"filter.yaml"), "r")
+        filter_dict = yaml.load(filterfile.read(), Loader=yaml.FullLoader)
+
+        filtersystem_elem = ET.SubElement(gamefile, "filtersystem")
+
+        for filter_name in filter_dict.keys():
+            for criterion in filter_dict[filter_name]:
+                filter_elem = ET.SubElement(filtersystem_elem, "filter", attrib={"name": filter_name})
+
+            criterion_elem = ET.SubElement(filter_elem, "filterCriterion", attrib=criterion)
 
     if editor in [ "trenchbroom" ]:
         import json
@@ -318,7 +368,7 @@ def print_file(gamefile, editor):
         # TODO: check if exists
         json_dict["icon"] = "Icon.png"
 
-        if "mapq3" in map_list:
+        if "mapq3" in map_dict["type"]:
             json_dict["experimental"] = True
             json_dict["fileformats"] = []
 
