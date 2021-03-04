@@ -132,7 +132,6 @@ entityDef worldspawn
 	"_style*alphagen" ""
 	"_style*rgbgen" ""
 	"gridsize" ""
-
 }
 
 entityDef light
@@ -201,7 +200,6 @@ entityDef light
 	"scale" "1"
 	"style" "0"
 	"target" ""
-
 }
 
 entityDef lightJunior
@@ -244,7 +242,6 @@ entityDef lightJunior
 	"fade" "1"
 	"scale" "1"
 	"target" ""
-
 }
 
 entityDef func_bobbing
@@ -292,7 +289,6 @@ entityDef func_bobbing
 	"_cs" ""
 	"_lightmapscale" "1"
 	"_rs" ""
-
 }
 
 entityDef func_button
@@ -341,7 +337,6 @@ entityDef func_button
 	"_cs" ""
 	"_lightmapscale" "1"
 	"_rs" ""
-
 }
 
 entityDef func_destructable
@@ -377,7 +372,6 @@ entityDef func_destructable
 	"_cs" ""
 	"_lightmapscale" "1"
 	"_rs" ""
-
 }
 
 entityDef func_door
@@ -436,7 +430,6 @@ entityDef func_door
 	"_cs" ""
 	"_lightmapscale" "1"
 	"_rs" ""
-
 }
 
 entityDef func_door_model
@@ -492,7 +485,6 @@ entityDef func_door_model
 	"speed" "200"
 	"targetname" ""
 	"wait" "2"
-
 }
 
 entityDef func_door_rotating
@@ -547,7 +539,6 @@ entityDef func_door_rotating
 	"_cs" ""
 	"_lightmapscale" "1"
 	"_rs" ""
-
 }
 
 entityDef func_dynamic
@@ -585,7 +576,6 @@ entityDef func_dynamic
 	"_cs" ""
 	"_lightmapscale" "1"
 	"_rs" ""
-
 }
 
 entityDef func_group
@@ -619,7 +609,6 @@ entityDef func_group
 	"_layers" ""
 	"_offsets" ""
 	"_shader" ""
-
 }
 
 entityDef func_pendulum
@@ -669,7 +658,6 @@ entityDef func_pendulum
 	"_cs" ""
 	"_lightmapscale" "1"
 	"_rs" ""
-
 }
 
 entityDef func_plat
@@ -725,7 +713,6 @@ entityDef func_plat
 	"_cs" ""
 	"_lightmapscale" "1"
 	"_rs" ""
-
 }
 
 entityDef func_rotating
@@ -769,7 +756,6 @@ entityDef func_rotating
 	"_cs" ""
 	"_lightmapscale" "1"
 	"_rs" ""
-
 }
 
 entityDef func_spawn
@@ -797,7 +783,6 @@ entityDef func_spawn
 	"_cs" ""
 	"_lightmapscale" "1"
 	"_rs" ""
-
 }
 
 entityDef func_static
@@ -845,7 +830,6 @@ entityDef func_static
 	"_cs" ""
 	"_lightmapscale" "1"
 	"_rs" ""
-
 }
 
 entityDef func_train
@@ -889,7 +873,6 @@ entityDef func_train
 	"_cs" ""
 	"_lightmapscale" "1"
 	"_rs" ""
-
 }
 
 entityDef path_corner
@@ -917,7 +900,6 @@ entityDef path_corner
 	"speed" ""
 	"target" ""
 	"wait" "0"
-
 }
 
 entityDef pos_alien_intermission
@@ -947,7 +929,6 @@ entityDef pos_alien_intermission
 	"origin" ""
 	"target" ""
 	"targetname" ""
-
 }
 
 entityDef info_alien_intermission
@@ -979,7 +960,6 @@ entityDef info_alien_intermission
 	"origin" ""
 	"target" ""
 	"targetname" ""
-
 }
 
 entityDef pos_human_intermission
@@ -1009,7 +989,6 @@ entityDef pos_human_intermission
 	"origin" ""
 	"target" ""
 	"targetname" ""
-
 }
 
 entityDef info_human_intermission
@@ -1041,7 +1020,6 @@ entityDef info_human_intermission
 	"origin" ""
 	"target" ""
 	"targetname" ""
-
 }
 
 entityDef pos_player_intermission
@@ -1072,7 +1050,6 @@ entityDef pos_player_intermission
 	"origin" ""
 	"target" ""
 	"targetname" ""
-
 }
 
 entityDef info_player_intermission
@@ -1105,7 +1082,6 @@ entityDef info_player_intermission
 	"origin" ""
 	"target" ""
 	"targetname" ""
-
 }
 
 entityDef pos_location
@@ -1134,7 +1110,6 @@ entityDef pos_location
 	"message" ""
 	"origin" ""
 	"targetname" ""
-
 }
 
 entityDef target_location
@@ -1165,7 +1140,6 @@ entityDef target_location
 	"message" ""
 	"origin" ""
 	"targetname" ""
-
 }
 
 entityDef pos_player_spawn
@@ -1190,7 +1164,6 @@ entityDef pos_player_spawn
 	// Property default value
 	"origin" ""
 	"targetname" ""
-
 }
 
 entityDef info_player_deathmatch
@@ -1217,7 +1190,6 @@ entityDef info_player_deathmatch
 	// Property default value
 	"origin" ""
 	"targetname" ""
-
 }
 
 entityDef info_player_start
@@ -1244,7 +1216,6 @@ entityDef info_player_start
 	// Property default value
 	"origin" ""
 	"targetname" ""
-
 }
 
 entityDef pos_target
@@ -1273,7 +1244,6 @@ entityDef pos_target
 	"angle" ""
 	"angles" ""
 	"origin" ""
-
 }
 
 entityDef target_position
@@ -1304,7 +1274,6 @@ entityDef target_position
 	"angle" ""
 	"angles" ""
 	"origin" ""
-
 }
 
 entityDef info_notnull
@@ -1335,7 +1304,6 @@ entityDef info_notnull
 	"angle" ""
 	"angles" ""
 	"origin" ""
-
 }
 
 entityDef misc_teleporter_dest
@@ -1366,7 +1334,6 @@ entityDef misc_teleporter_dest
 	"angle" ""
 	"angles" ""
 	"origin" ""
-
 }
 
 entityDef info_null
@@ -1397,7 +1364,6 @@ entityDef info_null
 	"angle" ""
 	"angles" ""
 	"origin" ""
-
 }
 
 entityDef target_print
@@ -1426,7 +1392,6 @@ entityDef target_print
 	"targetname" ""
 	"message" ""
 	"origin" ""
-
 }
 
 entityDef target_push
@@ -1455,7 +1420,6 @@ entityDef target_push
 	"targetname" ""
 	"origin" ""
 	"target" ""
-
 }
 
 entityDef target_teleporter
@@ -1486,7 +1450,6 @@ entityDef target_teleporter
 	"origin" ""
 	"speed" ""
 	"target" ""
-
 }
 
 entityDef target_hurt
@@ -1515,7 +1478,6 @@ entityDef target_hurt
 	"targetname" ""
 	"dmg" "5"
 	"origin" ""
-
 }
 
 entityDef team_human_spawn
@@ -1929,7 +1891,6 @@ entityDef ctrl_limited
 	"targetname" ""
 	"amount" "1"
 	"origin" ""
-
 }
 
 entityDef ctrl_relay
@@ -1955,7 +1916,6 @@ entityDef ctrl_relay
 	"targetname" ""
 	"origin" ""
 	"wait" "0"
-
 }
 
 entityDef target_relay
@@ -1986,7 +1946,6 @@ entityDef target_relay
 	"targetname" ""
 	"origin" ""
 	"wait" "0"
-
 }
 
 entityDef target_delay
@@ -2017,7 +1976,6 @@ entityDef target_delay
 	"targetname" ""
 	"origin" ""
 	"wait" "1"
-
 }
 
 entityDef env_afx_ammo
@@ -2039,7 +1997,6 @@ entityDef env_afx_ammo
 	// Property default value
 	"ammo" "1"
 	"targetname" ""
-
 }
 
 entityDef trigger_ammo
@@ -2063,7 +2020,6 @@ entityDef trigger_ammo
 	// Property default value
 	"ammo" "1"
 	"targetname" ""
-
 }
 
 entityDef env_afx_gravity
@@ -2085,7 +2041,6 @@ entityDef env_afx_gravity
 	// Property default value
 	"amount" "800"
 	"targetname" ""
-
 }
 
 entityDef trigger_gravity
@@ -2109,7 +2064,6 @@ entityDef trigger_gravity
 	// Property default value
 	"amount" "800"
 	"targetname" ""
-
 }
 
 entityDef env_afx_heal
@@ -2131,7 +2085,6 @@ entityDef env_afx_heal
 	// Property default value
 	"heal" "5"
 	"targetname" ""
-
 }
 
 entityDef trigger_heal
@@ -2155,7 +2108,6 @@ entityDef trigger_heal
 	// Property default value
 	"heal" "5"
 	"targetname" ""
-
 }
 
 entityDef env_afx_hurt
@@ -2177,7 +2129,6 @@ entityDef env_afx_hurt
 	// Property default value
 	"dmg" "5"
 	"targetname" ""
-
 }
 
 entityDef trigger_hurt
@@ -2201,7 +2152,6 @@ entityDef trigger_hurt
 	// Property default value
 	"dmg" "5"
 	"targetname" ""
-
 }
 
 entityDef env_afx_push
@@ -2225,7 +2175,6 @@ entityDef env_afx_push
 	"target" ""
 	"targetname" ""
 	"wait" "[0.5, 0]"
-
 }
 
 entityDef trigger_push
@@ -2251,7 +2200,6 @@ entityDef trigger_push
 	"target" ""
 	"targetname" ""
 	"wait" "[0.5, 0]"
-
 }
 
 entityDef env_afx_teleport
@@ -2275,7 +2223,6 @@ entityDef env_afx_teleport
 	"speed" "400"
 	"target" ""
 	"targetname" ""
-
 }
 
 entityDef trigger_teleport
@@ -2304,7 +2251,6 @@ entityDef trigger_teleport
 	"speed" "400"
 	"target" ""
 	"targetname" ""
-
 }
 
 entityDef fx_rumble
@@ -2330,7 +2276,6 @@ entityDef fx_rumble
 	"amount" "10"
 	"origin" ""
 	"speed" "100"
-
 }
 
 entityDef target_rumble
@@ -2361,7 +2306,6 @@ entityDef target_rumble
 	"amount" "10"
 	"origin" ""
 	"speed" "100"
-
 }
 
 entityDef game_end
@@ -2388,7 +2332,6 @@ entityDef game_end
 	"targetname" ""
 	"origin" ""
 	"team" ""
-
 }
 
 entityDef target_alien_win
@@ -2415,7 +2358,6 @@ entityDef target_alien_win
 	// Property default value
 	"targetname" ""
 	"origin" ""
-
 }
 
 entityDef target_human_win
@@ -2442,7 +2384,6 @@ entityDef target_human_win
 	// Property default value
 	"targetname" ""
 	"origin" ""
-
 }
 
 entityDef game_funds
@@ -2466,7 +2407,6 @@ entityDef game_funds
 	"targetname" ""
 	"amount" "0"
 	"origin" ""
-
 }
 
 entityDef game_kill
@@ -2488,7 +2428,6 @@ entityDef game_kill
 	// Property default value
 	"targetname" ""
 	"origin" ""
-
 }
 
 entityDef target_kill
@@ -2515,7 +2454,6 @@ entityDef target_kill
 	// Property default value
 	"targetname" ""
 	"origin" ""
-
 }
 
 entityDef game_score
@@ -2539,7 +2477,6 @@ entityDef game_score
 	"targetname" ""
 	"amount" "1"
 	"origin" ""
-
 }
 
 entityDef target_score
@@ -2568,7 +2505,6 @@ entityDef target_score
 	"targetname" ""
 	"amount" "1"
 	"origin" ""
-
 }
 
 entityDef gfx_animated_model
@@ -2600,7 +2536,6 @@ entityDef gfx_animated_model
 	"origin" ""
 	"radius" "1"
 	"targetname" ""
-
 }
 
 entityDef misc_anim_model
@@ -2634,7 +2569,6 @@ entityDef misc_anim_model
 	"origin" ""
 	"radius" "1"
 	"targetname" ""
-
 }
 
 entityDef misc_model
@@ -2678,7 +2612,6 @@ entityDef misc_model
 	"model" ""
 	"modelscale" "1"
 	"modelscale_vec" "1 1 1"
-
 }
 
 entityDef gfx_light_flare
@@ -2712,7 +2645,6 @@ entityDef gfx_light_flare
 	"shader" ""
 	"speed" "200"
 	"targetname" ""
-
 }
 
 entityDef misc_light_flare
@@ -2748,7 +2680,6 @@ entityDef misc_light_flare
 	"shader" ""
 	"speed" "200"
 	"targetname" ""
-
 }
 
 entityDef gfx_particle_system
@@ -2778,7 +2709,6 @@ entityDef gfx_particle_system
 	"psName" ""
 	"targetname" ""
 	"wait" ""
-
 }
 
 entityDef misc_particle_system
@@ -2810,7 +2740,6 @@ entityDef misc_particle_system
 	"psName" ""
 	"targetname" ""
 	"wait" ""
-
 }
 
 entityDef gfx_portal_camera
@@ -2843,7 +2772,6 @@ entityDef gfx_portal_camera
 	"origin" ""
 	"roll" ""
 	"target" ""
-
 }
 
 entityDef misc_portal_camera
@@ -2878,7 +2806,6 @@ entityDef misc_portal_camera
 	"origin" ""
 	"roll" ""
 	"target" ""
-
 }
 
 entityDef gfx_portal_surface
@@ -2902,7 +2829,6 @@ entityDef gfx_portal_surface
 	"origin" ""
 	"target" ""
 	"targetname" ""
-
 }
 
 entityDef misc_portal_surface
@@ -2928,7 +2854,6 @@ entityDef misc_portal_surface
 	"origin" ""
 	"target" ""
 	"targetname" ""
-
 }
 
 entityDef gfx_shader_mod
@@ -2954,7 +2879,6 @@ entityDef gfx_shader_mod
 	"origin" ""
 	"replacement" ""
 	"shader" ""
-
 }
 
 entityDef sensor_buildable
@@ -2983,7 +2907,6 @@ entityDef sensor_buildable
 	"buildables" ""
 	"targetname" ""
 	"wait" "[0.5, 0]"
-
 }
 
 entityDef trigger_buildable
@@ -3014,7 +2937,6 @@ entityDef trigger_buildable
 	"buildables" ""
 	"targetname" ""
 	"wait" "[0.5, 0]"
-
 }
 
 entityDef sensor_creep
@@ -3036,7 +2958,6 @@ entityDef sensor_creep
 	// Property default value
 	"target" ""
 	"origin" ""
-
 }
 
 entityDef sensor_end
@@ -3062,7 +2983,6 @@ entityDef sensor_end
 	"origin" ""
 	"targetname" ""
 	"team" ""
-
 }
 
 entityDef trigger_win
@@ -3093,7 +3013,6 @@ entityDef trigger_win
 	"origin" ""
 	"targetname" ""
 	"team" ""
-
 }
 
 entityDef sensor_player
@@ -3123,7 +3042,6 @@ entityDef sensor_player
 	"targetname" ""
 	"team" ""
 	"wait" "[0.5, 0]"
-
 }
 
 entityDef trigger_class
@@ -3158,7 +3076,6 @@ entityDef trigger_class
 	"targetname" ""
 	"team" ""
 	"wait" "[0.5, 0]"
-
 }
 
 entityDef trigger_equipment
@@ -3193,7 +3110,6 @@ entityDef trigger_equipment
 	"targetname" ""
 	"team" ""
 	"wait" "[0.5, 0]"
-
 }
 
 entityDef trigger_multiple
@@ -3222,7 +3138,6 @@ entityDef trigger_multiple
 	"target" ""
 	"targetname" ""
 	"wait" "[0.5, 0]"
-
 }
 
 entityDef sensor_power
@@ -3247,7 +3162,6 @@ entityDef sensor_power
 	// Property default value
 	"target" ""
 	"origin" ""
-
 }
 
 entityDef sensor_stage
@@ -3278,7 +3192,6 @@ entityDef sensor_stage
 	"stage" ""
 	"targetname" ""
 	"team" ""
-
 }
 
 entityDef trigger_stage
@@ -3311,7 +3224,6 @@ entityDef trigger_stage
 	"stage" ""
 	"targetname" ""
 	"team" ""
-
 }
 
 entityDef sensor_start
@@ -3333,7 +3245,6 @@ entityDef sensor_start
 	// Property default value
 	"target" ""
 	"origin" ""
-
 }
 
 entityDef trigger_always
@@ -3360,7 +3271,6 @@ entityDef trigger_always
 	// Property default value
 	"target" ""
 	"origin" ""
-
 }
 
 entityDef sensor_support
@@ -3387,7 +3297,6 @@ entityDef sensor_support
 	"target" ""
 	"origin" ""
 	"team" ""
-
 }
 
 entityDef sensor_timer
@@ -3416,7 +3325,6 @@ entityDef sensor_timer
 	"origin" ""
 	"targetname" ""
 	"wait" ""
-
 }
 
 entityDef func_timer
@@ -3445,7 +3353,6 @@ entityDef func_timer
 	"origin" ""
 	"targetname" ""
 	"wait" ""
-
 }
 
 entityDef sfx_speaker
@@ -3474,7 +3381,6 @@ entityDef sfx_speaker
 	"origin" ""
 	"targetname" ""
 	"wait" ""
-
 }
 
 entityDef target_speaker
@@ -3505,7 +3411,6 @@ entityDef target_speaker
 	"origin" ""
 	"targetname" ""
 	"wait" ""
-
 }
 
 entityDef _decal
@@ -3525,7 +3430,6 @@ entityDef _decal
 
 	// Property default value
 	"target" ""
-
 }
 
 entityDef _skybox
@@ -3551,6 +3455,5 @@ entityDef _skybox
 	"origin" ""
 	"_scale" "64 64 64"
 	"angles" ""
-
 }
 

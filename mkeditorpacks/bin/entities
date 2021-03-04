@@ -352,16 +352,15 @@ class D3DefPrinter:
         if default_list != []:
             print('')
 
-        if default_list != []:
             self.print_key_comment_line('Property default value')
 
             for k, v in default_list:
                 self.print_key(k, v)
 
     def print_specials(self, e):
-        print('')
-
         if 'specials' in e and e['specials']:
+            print('')
+
             for k, v in e['specials'].items():
                 self.print_key(k, v)
 
