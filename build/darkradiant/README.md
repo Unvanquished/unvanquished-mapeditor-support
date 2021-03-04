@@ -12,6 +12,8 @@ Set the [UnvanquishedAssets](https://github.com/UnvanquishedAssets/UnvanquishedA
 
 Download the [def file](pkg/def/entities.def) and store it as `pkg/def/entities.def` in the `UnvanquishedAssets` repository.
 
+> **Note:** _DarkRadiant reads the Q3 legacy brush format used by Unvanquished, but only write the Q3 non-legacy brush one, so the map is expected to be converted on writing._
+
 Using
 -----
 
