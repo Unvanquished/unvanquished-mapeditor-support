@@ -22,14 +22,13 @@ shader:
   ext:
     - shader
 texture:
+  - webp
+  - png
   - tga
   - jpg
-  - png
-  - pcx
-  - bmp
-  - webp
-  - crn
   - dds
+  - crn
+  - ktx
 model:
   - iqm
   - md5mesh

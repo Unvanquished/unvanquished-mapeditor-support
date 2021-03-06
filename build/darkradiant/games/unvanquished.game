@@ -8,11 +8,9 @@
 	</mapFormat>
 	<filetypes>
 		<texture>
+			<extension>png</extension>
 			<extension>tga</extension>
 			<extension>jpg</extension>
-			<extension>png</extension>
-			<extension>pcx</extension>
-			<extension>bmp</extension>
 			<extension>dds</extension>
 		</texture>
 	</filetypes>
