@@ -8,6 +8,46 @@
 
 - name: "-"
 
+- name: "Build everything for release"
+  stages:
+    - cmd: q3map2
+      opts:
+        bsp: null
+        leaktest: null
+        custinfoparms: null
+        meta: null
+        maxarea: null
+        samplesize: 8
+    - cmd: q3map2
+      opts:
+        vis: null
+        saveprt: null
+    - cmd: q3map2
+      opts:
+        light: null
+        fastbounce: null
+        fastlightmapsearch: null
+        nobouncestore: null
+        shade: null
+        dirty: null
+        patchshadows: null
+        samples: 3
+        samplesize: 8
+        randomsamples: null
+        bouncegrid: null
+        bounce: 16
+        deluxe: null
+        lightmapsize: 1024
+        external: null
+    - cmd: q3map2
+      opts:
+        minimap: null
+    - cmd: daemonmap
+      opts:
+        nav: null
+
+- name: "-"
+
 - name: "Map: novis (build without visibility)"
   stages:
     - cmd: q3map2
@@ -153,3 +193,42 @@
     - cmd: daemonmap
       opts:
         nav: null
+
+- name : "-"
+
+- name: "Convert to .obj"
+  stages:
+    - cmd: q3map2
+      opts:
+        bsp: null
+        meta: null
+        patchmeta: null
+    - cmd: q3map2
+      opts:
+        convert: null
+        format: obj
+
+- name: "Convert to .ase"
+  stages:
+    - cmd: q3map2
+      opts:
+        bsp: null
+        meta: null
+        patchmeta: null
+    - cmd: q3map2
+      opts:
+        convert: null
+        format: ase
+
+- name: "Convert to .ase for modelling applications"
+  stages:
+    - cmd: q3map2
+      opts:
+        bsp: null
+        meta: null
+        patchmeta: null
+        shaderasbitmap: null
+    - cmd: q3map2
+      opts:
+        convert: null
+        format: obj

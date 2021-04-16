@@ -7,6 +7,14 @@
 <command>[q3map2] -bsp -leaktest -custinfoparms "[MapFile]"</command>
 </build>
 <separator />
+<build name="Build everything for release">
+<command>[q3map2] -bsp -leaktest -custinfoparms -meta -maxarea -samplesize 8 "[MapFile]"</command>
+<command>[q3map2] -vis -saveprt "[MapFile]"</command>
+<command>[q3map2] -light -fastbounce -fastlightmapsearch -nobouncestore -shade -dirty -patchshadows -samples 3 -samplesize 8 -randomsamples -bouncegrid -bounce 16 -deluxe -lightmapsize 1024 -external "[MapFile]"</command>
+<command>[q3map2] -minimap "[MapFile]"</command>
+<command>[daemonmap] -nav "[MapFile]"</command>
+</build>
+<separator />
 <build name="Map: novis (build without visibility)">
 <command>[q3map2] -bsp -leaktest -custinfoparms -meta -fastmeta "[MapFile]"</command>
 </build>
@@ -40,5 +48,18 @@
 </build>
 <build name="Navmeshes: release">
 <command>[daemonmap] -nav "[MapFile]"</command>
+</build>
+<separator />
+<build name="Convert to .obj">
+<command>[q3map2] -bsp -meta -patchmeta "[MapFile]"</command>
+<command>[q3map2] -convert -format obj "[MapFile]"</command>
+</build>
+<build name="Convert to .ase">
+<command>[q3map2] -bsp -meta -patchmeta "[MapFile]"</command>
+<command>[q3map2] -convert -format ase "[MapFile]"</command>
+</build>
+<build name="Convert to .ase for modelling applications">
+<command>[q3map2] -bsp -meta -patchmeta -shaderasbitmap "[MapFile]"</command>
+<command>[q3map2] -convert -format obj "[MapFile]"</command>
 </build>
 </project>
