@@ -25,8 +25,10 @@
     - cmd: q3map2
       opts:
         light: null
+        nocollapse: null
         fastbounce: null
         fastlightmapsearch: null
+        nobouncestore: null
         nobouncestore: null
         shade: null
         dirty: null
@@ -92,6 +94,7 @@
     - cmd: q3map2
       opts:
         light: null
+        nocollapse: null
         faster: null
         fastlightmapsearch: null
         patchshadows: null
@@ -115,6 +118,7 @@
     - cmd: q3map2
       opts:
         light: null
+        nocollapse: null
         faster: null
         fastlightmapsearch: null
         patchshadows: null
@@ -139,6 +143,7 @@
     - cmd: q3map2
       opts:
         light: null
+        nocollapse: null
         faster: null
         fastlightmapsearch: null
         dirty: null
@@ -171,6 +176,7 @@
     - cmd: q3map2
       opts:
         light: null
+        nocollapse: null
         fastbounce: null
         fastlightmapsearch: null
         nobouncestore: null
