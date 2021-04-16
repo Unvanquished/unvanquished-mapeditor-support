@@ -30,6 +30,8 @@
         nobouncestore: null
         shade: null
         dirty: null
+        dirtscale: 0.8
+        dirtdepth: 32
         patchshadows: null
         samples: 3
         samplesize: 8
@@ -140,6 +142,8 @@
         faster: null
         fastlightmapsearch: null
         dirty: null
+        dirtscale: 0.8
+        dirtdepth: 32
         patchshadows: null
         samples: 2
         samplesize: 16
@@ -172,6 +176,8 @@
         nobouncestore: null
         shade: null
         dirty: null
+        dirtscale: 0.8
+        dirtdepth: 32
         patchshadows: null
         samples: 3
         samplesize: 8
