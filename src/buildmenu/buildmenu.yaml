@@ -27,7 +27,7 @@
         light: null
         nocollapse: null
         fastbounce: null
-        fastlightmapsearch: null
+        fastallocate: null
         nobouncestore: null
         nobouncestore: null
         shade: null
@@ -96,7 +96,7 @@
         light: null
         nocollapse: null
         faster: null
-        fastlightmapsearch: null
+        fastallocate: null
         patchshadows: null
         lightmapsize: 1024
         external: null
@@ -120,7 +120,7 @@
         light: null
         nocollapse: null
         faster: null
-        fastlightmapsearch: null
+        fastallocate: null
         patchshadows: null
         deluxe: null
         lightmapsize: 1024
@@ -145,7 +145,7 @@
         light: null
         nocollapse: null
         faster: null
-        fastlightmapsearch: null
+        fastallocate: null
         dirty: null
         dirtscale: 0.8
         dirtdepth: 32
@@ -178,7 +178,7 @@
         light: null
         nocollapse: null
         fastbounce: null
-        fastlightmapsearch: null
+        fastallocate: null
         nobouncestore: null
         shade: null
         dirty: null
