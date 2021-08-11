@@ -233,6 +233,16 @@ def print_file(yamlfile, editor):
         if texture_list != []:
             attrib["texturetypes"] = " ".join(texture_list)
 
+    if editor in [ "darkradiant" ]:
+        # workaround: DarkRadiant uses the type field to select the export map format
+        # otherwise it would say: Failed to locate map format module
+        if map_dict["type"][0] == "mapq3":
+            attrib["type"] = "quake3"
+        elif map_dict["type"][0] == "mapdoom3":
+            attrib["type"] = "doom3"
+        elif map_dict["type"][0] == "mapquake4":
+            attrib["type"] = "quake4"
+
     if editor in [ "netradiant", "darkradiant" ]:
         gamefile = ET.Element('game', attrib=attrib)
 
