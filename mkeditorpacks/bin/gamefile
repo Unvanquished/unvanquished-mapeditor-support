@@ -302,6 +302,8 @@ def print_file(yamlfile, editor):
 
         if map_dict["type"][0] == "mapq3":
             ET.SubElement(maptype_elem, "version", attrib={"value": "2"})
+            # it is required by DarkRadiant or it will crash while saving
+            ET.SubElement(maptype_elem, "floatPrecision", attrib={"value": "16"})
 
         for map_ext in map_dict["ext"]:
             ET.SubElement(maptype_elem, "fileExtension", attrib={"value": map_ext})
