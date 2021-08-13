@@ -310,6 +310,11 @@ def print_file(yamlfile, editor):
     if editor in ["darkradiant"]:
         maptype_elem = ET.SubElement(gamefile, "mapFormat")
 
+        # if unset, it defaults to empty string, meaning DarkRadiant will
+        # write a maps/<basename> file without extension that will collide
+        # with the maps/<basename> folder name to store external lightmaps
+        ET.SubElement(maptype_elem, "infoFileExtension", attrib={"value": ".darkradiant"})
+
         if map_dict["type"][0] == "mapq3":
             ET.SubElement(maptype_elem, "version", attrib={"value": "2"})
             # it is required by DarkRadiant or it will crash while saving
