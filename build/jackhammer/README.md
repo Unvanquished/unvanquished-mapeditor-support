@@ -1,10 +1,10 @@
-Unvanquished support for J.A.C.K
-================================
+Unvanquished support for J.A.C.K.
+=================================
 
 Installation
 ------------
 
-[J.A.C.K](https://jack.hlfx.ru/en) (previously _JackHammer_) does not know what is a gamepack.
+[J.A.C.K.](https://jack.hlfx.ru/en) (previously _JackHammer_) does not know what is a gamepack.
 
 You must download the [fgd file](/build/jackhammer/install/unvanquished.fgd) yourself and configure J.A.C.K to use it.
 

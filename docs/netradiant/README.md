@@ -8,7 +8,7 @@ Installation
 
 In NetRadiant preferences under *Settings/Paths*, point *Engine Path* to the folder that contains the game assets. After a map compilation, the gamepack will make the editor attempt to run `/usr/bin/unvanquished` instead of a binary inside this path.
 
-> **Note:** _The `NetRadiant-custom` fork by Garux does not work with Unvanquished because it lacks most of the required features implemented upstream in the past 6 years of development, the gamepack provided with NetRadiant-custom is obsolete and will not work, using this gamepack instead will not work either._
+> **Note:** _The `NetRadiant-custom` fork by Garux does not work with Unvanquished because it lacks most of the required features implemented upstream in the past 7 years of development, the gamepack provided with NetRadiant-custom is obsolete and will not work, using this gamepack instead will not work either._
 
 Using
 -----

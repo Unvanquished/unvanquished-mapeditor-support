@@ -140,7 +140,7 @@ def build(editor_name):
         "darkradiant": "d3def",
         "gtkradiant": "q3def",
         "jackhammer": "fgd",
-        "netradiant": "q3def",
+        "netradiant": "ent",
         "trenchbroom": "q3def",
     }
 
@@ -157,9 +157,13 @@ def build(editor_name):
         "darkradiant": "def",
         "gtkradiant": "def",
         "jackhammer": "fgd",
-        "netradiant": "def",
+        "netradiant": "ent",
         "trenchbroom": "def",
     }
+
+    if entities == "q3def":
+        # def_format["netradiant"] = "q3def" # unused
+        def_ext["netradiant"] = "def"
 
     if editor_name == "darkradiant":
         game_dir = codename + ".game"

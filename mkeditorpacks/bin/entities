@@ -61,15 +61,6 @@ def list_of_dicts_to_list_of_tuples(dd):
             break
     return res
 
-
-# ==============================================================================
-# entity output in GtkRadiant format (also supported by NetRadiant)
-
-# https://github.com/TTimo/GtkRadiant/issues/262
-dont_place_dummy_flag = True
-
-heading = '------ {} ------'
-
 def fmt_float(f):
     x = '{:f}'.format(f)
     if 'e' in x:
@@ -81,6 +72,11 @@ def _output_float(v):
 
 def _output_vec2_float(v):
     return ' '.join(_output_float(vv) for vv in v)
+
+def _output_time_2float(v):
+    if isinstance(v, (list, tuple)):
+        return _output_vec2_float(v)
+    return str(v)
 
 def _output_vec3_float(v):
     return ' '.join(_output_float(vv) for vv in v)
@@ -98,11 +94,11 @@ def _output_vec3_int(v):
     return ' '.join(_output_float(vv) for vv in v)
 
 def outvalue(v, _type):
-    func_name = '_output_' + _type
+    ct = canonize_type(_type)
+    func_name = '_output_' + ct
     if _type is None or func_name not in globals():
         return str(v)
     return globals()[func_name](v)
-
 
 label_re = re.compile(r'^\s*\[([\w\d\s,]+)\]')
 def sort_properties(props):
@@ -120,6 +116,14 @@ def sort_properties(props):
         yield key, props[key]
 
 
+# ==============================================================================
+# entity output in GtkRadiant format (also supported by NetRadiant)
+
+# https://github.com/TTimo/GtkRadiant/issues/262
+dont_place_dummy_flag = True
+
+heading = '------ {} ------'
+
 class Q3DefPrinter:
     def print_header(self, fp):
         print('// {}'.format(header_prefix))
@@ -128,7 +132,10 @@ class Q3DefPrinter:
         for line in fp.readlines():
             print("// {}".format(line).rstrip())
 
-        print('')
+        print()
+
+    def print_footer(self):
+        pass
 
     def print_entity_head(self, e):
         name = escape_token(e['name'])
@@ -144,7 +151,6 @@ class Q3DefPrinter:
         if flags:
             flags = ' ' + flags
         print('/*QUAKED {} {}{}{}'.format(name, color, sizes, flags))
-
 
     def print_flag_desc(self, e):
         flags = []
@@ -236,13 +242,16 @@ class D3DefPrinter:
 
     def print_header(self, fp):
         print('/* {}'.format(header_prefix))
-        print('')
+        print()
 
         for line in fp.readlines():
             print(line.rstrip())
 
         print('*/')
-        print('')
+        print()
+
+    def print_footer(self):
+        pass
 
     def print_entity_head(self, e):
         name = escape_token(e['name'])
@@ -255,12 +264,12 @@ class D3DefPrinter:
         if "d3Class" in e.keys():
             self.print_key_comment_line('Class')
             self.print_key("spawnclass", e["d3Class"])
-            print('')
+            print()
 
 # We already preprocess the inheritance
 #        if "extend" in e.keys():
 #            self.print_key("inherit", name)
-#            print('')
+#            print()
 
         desc = ''
         if 'desc' in e:
@@ -277,11 +286,11 @@ class D3DefPrinter:
         if 'desc' != '':
             self.print_key_comment_line('Description')
             self.print_key('editor_usage', desc)
-            print('')
+            print()
 
         self.print_key_comment_line('Editor color')
         self.print_key('editor_color', e['color'])
-        print('')
+        print()
 
         self.print_key_comment_line('Editor sizes')
 
@@ -292,11 +301,11 @@ class D3DefPrinter:
             self.print_key('editor_mins', '?')
             self.print_key('editor_maxs', '?')
 
-        print('')
+        print()
 
     def print_entity_foot(self):
         print('}')
-        print('')
+        print()
 
     def print_prop_desc(self, e, dt, pr_types=False, pr_defaults=False, pr_ranges=False, pr_eg=False):
         if 'props' not in e or not e['props']:
@@ -350,7 +359,7 @@ class D3DefPrinter:
                 default_list.append((k, default_value))
 
         if default_list != []:
-            print('')
+            print()
 
             self.print_key_comment_line('Property default value')
 
@@ -359,7 +368,7 @@ class D3DefPrinter:
 
     def print_specials(self, e):
         if 'specials' in e and e['specials']:
-            print('')
+            print()
 
             for k, v in e['specials'].items():
                 self.print_key(k, v)
@@ -371,6 +380,203 @@ class D3DefPrinter:
 #        self.print_flag_desc(e)
         self.print_specials(e)
         self.print_entity_foot()
+
+
+# ==============================================================================
+# Entity output in XML format used by NetRadiant
+
+class EntPrinter:
+    @staticmethod
+    def sanitize(s):
+        # FIXME: use XML module
+        s = s.replace('<', '&gt;')
+        s = s.replace('>', '&lt;')
+        s = s.replace('"', '&quot;')
+        s = s.replace("'", '&apos;')
+        return s
+
+    @staticmethod
+    def customtype(_type, _bool):
+        # See radiant/eclass_xml.cpp for reference.
+
+        # HACK: NetRadiant does not support real4 or integer4,
+        # vec4_float and int4_float will default to string.
+
+        netradiant_special_types = {
+            "float (yaw)": "angle",
+            "vec3_float (yaw pitch roll)": "angles",
+            "vec3_float (color)": "color",
+            "string (target)": "target",
+            "string (targetname)": "targetname",
+            "string (sound)": "sound",
+            "string (texture)": "texture",
+            "string (model)": "model",
+            "string (skin)": "skin",
+        }
+
+        netradiant_types = {
+            'bool': 'boolean',
+            'float': 'real',
+            'vec3_float': 'real3',
+            'int': 'integer',
+            'vec2_int': 'integer2',
+            'vec3_int': 'integer3',
+        }
+
+        proptype = 'string'
+
+        if _bool:
+            proptype = 'boolean'
+        else:
+            if _type in netradiant_special_types.keys():
+                proptype = netradiant_special_types[_type]
+            else:
+                ct = canonize_type(_type)
+                if ct in netradiant_types.keys():
+                    proptype = netradiant_types[ ct ]
+
+        return proptype
+
+    def print_header(self, fp):
+        print('<?xml version="1.0"?>')
+        print('<!-- {}'.format(header_prefix))
+        print()
+
+        for line in fp.readlines():
+            print("{}".format(line).rstrip())
+
+        print('-->')
+        print()
+        print('<classes>')
+        print()
+
+    def print_footer(self):
+        print('</classes>')
+
+    def print_entity_head(self, e):
+        name = escape_token(e['name'])
+        color = 'color="{} {} {}"'.format(*(fmt_float(f) for f in color_to_float_triple(e['color'])))
+
+        if 'size_min' in e and 'size_max' in e:
+            # FIXME: point seems to be set in YAML file
+            kind = 'point'
+            sizes = ' box="{} {} {} {} {} {}"'.format(*(fmt_float(f) for f in e['size_min'] + e['size_max']))
+        else:
+            kind = 'group'
+            sizes = ''
+            if not dont_place_dummy_flag:
+                flags.insert(0, escape_token('?'))
+
+        specials = ''
+        if 'specials' in e and e['specials']:
+            for k, v in e['specials'].items():
+                specials += ' {}="{}"'.format(k, v)
+
+        print('<{} name="{}" {}{}{}>'.format(kind, name, color, sizes, specials))
+
+    def print_entity_foot(self, e):
+        if 'size_min' in e and 'size_max' in e:
+            kind = 'point'
+        else:
+            kind = 'group'
+        print('</{}>'.format(kind))
+
+    def print_flag_desc(self, e):
+        flags = []
+
+        # FIXME: missing bit attribute
+        bit = 0
+        for k, v in e.get('flags', []):
+            if k == '-' or not v:
+                continue
+
+            v = self.sanitize( v )
+
+            # FIXME: key can be different than name
+            # according to radiant/eclass_xml.cpp:
+            # key="[flag name]"
+            # name="[name shown in gui]"
+            # bit="[bit-index in spawnflags]"
+            flags.append('<flag key="{}" name="{}" bit="{}">{}</flag>'.format(k, k, bit, v))
+
+            bit += 1
+
+        if flags:
+            print(heading.format('FLAGS'))
+            for v in flags:
+                print(v)
+
+    def print_prop_desc(self, e, dt, pr_types, pr_defaults, pr_ranges, pr_eg):
+        if 'props' not in e or not e['props']:
+            return
+
+        print(heading.format('PROPERTIES'))
+        proptypes, propdefaults, propranges, propreplace, propeg, boolvalues = \
+            (e.get(k, {}) for k in ('proptypes', 'propdefaults', 'propranges', 'propreplace', 'propeg', 'boolvalues'))
+
+        for k, v in sort_properties(e['props']):
+            _type = proptypes[k] if k in proptypes else (dt[k] if k in dt else None)
+            _bool = k in boolvalues
+            info = []
+            if pr_types and _type is not None:
+                info.append(_type)
+            if pr_eg and k in propeg:
+                info.append('eg: {}'.format(outvalue(propeg[k], _type)))
+            if pr_ranges and k in propranges:
+                v1, v2 = propranges[k]
+                info.append('{}..{}'.format(outvalue(v1, _type), outvalue(v2, _type)))
+            if pr_ranges and _bool:
+                v1, v2 = boolvalues[k]
+                info.append('{} or {}'.format(outvalue(v1, _type), outvalue(v2, _type)))
+            if pr_defaults and k in propdefaults:
+                v1 = propdefaults[k]
+                if _bool:
+                    v1 = boolvalues[k][1 if v1 else 0]
+                info.append('def: {}'.format(outvalue(v1, _type)))
+            if info:
+                info = ' ({})'.format(', '.join(info))
+            else:
+                info = ''
+            if k in propreplace:
+                for _from, _to in propreplace[k].items():
+                    v = v.replace(_from, _to)
+
+            proptype = self.customtype(_type, _bool)
+
+            value = self.sanitize( v.rstrip() )
+            info = self.sanitize( info )
+
+            default = ''
+            if k in propdefaults:
+                default_value = outvalue(propdefaults[k], _type)
+                default=' value="{}"'.format(default_value)
+
+            print('<{} key="{}" name="{}"{}>{}{}</{}>'.format(proptype, k, k, default, value, info, proptype))
+
+    def print_common_desc(self, e):
+        if e.get('desc', '').strip():
+            print(heading.format('DESCRIPTION'))
+            v = e['desc']
+            if 'descreplace' in e:
+                for _from, _to in e['descreplace'].items():
+                    v = v.replace(_from, _to)
+
+            v = self.sanitize(v)
+
+            print(v)
+
+    def print_entity(self, e, dt, pr_types=False, pr_defaults=False, pr_ranges=False, pr_eg=False):
+        self.print_entity_head(e)
+        if e.get('deprecated'):
+            print(deprecated_prefix)
+            if e.get('aliasof'):
+                print('{} {}'.format(recommended_prefix, e.get('aliasof')))
+        self.print_common_desc(e)
+        self.print_flag_desc(e)
+        self.print_prop_desc(e, dt, pr_types, pr_defaults, pr_ranges, pr_eg)
+        #self.print_specials(e)
+        self.print_entity_foot(e)
+        print()
 
 
 # ==============================================================================
@@ -386,21 +592,27 @@ class FgdPrinter:
         return FgdPrinter.remove_quotes(text).rstrip().replace('\n', '\\n')
 
     @staticmethod
-    def fgdtype(k, _type):
+    def customtype(_type):
         proptype = 'string'
-        if k == 'targetname':
-            proptype = 'target_source'
-        elif k == 'model' or k == 'model2':
-            proptype = 'studio'
-        elif k == '_color' or k == 'color':
-            proptype = 'color1'
 
-        if _type == 'int':
-            proptype = 'integer'
-        elif _type == 'string (target)':
-            proptype = 'target_destination'
-        elif _type == 'string (sound)':
-            proptype = 'sound'
+        fgd_special_types = {
+            'string (model)': 'studio',
+            'string (target)': 'target_destination',
+            'string (targetname)': 'target_source',
+            'string (sound)': 'sound',
+        }
+
+        fgd_types = {
+            'int': 'integer',
+        }
+
+        if _type in fgd_special_types.keys():
+            proptype = fgd_special_types[ _type ]
+        else:
+            ct = canonize_type(_type)
+            if ct in fgd_types.keys():
+              proptype = fgd_types[ ct ]
+
         return proptype
 
     def print_header(self, fp):
@@ -411,6 +623,9 @@ class FgdPrinter:
             print("// {}".format(line).rstrip())
 
         print('')
+
+    def print_footer(self):
+        pass
 
     def print_entity_head(self, e):
         name = e['name']
@@ -473,8 +688,8 @@ class FgdPrinter:
                 for _from, _to in propreplace[k].items():
                     v = v.replace(_from, _to)
 
-            proptype = FgdPrinter.fgdtype(k, _type)
-            v = FgdPrinter.prepare_description(v)
+            proptype = self.customtype(_type)
+            v = self.prepare_description(v)
             display_name = k.capitalize()
 
             print('\t{}({}) : {} : {} : "{}"'.format(k, proptype, display_name, default_value, v))
@@ -493,9 +708,9 @@ class FgdPrinter:
         print(']')
         print()
 
+
 # ==============================================================================
 # validators
-
 
 def _validate_int(v):
     return type(v) == int
@@ -532,13 +747,11 @@ def _validate_vec2_int(v):
 def _validate_vec3_int(v):
     return isinstance(v, (list, tuple)) and len(v) == 3 and all(_validate_int(x) for x in v)
 
-
 def canonize_type(t):
     t = str(t)
     if ' ' in t:
         t, _ = t.split(' ', 1)
     return t
-
 
 def val_fields_exist(e):
     if d:
@@ -660,7 +873,6 @@ def validate_entity(e, dt):
         if not globals()[func_name](v):
             r.append('Invalid example value of {}: {}, must be of type {}'.format(field, v, ftype))
 
-
     if unknown_types:
         r.append('Types ({}) are unknown: {}'.format(len(unknown_types), unknown_types))
 
@@ -684,7 +896,6 @@ def entity_type_coverage(e, dt):
 
 # ==============================================================================
 # main
-
 
 def get_additional_file_name(mainname, f):
     d = os.path.dirname(mainname)
@@ -796,13 +1007,14 @@ def load_yamls(filename):
 format_printer = {
     "q3def": Q3DefPrinter,
     "d3def": D3DefPrinter,
+    "ent": EntPrinter,
     "fgd": FgdPrinter,
 }
 
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     description="Generates editor entity definition files.")
 
-group = parser.add_argument_group(title="action")
+group = parser.add_argument_group(title="actions")
 group = group.add_mutually_exclusive_group(required=True)
 group.add_argument("-s", "--validate", action="store_true", help="Validate YAML syntax")
 group.add_argument("-g", "--generate", action="store_true", help="Generate entities file")
@@ -862,6 +1074,10 @@ elif args.generate:
     if args.header:
         with open(args.header, "r") as fp:
             out_printer.print_header(fp)
+    else:
+        out_print.print_header("Game entity definitions file for level editor")
 
     for e in elist:
         out_printer.print_entity(e, deftypes, **opts)
+
+    out_printer.print_footer()

@@ -10,10 +10,46 @@ Supported editors
 
 - [GtkRadiant](http://icculus.org/gtkradiant)
 - [NetRadiant](https://gitlab.com/xonotic/netradiant)
+- [DarkRadiant](https://www.darkradiant.net)
 
 Work in progress editor support
 -------------------------------
 
-- [DarkRadiant](https://www.darkradiant.net)
-- [J.A.C.K](http://jack.hlfx.ru/en/main.html)
+- [J.A.C.K.](http://jack.hlfx.ru/en/main.html)
 - [TrenchBroom](http://kristianduske.com/trenchbroom)
+
+Supported output formats
+------------------------
+
+### Entity definition file
+
+Editor|NetRadiant `.ent`|Worldcraft `.fgd`|Quake 3 `.def`|Doom 3 `.def`
+---|---|---|---|---
+NetRadiant|✅| |✅|✅
+GtKRadiant| |✅| |
+DarkRadiant| | | |✅
+J.A.C.K.| |✅| |
+TrenchBroom| | |✅|
+
+### Build menu file
+
+Editor|`default_build_menu.xml`|`default_project.proj`
+---|---|---
+NetRadiant|✅|
+GtkRadiant| |✅
+
+### Game definition file
+
+Editor|NetRadiant `.game`|DarkRadiant `.game`|`synapse.config`|GameConfig.cfg
+---|---|---|---|---
+NetRadiant|✅| | |
+DarkRadiant| |✅| |
+GtkRadiant| | |✅|
+TrenchBroom| | | |✅
+
+### Help menu file
+
+Editor|`game.xlink`
+---|---
+NetRadiant|✅
+GtkRadiant|✅

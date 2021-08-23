@@ -77,11 +77,11 @@
       [q3map] Shader to use for "fog hull." Foghull shader should be a sky shader.
       Omit the "textures/" prefix. Use with "_farplanedist".
   proptypes:
-    music: string
+    music: string (sound)
     disabledEquipment: string
     disabledClasses: string
     disabledBuildables: string
-    colorGrade: string
+    colorGrade: string (texture)
     gravity: float
     reverbIntensity: float
     _keepLights: int
@@ -89,9 +89,9 @@
     _minvertexlight: float
     _mingridlight: float
     _minlight: float
-    _color: vec3_float
+    _color: vec3_float (color)
     fogDensity: float
-    fogColor: vec3_float
+    fogColor: vec3_float (color)
     _blocksize: vec3_int
     gridsize: vec3_float
     _noshadersun: int
@@ -197,7 +197,7 @@
     # lights can also do _flare and _flareshader (LensFlare etc). but it seems to be not supported by unv.
   proptypes:
     light: float
-    _color: vec3_float
+    _color: vec3_float (color)
     fade: float
     style: int
     scale: float
@@ -277,7 +277,7 @@
       [q3map] Used in pair with _samples. Jitter radius for array of lights.
   proptypes:
     light: float
-    _color: vec3_float
+    _color: vec3_float (color)
     fade: float
     scale: float
     _filterradius: float
@@ -668,7 +668,7 @@
     reverbDistance: Distance where reverb effect appears.
     reverbIntensity: *revIntensity
   proptypes:
-    gradingTexture: string
+    gradingTexture: string (texture)
     gradingDistance: float
     reverbEffect: string
     reverbDistance: float

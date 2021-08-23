@@ -12,10 +12,10 @@ delay: &time time_2float (time [variance])
 dmg: int
 health: int
 message: string
-model: string
-model2: string
+model: string (model)
+model2: string (model)
 name: string
-noise: string (sound)
+noise: &sound string (sound)
 onAct: string (target)
 onDie: string (target)
 onDisable: string (target)
@@ -31,20 +31,20 @@ period: *time
 radius: vec3_float
 random: float
 replacement: string
-shader: string
-sound1to2: string (sound)
-sound2to1: string (sound)
-soundPos1: string (sound)
-soundPos2: string (sound)
+shader: string (texture)
+sound1to2: *sound
+sound2to1: *sound
+soundPos1: *sound
+soundPos2: *sound
 spawnflags: int
 speed: float
 stage: int
-target: string (target)
-target2: string (target)
-target3: string (target)
-target4: string (target)
-targetname: string
-targetname2: string
+target: &target string (target)
+target2: *target
+target3: *target
+target4: *target
+targetname: &targetname string (targetname)
+targetname2: *targetname
 targetShaderName: string
 targetShaderNewName: string
 team: int

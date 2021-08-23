@@ -67,13 +67,13 @@
 	humanRepeaterBuildPoints(string) : Humanrepeaterbuildpoints :  : "maximum amount of power the humans can use around each repeater"
 	mapOverBrightBits(string) : Mapoverbrightbits :  : ""
 	message(string) : Message :  : "Shown above loading bar."
-	music(string) : Music :  : "Path/name of looping .wav or .ogg file used for level's music."
+	music(sound) : Music :  : "Path/name of looping .wav or .ogg file used for level's music."
 	remapshader*(string) : Remapshader* :  : "Remap shaders. Any property name starting with 'remapshader' counts. Values are ; separated."
 	reverbEffect(string) : Reverbeffect :  : "Effect name. Use /testReverb <TAB> to view the list of possible values."
 	reverbIntensity(string) : Reverbintensity :  : "Intensity of reverberation."
 	_ambient(string) : _ambient :  : "[q3map] Adds a constant value to overall lighting. Use is not recommended. Ambient light will have a tendency to flatten out variations in light and shade."
 	_blocksize(string) : _blocksize : "1024 1024 1024" : "[q3map] q3map always splits the BSP tree along the planes. Increase the blocksize using larger powers of 2 to reduce compile times on very large maps with a low structural brush density."
-	_color(color1) : _color : "1 1 1" : "[q3map] color value for '_ambient', '_minvertexlight', '_mingridlight'."
+	_color(string) : _color : "1 1 1" : "[q3map] color value for '_ambient', '_minvertexlight', '_mingridlight'."
 	_farplanedist(string) : _farplanedist :  : "[q3map] Limit on how many units the vis phase of compilation can see. Used in combination with level-wide fog, it can help reduce r_speeds on large, open maps. Use with '_foghull'."
 	_foghull(string) : _foghull :  : "[q3map] Shader to use for 'fog hull.' Foghull shader should be a sky shader. Omit the 'textures/' prefix. Use with '_farplanedist'."
 	_keepLights(integer) : _keeplights : 0 : "[q3map] Keep light entities in the BSP. Normally stripped out by the BSP process and read from the .map file by the lighting phase."
@@ -88,7 +88,7 @@
 
 @PointClass flags(Light) size(-8 -8 -8, 8 8 8) color(166 166 255) iconsprite("sprites/light.spr") = light : "Non-displayed point light source.\n\nThe -pointscale and -scale arguments to Q3Map2 affect the brightness of these lights. The -skyscale argument affects brightness of entity sun lights.\n\nProperties for dynamic realtime lights marked as [dynamic]. Any property marked as [projected] if set makes dynamic light projected. Projected light requires most of its properties set, such as 'light_target', 'light_up', 'light_right'."
 [
-	_color(color1) : _color : "1 1 1" : "Weighted RGB value of light color."
+	_color(string) : _color : "1 1 1" : "Weighted RGB value of light color."
 	light(string) : Light : 300 : "Intensity."
 	origin(string) : Origin :  : "Position."
 	targetname(target_source) : Targetname :  : "Setting name implies dynamic light style set."
@@ -126,7 +126,7 @@
 
 @PointClass flags(Light) size(-6 -6 -6, 6 6 6) color(0 179 76) iconsprite("sprites/light.spr") = lightJunior : "Non-displayed point light source. Unlike usual light affects only entities (lightgrid).\n\nThe -pointscale and -scale arguments to Q3Map2 affect the brightness of these lights. The -skyscale argument affects brightness of entity sun lights."
 [
-	_color(color1) : _color : "1 1 1" : "Weighted RGB value of light color."
+	_color(string) : _color : "1 1 1" : "Weighted RGB value of light color."
 	light(string) : Light : 300 : "Intensity."
 	origin(string) : Origin :  : "Position."
 	radius(string) : Radius : 64 : "Overrides the default 64 unit Radius of a spotlight at the target point."
@@ -146,7 +146,7 @@
 
 @SolidClass = func_bobbing : "Solid entity that oscillates back and forth in a linear motion. Entity bobs on the Z axis (up-down) by default.\n\nFor '_celshader' read http://q3map2.robotrenegade.com/docs/shader_manual/cel-shading.html\n\nEntity supports [terrain] properties. They're not so useful here, but you can refer to func_group for descriptions."
 [
-	color(color1) : Color : "1 1 1" : "Colour of emitted light. Emission activated by either color or light set. Don't forget to set origin."
+	color(string) : Color : "1 1 1" : "Colour of emitted light. Emission activated by either color or light set. Don't forget to set origin."
 	dmg(integer) : Dmg : 2 : "Damage dealt when blocked."
 	group(string) : Group :  : "Name of entity group. Allows to activate all entities of group at once."
 	height(string) : Height : 32 : "Amount of travel of the oscillation movement."
@@ -172,7 +172,7 @@
 [
 	target(target_destination) : Target :  : "[required] Must have entity to fire at."
 	angle(string) : Angle :  : "Determines moving direction of button (around Z axis: 0=+x, 90=+y, 180=-x, 270=-y; special values: up = -1, down = -2)."
-	color(color1) : Color : "1 1 1" : "Colour of emitted light. Emission activated by either color or light set. Don't forget to set origin."
+	color(string) : Color : "1 1 1" : "Colour of emitted light. Emission activated by either color or light set. Don't forget to set origin."
 	group(string) : Group :  : "Name of entity group. Allows to activate all entities of group at once."
 	health(integer) : Health : 0 : "If set, the button must take damage (any amount) to activate."
 	light(string) : Light : 100 : "Light emitting intensity. Emission activated by either color or light set. Don't forget to set origin."
@@ -208,7 +208,7 @@
 @SolidClass = func_door : "Normal sliding door entity. By default, the door will activate when player walks close ('range') to it or when damage is inflicted ('health') to it.\n\nFor '_celshader' read http://q3map2.robotrenegade.com/docs/shader_manual/cel-shading.html\n\nEntity supports [terrain] properties. They're not so useful here, but you can refer to func_group for descriptions."
 [
 	angle(string) : Angle :  : "Determines moving direction of door (around Z axis: 0=+x, 90=+y, 180=-x, 270=-y; special values: up = -1, down = -2)."
-	color(color1) : Color : "1 1 1" : "Colour of emitted light. Emission activated by either color or light set. Don't forget to set origin."
+	color(string) : Color : "1 1 1" : "Colour of emitted light. Emission activated by either color or light set. Don't forget to set origin."
 	dmg(integer) : Dmg : 2 : "Damage to inflict on player when he blocks operation of door. Door will reverse direction when blocked unless CRUSHER spawnflag is set."
 	group(string) : Group :  : "Name of entity group. Allows to activate all entities of group at once."
 	health(integer) : Health : 0 : "If set, the door must take damage (any amount) to activate."
@@ -242,7 +242,7 @@
 	angle(string) : Angle :  : "Short version of 'angles'."
 	angles(string) : Angles :  : "Model orientation."
 	animation(string) : Animation :  : "The first frame and number of frames in the door open animation. This will be reversed for the close animation."
-	color(color1) : Color : "1 1 1" : "Colour of emitted light. Emission activated by either color or light set. Don't forget to set origin."
+	color(string) : Color : "1 1 1" : "Colour of emitted light. Emission activated by either color or light set. Don't forget to set origin."
 	health(integer) : Health :  : "If set, the door must take damage (any amount) to activate."
 	light(string) : Light : 100 : "Light emitting intensity. Emission activated by either color or light set. Don't forget to set origin."
 	noise(sound) : Noise :  : "The sound played repeatedly while door is moving."
@@ -261,7 +261,7 @@
 @SolidClass = func_door_rotating : "Rotating door entity. By default, the door will activate when player walks close to it.\n\nRotating door will not cause damage to player when blocked.\n\nWhen activated turns around the rotation axis ('origin') to angle ('rotatorAngle') with 'speed', then stops. After 'wait' time door starts turning back.\n\nFor '_celshader' read http://q3map2.robotrenegade.com/docs/shader_manual/cel-shading.html\n\nEntity supports [terrain] properties. They're not so useful here, but you can refer to func_group for descriptions."
 [
 	origin(string) : Origin :  : "[required] Rotation axis position."
-	color(color1) : Color : "1 1 1" : "Colour of emitted light. Emission activated by either color or light set. Don't forget to set origin."
+	color(string) : Color : "1 1 1" : "Colour of emitted light. Emission activated by either color or light set. Don't forget to set origin."
 	group(string) : Group :  : "Name of entity group. Allows to activate all entities of group at once."
 	health(integer) : Health : 0 : "If set, the door must take damage (any amount) to activate."
 	light(string) : Light : 100 : "Light emitting intensity. Emission activated by either color or light set. Don't forget to set origin."
@@ -291,7 +291,7 @@
 
 @SolidClass = func_dynamic : "Do not use.\n\nFor '_celshader' read http://q3map2.robotrenegade.com/docs/shader_manual/cel-shading.html\n\nEntity supports [terrain] properties. They're not so useful here, but you can refer to func_group for descriptions."
 [
-	color(color1) : Color : "1 1 1" : "Colour of emitted light. Emission activated by either color or light set. Don't forget to set origin."
+	color(string) : Color : "1 1 1" : "Colour of emitted light. Emission activated by either color or light set. Don't forget to set origin."
 	group(string) : Group :  : "Name of entity group. Allows to activate all entities of group at once."
 	light(string) : Light : 100 : "Light emitting intensity. Emission activated by either color or light set. Don't forget to set origin."
 	model2(studio) : Model2 :  : "Path to custom model attached to entity. Don't forget to set 'origin'."
@@ -319,8 +319,8 @@
 [
 	origin(string) : Origin : "0 0 0" : "[required] Rotation axis position."
 	angle(string) : Angle : 0 : "Short version of 'angles'."
-	angles(string) : Angles : "[0, 0, 0]" : "Orienting pendulum."
-	color(color1) : Color : "1 1 1" : "Colour of emitted light. Emission activated by either color or light set. Don't forget to set origin."
+	angles(string) : Angles : "0 0 0" : "Orienting pendulum."
+	color(string) : Color : "1 1 1" : "Colour of emitted light. Emission activated by either color or light set. Don't forget to set origin."
 	dmg(integer) : Dmg : 2 : "Damage dealt when blocked."
 	group(string) : Group :  : "Name of entity group. Allows to activate all entities of group at once."
 	light(string) : Light : 100 : "Light emitting intensity. Emission activated by either color or light set. Don't forget to set origin."
@@ -337,7 +337,7 @@
 
 @SolidClass = func_plat : "Rising platform the player can ride to reach higher places. Plats must always be drawn in the raised position, so they will operate and be lighted correctly but they spawn in the lowered position.\n\nThe plat will stay in the raised position until the player steps off.\n\nFor '_celshader' read http://q3map2.robotrenegade.com/docs/shader_manual/cel-shading.html\n\nEntity supports [terrain] properties. They're not so useful here, but you can refer to func_group for descriptions."
 [
-	color(color1) : Color : "1 1 1" : "Colour of emitted light. Emission activated by either color or light set. Don't forget to set origin."
+	color(string) : Color : "1 1 1" : "Colour of emitted light. Emission activated by either color or light set. Don't forget to set origin."
 	dmg(integer) : Dmg : 2 : "Damage dealt when blocked."
 	group(string) : Group :  : "Name of entity group. Allows to activate all entities of group at once."
 	height(string) : Height : 0 : "If set, this will determine the total amount of vertical travel of the plat. Place plat at the top point. In game it will spawn at bottom. Overrides 'lip' option."
@@ -367,7 +367,7 @@
 [
 	origin(string) : Origin :  : "[required] Rotation axis position."
 	speed(string) : Speed : 400 : "[required] Determines how fast entity rotates."
-	color(color1) : Color : "1 1 1" : "Colour of emitted light. Emission activated by either color or light set. Don't forget to set origin."
+	color(string) : Color : "1 1 1" : "Colour of emitted light. Emission activated by either color or light set. Don't forget to set origin."
 	dmg(integer) : Dmg : 2 : "Damage dealt when blocked."
 	group(string) : Group :  : "Name of entity group. Allows to activate all entities of group at once."
 	light(string) : Light : 100 : "Light emitting intensity. Emission activated by either color or light set. Don't forget to set origin."
@@ -401,7 +401,7 @@
 
 @SolidClass = func_static : "Static non-solid bspmodel.\n\nUsed to add colour grading and reverb effects to specific area.\n\nFor '_celshader' read http://q3map2.robotrenegade.com/docs/shader_manual/cel-shading.html\n\nEntity supports [terrain] properties. They're not so useful here, but you can refer to func_group for descriptions."
 [
-	color(color1) : Color : "1 1 1" : "Colour of emitted light. Emission activated by either color or light set. Don't forget to set origin."
+	color(string) : Color : "1 1 1" : "Colour of emitted light. Emission activated by either color or light set. Don't forget to set origin."
 	gradingDistance(string) : Gradingdistance : 250 : "Distance where grading effect appears."
 	gradingTexture(string) : Gradingtexture :  : "If set, there is the grading effect fluently appears when player comes closer."
 	group(string) : Group :  : "Name of entity group. Allows to activate all entities of group at once."
@@ -422,7 +422,7 @@
 [
 	origin(string) : Origin :  : "[required] Base position of train."
 	target(target_destination) : Target :  : "[required] This points to the first path_corner of the path which is also location of the train's origin."
-	color(color1) : Color : "1 1 1" : "Colour of emitted light. Emission activated by either color or light set. Don't forget to set origin."
+	color(string) : Color : "1 1 1" : "Colour of emitted light. Emission activated by either color or light set. Don't forget to set origin."
 	dmg(integer) : Dmg : 2 : "Unused."
 	group(string) : Group :  : "Name of entity group. Allows to activate all entities of group at once."
 	light(string) : Light : 100 : "Light emitting intensity. Emission activated by either color or light set. Don't forget to set origin."
@@ -838,7 +838,7 @@
 [
 	target(target_destination) : Target :  : "Name of the aiming position entity to which the player will jump. This is the highest point of the jump."
 	targetname(target_source) : Targetname :  : "Give it a name to be able to toggle its activity."
-	wait(string) : Wait : "[0.5, 0]" : "Delay between triggerings."
+	wait(string) : Wait : "0.5 0" : "Delay between triggerings."
 	spawnflags(flags) = 
 	[
 		1 : "Spawn_disabled" : : "Disabled by default."
@@ -849,7 +849,7 @@
 [
 	target(target_destination) : Target :  : "Name of the aiming position entity to which the player will jump. This is the highest point of the jump."
 	targetname(target_source) : Targetname :  : "Give it a name to be able to toggle its activity."
-	wait(string) : Wait : "[0.5, 0]" : "Delay between triggerings."
+	wait(string) : Wait : "0.5 0" : "Delay between triggerings."
 	spawnflags(flags) = 
 	[
 		1 : "Spawn_disabled" : : "Disabled by default."
@@ -1120,7 +1120,7 @@
 	target(target_destination) : Target :  : "[required] Must have entity to fire at."
 	buildables(string) : Buildables :  : "A comma delimited list of buildables which will trigger this entity. If omitted matches all buildables. (eggpod,overmind,barricade,acid_tube,trapper,booster,hive,leech,telenode,mgturret, tesla,arm,medistat,drill,reactor,repeater)"
 	targetname(target_source) : Targetname :  : "Give it a name to be able to toggle its activity."
-	wait(string) : Wait : "[0.5, 0]" : "Time in seconds until trigger becomes re-triggerable after it's been touched."
+	wait(string) : Wait : "0.5 0" : "Time in seconds until trigger becomes re-triggerable after it's been touched."
 	spawnflags(flags) = 
 	[
 		1 : "Spawn_disabled" : : "Disabled by default."
@@ -1133,7 +1133,7 @@
 	target(target_destination) : Target :  : "[required] Must have entity to fire at."
 	buildables(string) : Buildables :  : "A comma delimited list of buildables which will trigger this entity. If omitted matches all buildables. (eggpod,overmind,barricade,acid_tube,trapper,booster,hive,leech,telenode,mgturret, tesla,arm,medistat,drill,reactor,repeater)"
 	targetname(target_source) : Targetname :  : "Give it a name to be able to toggle its activity."
-	wait(string) : Wait : "[0.5, 0]" : "Time in seconds until trigger becomes re-triggerable after it's been touched."
+	wait(string) : Wait : "0.5 0" : "Time in seconds until trigger becomes re-triggerable after it's been touched."
 	spawnflags(flags) = 
 	[
 		1 : "Spawn_disabled" : : "Disabled by default."
@@ -1184,7 +1184,7 @@
 	equipment(string) : Equipment :  : "A comma delimited list of human weapons or upgrades which will trigger this entity. (rifle,psaw,shotgun,lgun,mdriver,chaingun,flamer,prifle,lcannon, larmour,marmour,bsuit,radar,battpack,jetpack,gren,firebomb)"
 	targetname(target_source) : Targetname :  : "Give it a name to be able to toggle its activity."
 	team(integer) : Team :  : "1 for aliens, 2 for humans. Omit if you don't want to check the team. Not affected by NEGATE."
-	wait(string) : Wait : "[0.5, 0]" : "Time in seconds until trigger becomes re-triggerable after it's been touched."
+	wait(string) : Wait : "0.5 0" : "Time in seconds until trigger becomes re-triggerable after it's been touched."
 	spawnflags(flags) = 
 	[
 		1 : "Spawn_disabled" : : "Disabled by default."
@@ -1199,7 +1199,7 @@
 	equipment(string) : Equipment :  : "A comma delimited list of human weapons or upgrades which will trigger this entity. (rifle,psaw,shotgun,lgun,mdriver,chaingun,flamer,prifle,lcannon, larmour,marmour,bsuit,radar,battpack,jetpack,gren,firebomb)"
 	targetname(target_source) : Targetname :  : "Give it a name to be able to toggle its activity."
 	team(integer) : Team :  : "1 for aliens, 2 for humans. Omit if you don't want to check the team. Not affected by NEGATE."
-	wait(string) : Wait : "[0.5, 0]" : "Time in seconds until trigger becomes re-triggerable after it's been touched."
+	wait(string) : Wait : "0.5 0" : "Time in seconds until trigger becomes re-triggerable after it's been touched."
 	spawnflags(flags) = 
 	[
 		1 : "Spawn_disabled" : : "Disabled by default."
@@ -1214,7 +1214,7 @@
 	equipment(string) : Equipment :  : "A comma delimited list of human weapons or upgrades which will trigger this entity. (rifle,psaw,shotgun,lgun,mdriver,chaingun,flamer,prifle,lcannon, larmour,marmour,bsuit,radar,battpack,jetpack,gren,firebomb)"
 	targetname(target_source) : Targetname :  : "Give it a name to be able to toggle its activity."
 	team(integer) : Team :  : "1 for aliens, 2 for humans. Omit if you don't want to check the team. Not affected by NEGATE."
-	wait(string) : Wait : "[0.5, 0]" : "Time in seconds until trigger becomes re-triggerable after it's been touched."
+	wait(string) : Wait : "0.5 0" : "Time in seconds until trigger becomes re-triggerable after it's been touched."
 	spawnflags(flags) = 
 	[
 		1 : "Spawn_disabled" : : "Disabled by default."
@@ -1226,7 +1226,7 @@
 [
 	target(target_destination) : Target :  : "Name of the target to fire at."
 	targetname(target_source) : Targetname :  : "Can also be triggered as target."
-	wait(string) : Wait : "[0.5, 0]" : "Time in seconds until trigger becomes re-triggerable after it's been touched."
+	wait(string) : Wait : "0.5 0" : "Time in seconds until trigger becomes re-triggerable after it's been touched."
 	spawnflags(flags) = 
 	[
 		1 : "Humans" : : "Activated by humans."

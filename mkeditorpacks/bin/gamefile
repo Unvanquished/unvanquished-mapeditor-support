@@ -142,6 +142,10 @@ def print_file(yamlfile, editor):
             if "class" in l0:
                 attrib["entityclass"] = l0["type"]
 
+# FIXME: if not .def
+    if editor in [ "netradiant" ]:
+        attrib["entityclasstype"] = "xml"
+
     map_dict = {}
     prefab_dict = {}
     shader_dict = {}

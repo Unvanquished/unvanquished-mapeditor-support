@@ -87,7 +87,7 @@ clight: # SP_ConstantLightField
     origin: Entity position point.
   proptypes:
     light: float
-    color: vec3_float
+    color: vec3_float (color)
   propdefaults:
     light: 100
     color: [1, 1, 1]
