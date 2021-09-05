@@ -8,15 +8,15 @@ It is developped for the [Unvanquished](https://unvanquished.net) project, but m
 Supported editors
 -----------------
 
-- [GtkRadiant](http://icculus.org/gtkradiant)
+- [GtkRadiant](https://icculus.org/gtkradiant)
 - [NetRadiant](https://gitlab.com/xonotic/netradiant)
 - [DarkRadiant](https://www.darkradiant.net)
 
 Work in progress editor support
 -------------------------------
 
-- [J.A.C.K.](http://jack.hlfx.ru/en/main.html)
-- [TrenchBroom](http://kristianduske.com/trenchbroom)
+- [J.A.C.K.](https://jack.hlfx.ru/en/main.html)
+- [TrenchBroom](https://trenchbroom.github.io/)
 
 Supported output formats
 ------------------------
