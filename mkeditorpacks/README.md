@@ -26,21 +26,21 @@ Supported output formats
 Editor|NetRadiant `.ent`|Worldcraft `.fgd`|Quake 3 `.def`|Doom 3 `.def`
 ---|---|---|---|---
 NetRadiant|✅| |✅|✅
-GtKRadiant| |✅| |
+GtkRadiant| | |✅|
 DarkRadiant| | | |✅
 J.A.C.K.| |✅| |
 TrenchBroom| | |✅|
 
 ### Build menu file
 
-Editor|`default_build_menu.xml`|`default_project.proj`
+Editor|NetRadiant `default_build_menu.xml`|GtkRadiant `default_project.proj`
 ---|---|---
 NetRadiant|✅|
 GtkRadiant| |✅
 
 ### Game definition file
 
-Editor|NetRadiant `.game`|DarkRadiant `.game`|`synapse.config`|GameConfig.cfg
+Editor|NetRadiant `name.game`|DarkRadiant `name.game`|GtkRadiant `synapse.config`|TrenchBroom `GameConfig.cfg`
 ---|---|---|---|---
 NetRadiant|✅| | |
 DarkRadiant| |✅| |
@@ -49,7 +49,7 @@ TrenchBroom| | | |✅
 
 ### Help menu file
 
-Editor|`game.xlink`
+Editor|GtkRadiant `game.xlink`
 ---|---
 NetRadiant|✅
 GtkRadiant|✅
