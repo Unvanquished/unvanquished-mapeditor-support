@@ -4,15 +4,13 @@ Unvanquished support for DarkRadiant
 Installation
 ------------
 
-DarkRadiant is not yet usable for Unvanquished, but if you're a developer you can be interested in the game file for testing purpose.
+DarkRadiant is becoming to be usable for Unvanquished. Models may not be properly scaled.
 
 Download the [game file](games/unvanquished.game) and put it in `install/games/` directory before compilation when installing from sources, or in `/usr/share/netradiant/games` directory otherwise (or the related path specific to your operating system hierarchy).
 
 Set the [UnvanquishedAssets](https://github.com/UnvanquishedAssets/UnvanquishedAssets) repository as engine path in DarkRadiant preferences, set `pkg` as `fs_game` and `src` as `fs_game_base`.
 
 Download the [def file](pkg/def/entities.def) and store it as `pkg/def/entities.def` in the `UnvanquishedAssets` repository.
-
-> **Note:** _DarkRadiant reads the Q3 legacy brush format used by Unvanquished, but only write the Q3 non-legacy brush one, so the map is expected to be converted on writing._
 
 Using
 -----
