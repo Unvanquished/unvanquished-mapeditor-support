@@ -7,13 +7,16 @@ game:
   textures: "textures"
 engine:
   linux:
-    dir: "/usr/lib/unvanquished/"
+    legacy_dir: "/usr/lib/unvanquished"
+    dir: "${XDG_DATA_DIR}/unvanquished/base"
     name: "daemon"
   macos:
-    dir: "/Applications/Unvanquished/"
-    name: "daemon.app"
+    legacy_dir: "/Applications/Unvanquished"
+    dir: "${HOME}/Games/Unvanquished"
+    name: "Unvanquished.app"
   windows:
-    dir: "C:/Program Files/Unvanquished/"
+    legacy_dir: "C:/Program Files/Unvanquished"
+    dir: "%ProgramFiles%/Unvanquished"
     name: "daemon.exe"
 home:
-  legacy: ".unvanquished"
+  legacy_dir: ".unvanquished"

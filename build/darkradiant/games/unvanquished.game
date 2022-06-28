@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<game index="1" name="Unvanquished" basegamename="Unvanquished" unknowngamename="Custom Unvanquished modification" basegame="pkg" type="quake3" q3map2_type="unvanquished" enginepath_linux="/usr/lib/unvanquished/" engine_linux="daemon" enginepath_macos="/Applications/Unvanquished/" engine_macos="daemon.app" enginepath_win32="C:/Program Files/Unvanquished/" engine_win32="daemon.exe" prefix=".unvanquished" entities="quake3" entityclass="quake3" archivetypes="dpk" modeltypes="md5mesh md3 ase lwo obj 3ds picoterrain" maptypes="mapq3" brushtypes="quake3" patchtypes="quake3" shaders="quake3" shaderpath="scripts">
+<game index="1" name="Unvanquished" basegamename="Unvanquished" unknowngamename="Custom Unvanquished modification" basegame="pkg" type="quake3" q3map2_type="unvanquished" enginepath_linux="/usr/lib/unvanquished" engine_linux="daemon" enginepath_macos="/Applications/Unvanquished" engine_macos="Unvanquished.app" enginepath_win32="C:/Program Files/Unvanquished" engine_win32="daemon.exe" entities="quake3" entityclass="quake3" archivetypes="dpk" modeltypes="md5mesh md3 ase lwo obj 3ds picoterrain" maptypes="mapq3" brushtypes="quake3" patchtypes="quake3" shaders="quake3" shaderpath="scripts">
 	<mapFormat>
 		<infoFileExtension value=".darkradiant"/>
 		<version value="2"/>
