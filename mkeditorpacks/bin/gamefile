@@ -121,7 +121,10 @@ def print_file(yamlfile, editor):
                     l1 = l0[sys]
 
                     if "dir" in l1.keys():
-                        attrib["enginepath_" + sysname] = l1["dir"]
+                        if editor in ["netradiant"]:
+                            attrib["enginepath_" + sysname] = l1["dir"]
+                        else:
+                            attrib["enginepath_" + sysname] = l1["legacy_dir"]
 
                     if "name" in l1.keys():
                         attrib["engine_" + sysname] = l1["name"]
@@ -133,7 +136,7 @@ def print_file(yamlfile, editor):
         if "home" in game.keys():
             l0 = game["home"]
             if "legacy" in l0.keys():
-                attrib["prefix"] = l0["legacy"]
+                attrib["prefix"] = l0["legacy_dir"]
 
         if "entity" in ent.keys():
             l0 = ent["entity"]
