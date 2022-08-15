@@ -8,7 +8,7 @@ game:
 engine:
   linux:
     legacy_dir: "/usr/lib/unvanquished"
-    dir: "${XDG_DATA_DIR}/unvanquished/base"
+    dir: "${XDG_DATA_HOME}/unvanquished/base"
     name: "daemon"
   macos:
     legacy_dir: "/Applications/Unvanquished"
