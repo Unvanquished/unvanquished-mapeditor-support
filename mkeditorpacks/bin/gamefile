@@ -53,7 +53,7 @@ supported["darkradiant"]["model"] = ["md5mesh", "md3", "ase", "lwo", "obj", "3ds
 supported["trenchbroom"] = {}
 supported["trenchbroom"]["vfs"] = ["pk3", "pk4", "dpk"]
 supported["trenchbroom"]["texture"] = []
-supported["trenchbroom"]["model"] = ["md3"]
+supported["trenchbroom"]["model"] = ["md3", "ase"]
 
 
 # load yaml data as ordered dict so generated file content keep the same order after each generation (reduces diff noise)
@@ -388,7 +388,7 @@ def print_file(yamlfile, editor):
     if editor in [ "trenchbroom" ]:
         import json
         json_dict = OrderedDict()
-        json_dict["version"] = 2
+        json_dict["version"] = 3
         json_dict["name"] = attrib["name"]
 
         # TODO: check if exists
@@ -399,16 +399,15 @@ def print_file(yamlfile, editor):
             json_dict["fileformats"] = []
 
             format_dict=OrderedDict()
-            format_dict["format"] = "Quake3"
-            legacy_format_dict=OrderedDict()
-            legacy_format_dict["format"] = "Quake3 (legacy)"
+            # Brush primitives are not yet implemented.
+            # format_dict["format"] = "Quake3"
+            format_dict["format"] = "Quake3 (legacy)"
 
             json_dict["fileformats"].append(format_dict)
-            json_dict["fileformats"].append(legacy_format_dict)
 
         json_dict["filesystem"] = OrderedDict()
 
-        json_dict["filesystem"]["search_path"] =  attrib["basegame"]
+        json_dict["filesystem"]["searchpath"] =  attrib["basegame"]
 
         for archive_format in archive_list:
         # FIXME: It picks the last one at this time
@@ -429,11 +428,11 @@ def print_file(yamlfile, editor):
         if shader_dict["type"][0] == "quake3":
             json_dict["textures"]["format"] = OrderedDict()
             json_dict["textures"]["format"]["extensions"] = [ "" ]
-            json_dict["textures"]["format"]["format"] = [ "q3shader" ]
+            json_dict["textures"]["format"]["format"] = "q3shader"
             json_dict["textures"]["attribute"] = "_tb_textures"
 
         json_dict["entities"] = OrderedDict()
-        entities_file_name = attrib["basegamename"] + os.path.extsep + "def"
+        entities_file_name = [ "entities.ent" ]
         json_dict["entities"]["definitions"] = entities_file_name
 
         # TODO: does it make sense to customize it?

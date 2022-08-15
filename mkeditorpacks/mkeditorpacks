@@ -141,7 +141,7 @@ def build(editor_name):
         "gtkradiant": "q3def",
         "jackhammer": "fgd",
         "netradiant": "ent",
-        "trenchbroom": "q3def",
+        "trenchbroom": "ent",
     }
 
     def_basename = {
@@ -149,8 +149,7 @@ def build(editor_name):
         "gtkradiant": "entities",
         "jackhammer": codename,
         "netradiant": "entities",
-        # TODO: what if white spaces?
-        "trenchbroom": gamename,
+        "trenchbroom": "entities",
     }
 
     def_ext = {
@@ -158,7 +157,7 @@ def build(editor_name):
         "gtkradiant": "def",
         "jackhammer": "fgd",
         "netradiant": "ent",
-        "trenchbroom": "def",
+        "trenchbroom": "ent",
     }
 
     if entities == "q3def":
