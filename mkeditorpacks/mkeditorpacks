@@ -136,33 +136,20 @@ def build(editor_name):
 
     build_dir = os.path.join(BUILD_DIR, editor_name)
 
-    def_format = {
-        "darkradiant": "d3def",
-        "gtkradiant": "q3def",
-        "jackhammer": "fgd",
-        "netradiant": "ent",
-        "trenchbroom": "ent",
+    def_format_dict = {
+        # tool:        [ format,  basename,   extension ]
+        "darkradiant": [ "d3def", "entities", "def" ],
+        "gtkradiant":  [ "q3def", "entities", "def" ],
+        "jackhammer":  [ "fgd",   codename,   "fgd" ],
+        "netradiant":  [ "ent",   "entities", "ent" ],
+        "trenchbroom": [ "ent",   "entities", "ent" ],
     }
 
-    def_basename = {
-        "darkradiant": "entities",
-        "gtkradiant": "entities",
-        "jackhammer": codename,
-        "netradiant": "entities",
-        "trenchbroom": "entities",
-    }
-
-    def_ext = {
-        "darkradiant": "def",
-        "gtkradiant": "def",
-        "jackhammer": "fgd",
-        "netradiant": "ent",
-        "trenchbroom": "ent",
-    }
-
+    # If the entities description is not in YAML format,
+    # but is a q3def file, use a q3def file for NetRadiant.
     if entities == "q3def":
-        # def_format["netradiant"] = "q3def" # unused
-        def_ext["netradiant"] = "def"
+        # def_format_dict["netradiant"][0] = "q3def" # unused
+        def_format_dict["netradiant"][2] = "def"
 
     if editor_name == "darkradiant":
         game_dir = codename + ".game"
@@ -212,11 +199,10 @@ def build(editor_name):
         os.makedirs(xlink_dir, exist_ok=True)
         shutil.copyfile(os.path.join(SRC_DIR, "xlink", "game.xlink"), os.path.join(xlink_dir, "game.xlink"))
 
-    if editor_name in def_format.keys():
+    if editor_name in def_format_dict.keys():
         os.makedirs(entities_dir, exist_ok=True)
-        entities_path = os.path.join(entities_dir, def_basename[editor_name] + os.path.extsep + def_ext[editor_name])
+        entities_path = os.path.join(entities_dir, def_format_dict[editor_name][1] + os.path.extsep + def_format_dict[editor_name][2])
 
-        # translation to d3def not yet supported
         if entities == "yaml":
             command = [
                 os.path.join(bin_dir, "bin", "entities"),
@@ -228,7 +214,7 @@ def build(editor_name):
                 "--header",
                 os.path.join(SRC_DIR, "entities", "header.txt"),
                 os.path.join(SRC_DIR, "entities", "entities.yaml"),
-                def_format[editor_name],
+                def_format_dict[editor_name][0],
             ]
             result = subprocess.run(command, stdout=subprocess.PIPE)
             f = open(entities_path, "wb")
@@ -310,7 +296,6 @@ def build(editor_name):
 
         if os.path.isfile(icon_file):
             shutil.copyfile(icon_file, os.path.join(build_dir, game_dir, file_name))
-
 
 supported_editor_keyword_list = [ "all"] + supported_editor_list
 editor_help_string = ", ".join(supported_editor_keyword_list)
