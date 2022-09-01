@@ -490,7 +490,7 @@ class EntPrinter:
             if k == '-' or not v:
                 continue
 
-            v = self.sanitize( v )
+            v = self.sanitize(v)
 
             # FIXME: key can be different than name
             # according to radiant/eclass_xml.cpp:
@@ -543,13 +543,14 @@ class EntPrinter:
 
             proptype = self.customtype(_type, _bool)
 
-            value = self.sanitize( v.rstrip() )
-            info = self.sanitize( info )
+            value = self.sanitize(v.rstrip())
+            info = self.sanitize(info)
 
             default = ''
             if k in propdefaults:
-                default_value = outvalue(propdefaults[k], _type)
-                default=' value="{}"'.format(default_value)
+                defaultvalue = outvalue(propdefaults[k], _type)
+                defaultvalue = self.sanitize(defaultvalue)
+                default=' value="{}"'.format(defaultvalue)
 
             print('<{} key="{}" name="{}"{}>{}{}</{}>'.format(proptype, k, k, default, value, info, proptype))
 
