@@ -51,8 +51,11 @@
 
 @SolidClass = worldspawn : "Only used for the world.\n\nEntity supports [terrain] properties. They're not so useful here, but you can refer to func_group for descriptions."
 [
+	BPBudgetPerMiner(string) : Bpbudgetperminer :  : "Extra build points provided by Leeches and Drills."
+	BPInitialBudget(string) : Bpinitialbudget :  : "Initial build point budget for all teams.  OVERRIDDEN BY BPInitialBudget{Aliens|Humans}."
+	BPInitialBudgetAliens(string) : Bpinitialbudgetaliens :  : "Initial build point budget for the Alien team.  This takes precedence over BPInitialBudget for this team."
+	BPInitialBudgetHumans(string) : Bpinitialbudgethumans :  : "Initial build point budget for the Human team.  This takes precedence over BPInitialBudget for this team."
 	_q3map2_cmdline(string) : _q3map2_cmdline :  : ""
-	alienBuildPoints(string) : Alienbuildpoints :  : "The maximum amount of sentience available to the overmind."
 	colorGrade(string) : Colorgrade :  : "or gradingTexture - Path of color grading effect"
 	deluxeMapping(string) : Deluxemapping :  : "bool"
 	disabledBuildables(string) : Disabledbuildables :  : "A comma delimited list of buildables to disable for this map. (eggpod,overmind,barricade,acid_tube,trapper,booster,hive,leech,telenode,mgturret, tesla,arm,medistat,drill,reactor,repeater)"
@@ -63,8 +66,6 @@
 	fogDensity(string) : Fogdensity :  : ""
 	gravity(string) : Gravity : 800 : "Gravity of level."
 	hdrRGBE(string) : Hdrrgbe :  : "bool"
-	humanBuildPoints(string) : Humanbuildpoints :  : "The maximum amount of power the humans can use."
-	humanRepeaterBuildPoints(string) : Humanrepeaterbuildpoints :  : "maximum amount of power the humans can use around each repeater"
 	mapOverBrightBits(string) : Mapoverbrightbits :  : ""
 	message(string) : Message :  : "Shown above loading bar."
 	music(sound) : Music :  : "Path/name of looping .wav or .ogg file used for level's music."

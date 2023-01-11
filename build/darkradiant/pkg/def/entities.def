@@ -66,8 +66,11 @@ entityDef worldspawn
 	"editor_maxs" "?"
 
 	// Property description
+	"editor_var BPBudgetPerMiner" "Extra build points provided by Leeches and Drills."
+	"editor_var BPInitialBudget" "Initial build point budget for all teams.  OVERRIDDEN BY BPInitialBudget{Aliens|Humans}."
+	"editor_var BPInitialBudgetAliens" "Initial build point budget for the Alien team.  This takes precedence over BPInitialBudget for this team."
+	"editor_var BPInitialBudgetHumans" "Initial build point budget for the Human team.  This takes precedence over BPInitialBudget for this team."
 	"editor_var _q3map2_cmdline" ""
-	"editor_var alienBuildPoints" "The maximum amount of sentience available to the overmind."
 	"editor_var colorGrade" "or gradingTexture - Path of color grading effect (string (texture), eg: gfx/cgrading/red-only)"
 	"editor_var deluxeMapping" "bool"
 	"editor_var disabledBuildables" "A comma delimited list of buildables to disable for this map. (eggpod,overmind,barricade,acid_tube,trapper,booster,hive,leech,telenode,mgturret, tesla,arm,medistat,drill,reactor,repeater) (string)"
@@ -78,8 +81,6 @@ entityDef worldspawn
 	"editor_float fogDensity" " (float)"
 	"editor_float gravity" "Gravity of level. (float, def: 800)"
 	"editor_var hdrRGBE" "bool"
-	"editor_var humanBuildPoints" "The maximum amount of power the humans can use."
-	"editor_var humanRepeaterBuildPoints" "maximum amount of power the humans can use around each repeater"
 	"editor_var mapOverBrightBits" ""
 	"editor_var message" "Shown above loading bar. (string)"
 	"editor_var music" "Path/name of looping .wav or .ogg file used for level's music. (string (sound), eg: music/sonic5.wav)"
@@ -101,8 +102,11 @@ entityDef worldspawn
 	"editor_var gridsize" "[q3map] Granularity of the lightgrid created by q3map. Values for every axis. Minimum value is 8. (vec3_float, eg: 64 64 128)"
 
 	// Property default value
+	"BPBudgetPerMiner" ""
+	"BPInitialBudget" ""
+	"BPInitialBudgetAliens" ""
+	"BPInitialBudgetHumans" ""
 	"_q3map2_cmdline" ""
-	"alienBuildPoints" ""
 	"colorGrade" ""
 	"deluxeMapping" ""
 	"disabledBuildables" ""
@@ -113,8 +117,6 @@ entityDef worldspawn
 	"fogDensity" ""
 	"gravity" "800"
 	"hdrRGBE" ""
-	"humanBuildPoints" ""
-	"humanRepeaterBuildPoints" ""
 	"mapOverBrightBits" ""
 	"message" ""
 	"music" ""

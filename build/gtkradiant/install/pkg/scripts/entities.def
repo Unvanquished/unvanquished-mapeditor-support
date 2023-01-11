@@ -51,8 +51,11 @@
 
 /*QUAKED worldspawn (0 0 0)
 ------ PROPERTIES ------
+BPBudgetPerMiner: Extra build points provided by Leeches and Drills.
+BPInitialBudget: Initial build point budget for all teams.  OVERRIDDEN BY BPInitialBudget{Aliens|Humans}.
+BPInitialBudgetAliens: Initial build point budget for the Alien team.  This takes precedence over BPInitialBudget for this team.
+BPInitialBudgetHumans: Initial build point budget for the Human team.  This takes precedence over BPInitialBudget for this team.
 _q3map2_cmdline: 
-alienBuildPoints: The maximum amount of sentience available to the overmind.
 colorGrade: or gradingTexture - Path of color grading effect (string (texture), eg: gfx/cgrading/red-only)
 deluxeMapping: bool
 disabledBuildables: A comma delimited list of buildables to disable for this map. (eggpod,overmind,barricade,acid_tube,trapper,booster,hive,leech,telenode,mgturret, tesla,arm,medistat,drill,reactor,repeater) (string)
@@ -63,8 +66,6 @@ fogColor: RGB (vec3_float (color))
 fogDensity:  (float)
 gravity: Gravity of level. (float, def: 800)
 hdrRGBE: bool
-humanBuildPoints: The maximum amount of power the humans can use.
-humanRepeaterBuildPoints: maximum amount of power the humans can use around each repeater
 mapOverBrightBits: 
 message: Shown above loading bar. (string)
 music: Path/name of looping .wav or .ogg file used for level's music. (string (sound), eg: music/sonic5.wav)
