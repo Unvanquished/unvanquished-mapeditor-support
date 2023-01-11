@@ -18,9 +18,16 @@
     # testReverb command works on these values
     # bug: causes game to crash CM_ClipHandleToModel: bad handle -1
     # idk how does it work on yocto.. did absolutely same values and got error
-    humanBuildPoints: The maximum amount of power the humans can use. # bug: no effect
-    humanRepeaterBuildPoints: maximum amount of power the humans can use around each repeater # bug: no effect
-    alienBuildPoints: The maximum amount of sentience available to the overmind. # bug: no effect
+    BPInitialBudget: >
+      Initial build point budget for all teams. 
+      OVERRIDDEN BY BPInitialBudget{Aliens|Humans}.
+    BPInitialBudgetHumans: >
+      Initial build point budget for the Human team. 
+      This takes precedence over BPInitialBudget for this team.
+    BPInitialBudgetAliens: >
+      Initial build point budget for the Alien team. 
+      This takes precedence over BPInitialBudget for this team.
+    BPBudgetPerMiner: Extra build points provided by Leeches and Drills.
     fogColor: RGB # bug: no effect
     fogDensity: '' # bug: no effect
     remapshader*: > # bug: R_RemapShader doesn't work
