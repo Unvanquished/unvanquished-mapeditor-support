@@ -46,9 +46,6 @@
     - cmd: q3map2
       opts:
         minimap: null
-    - cmd: daemonmap
-      opts:
-        nav: null
 
 - name: "-"
 
@@ -199,12 +196,6 @@
     - cmd: q3map2
       opts:
         minimap: null
-
-- name: "Navmeshes: release"
-  stages:
-    - cmd: daemonmap
-      opts:
-        nav: null
 
 - name : "-"
 
