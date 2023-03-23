@@ -391,7 +391,7 @@
     health: 100
   desc: >
     Destructable object. You can destroy this object in game. When destructed deals splash damage
-    to everyone near it. Does not cause splash damage to builables.
+    to everyone near it. Does not cause splash damage to buildables.
 - name: func_door
 # bug: no "noise" key
   extend: [chain_autonom,brush,indexmap2,mover]

@@ -342,7 +342,7 @@ entityDef func_button
 entityDef func_destructable
 {
 	// Description
-	"editor_usage" "Destructable object. You can destroy this object in game. When destructed deals splash damage to everyone near it. Does not cause splash damage to builables.\nFor \"_celshader\" read http://q3map2.robotrenegade.com/docs/shader_manual/cel-shading.html\nEntity supports [terrain] properties. They're not so useful here, but you can refer to func_group for descriptions."
+	"editor_usage" "Destructable object. You can destroy this object in game. When destructed deals splash damage to everyone near it. Does not cause splash damage to buildables.\nFor \"_celshader\" read http://q3map2.robotrenegade.com/docs/shader_manual/cel-shading.html\nEntity supports [terrain] properties. They're not so useful here, but you can refer to func_group for descriptions."
 
 	// Editor color
 	"editor_color" "007fcc"

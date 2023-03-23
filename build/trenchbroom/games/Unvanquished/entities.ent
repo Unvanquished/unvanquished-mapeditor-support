@@ -205,7 +205,7 @@ Entity supports [terrain] properties. They&apos;re not so useful here, but you c
 
 <group name="func_destructable" color="0 0.498 0.8">
 ------ DESCRIPTION ------
-Destructable object. You can destroy this object in game. When destructed deals splash damage to everyone near it. Does not cause splash damage to builables.
+Destructable object. You can destroy this object in game. When destructed deals splash damage to everyone near it. Does not cause splash damage to buildables.
 For &quot;_celshader&quot; read http://q3map2.robotrenegade.com/docs/shader_manual/cel-shading.html
 Entity supports [terrain] properties. They&apos;re not so useful here, but you can refer to func_group for descriptions.
 ------ FLAGS ------

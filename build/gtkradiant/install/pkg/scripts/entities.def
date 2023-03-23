@@ -213,7 +213,7 @@ _cs: [q3map] or "_castShadows". Group number entity cast shadow to. Negative val
 _lightmapscale: [q3map] Value scaling the resolution of lightmaps. Lesser value gives bigger resolution. (float, def: 1)
 _rs: [q3map] or "_receiveShadows". Group number entity receive shadow from. Negative value uses same group but disables world. 0 disables shadow receiving. (int)
 ------ DESCRIPTION ------
-Destructable object. You can destroy this object in game. When destructed deals splash damage to everyone near it. Does not cause splash damage to builables.
+Destructable object. You can destroy this object in game. When destructed deals splash damage to everyone near it. Does not cause splash damage to buildables.
 For "_celshader" read http://q3map2.robotrenegade.com/docs/shader_manual/cel-shading.html
 Entity supports [terrain] properties. They're not so useful here, but you can refer to func_group for descriptions.
 */

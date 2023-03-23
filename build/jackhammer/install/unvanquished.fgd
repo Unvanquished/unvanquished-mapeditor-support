@@ -187,7 +187,7 @@
 	_rs(integer) : _rs :  : "[q3map] or '_receiveShadows'. Group number entity receive shadow from. Negative value uses same group but disables world. 0 disables shadow receiving."
 ]
 
-@SolidClass = func_destructable : "Destructable object. You can destroy this object in game. When destructed deals splash damage to everyone near it. Does not cause splash damage to builables.\n\nFor '_celshader' read http://q3map2.robotrenegade.com/docs/shader_manual/cel-shading.html\n\nEntity supports [terrain] properties. They're not so useful here, but you can refer to func_group for descriptions."
+@SolidClass = func_destructable : "Destructable object. You can destroy this object in game. When destructed deals splash damage to everyone near it. Does not cause splash damage to buildables.\n\nFor '_celshader' read http://q3map2.robotrenegade.com/docs/shader_manual/cel-shading.html\n\nEntity supports [terrain] properties. They're not so useful here, but you can refer to func_group for descriptions."
 [
 	damage(integer) : Damage : 0 : "Splash damage caused when destroyed."
 	health(integer) : Health : 100 : "Amount of damage needed to destroy this."
