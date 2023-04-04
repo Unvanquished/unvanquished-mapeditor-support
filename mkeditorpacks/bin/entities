@@ -494,7 +494,7 @@ class EntPrinter:
                 flags.append('<flag key="{}" name="{}" bit="{}">{}</flag>'.format(k, k, bit, v))
 
         if flags:
-            print(heading.format('FLAGS'))
+            print(heading.format('SPAWNFLAGS'))
             for v in flags:
                 print(v)
 

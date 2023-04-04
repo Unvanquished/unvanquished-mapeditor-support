@@ -97,7 +97,7 @@ Entity supports [terrain] properties. They&apos;re not so useful here, but you c
 Non-displayed point light source.
 The -pointscale and -scale arguments to Q3Map2 affect the brightness of these lights. The -skyscale argument affects brightness of entity sun lights.
 Properties for dynamic realtime lights marked as [dynamic]. Any property marked as [projected] if set makes dynamic light projected. Projected light requires most of its properties set, such as &quot;light_target&quot;, &quot;light_up&quot;, &quot;light_right&quot;.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="LINEAR" name="LINEAR" bit="0">Use a linear falloff. Default is inverse distance squared (more realistic).</flag>
 <flag key="ANGLE" name="ANGLE" bit="1">Force angle attenuation. Useless, &quot;_anglescale&quot; implies this flag on.</flag>
 <flag key="DARKLIGHT" name="DARKLIGHT" bit="2">Unused.</flag>
@@ -136,7 +136,7 @@ Properties for dynamic realtime lights marked as [dynamic]. Any property marked 
 ------ DESCRIPTION ------
 Non-displayed point light source. Unlike usual light affects only entities (lightgrid).
 The -pointscale and -scale arguments to Q3Map2 affect the brightness of these lights. The -skyscale argument affects brightness of entity sun lights.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="LINEAR" name="LINEAR" bit="0">Use a linear falloff. Default is inverse distance squared (more realistic).</flag>
 <flag key="ANGLE" name="ANGLE" bit="1">Force angle attenuation. Useless, &quot;_anglescale&quot; implies this flag on.</flag>
 ------ PROPERTIES ------
@@ -158,7 +158,7 @@ The -pointscale and -scale arguments to Q3Map2 affect the brightness of these li
 Solid entity that oscillates back and forth in a linear motion. Entity bobs on the Z axis (up-down) by default.
 For &quot;_celshader&quot; read http://q3map2.robotrenegade.com/docs/shader_manual/cel-shading.html
 Entity supports [terrain] properties. They&apos;re not so useful here, but you can refer to func_group for descriptions.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="X_AXIS" name="X_AXIS" bit="0">Entity will bob along the X axis.</flag>
 <flag key="Y_AXIS" name="Y_AXIS" bit="1">Entity will bob along the Y axis.</flag>
 ------ PROPERTIES ------
@@ -184,7 +184,7 @@ Entity supports [terrain] properties. They&apos;re not so useful here, but you c
 When a button is touched by a player, it moves in the direction set by the &quot;angle&quot; key, triggers all its targets, stays pressed by an amount of time set by the &quot;wait&quot; key, then returns to it&apos;s original position where it can be operated again.
 For &quot;_celshader&quot; read http://q3map2.robotrenegade.com/docs/shader_manual/cel-shading.html
 Entity supports [terrain] properties. They&apos;re not so useful here, but you can refer to func_group for descriptions.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="ACTIVATE" name="ACTIVATE" bit="7">The button may be operated with the &quot;use&quot; key (+activate).</flag>
 ------ PROPERTIES ------
 <target key="target" name="target">[required] Must have entity to fire at. (string (target))</target>
@@ -210,7 +210,7 @@ Entity supports [terrain] properties. They&apos;re not so useful here, but you c
 Destructable object. You can destroy this object in game. When destructed deals splash damage to everyone near it. Does not cause splash damage to buildables.
 For &quot;_celshader&quot; read http://q3map2.robotrenegade.com/docs/shader_manual/cel-shading.html
 Entity supports [terrain] properties. They&apos;re not so useful here, but you can refer to func_group for descriptions.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="SPAWN_DISABLED" name="SPAWN_DISABLED" bit="0">Hidden by default. Can be shown via activation as target.</flag>
 ------ PROPERTIES ------
 <integer key="damage" name="damage" value="0">Splash damage caused when destroyed. (int, def: 0)</integer>
@@ -229,7 +229,7 @@ Entity supports [terrain] properties. They&apos;re not so useful here, but you c
 Normal sliding door entity. By default, the door will activate when player walks close (&quot;range&quot;) to it or when damage is inflicted (&quot;health&quot;) to it.
 For &quot;_celshader&quot; read http://q3map2.robotrenegade.com/docs/shader_manual/cel-shading.html
 Entity supports [terrain] properties. They&apos;re not so useful here, but you can refer to func_group for descriptions.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="START_OPEN" name="START_OPEN" bit="0">The door will spawn in the open state and operate in reverse.</flag>
 <flag key="CRUSHER" name="CRUSHER" bit="2">Door will not reverse direction when blocked and will keep damaging player or building until it dies or gets out of the way.</flag>
 <flag key="ACTIVATE" name="ACTIVATE" bit="7">The door may be operated with the &quot;use&quot; key (+activate).</flag>
@@ -261,7 +261,7 @@ Entity supports [terrain] properties. They&apos;re not so useful here, but you c
 ------ DESCRIPTION ------
 A model based door entity. By default, the door will activate when player walks close to it. The opening and closing of the door is provided by an animation in the model itself.
 Every func_door_model needs its model to be positioned, scaled and orientated using the modelOrigin, scale and angle/angles keys repsectively.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="ACTIVATE" name="ACTIVATE" bit="7">The door may be operated with the &quot;use&quot; key (+activate).</flag>
 ------ PROPERTIES ------
 <model key="model2" name="model2">[required] The door model. (string (model), eg: models/mapobjects/pipe/pipe02.md3)</model>
@@ -292,7 +292,7 @@ Rotating door will not cause damage to player when blocked.
 When activated turns around the rotation axis (&quot;origin&quot;) to angle (&quot;rotatorAngle&quot;) with &quot;speed&quot;, then stops. After &quot;wait&quot; time door starts turning back.
 For &quot;_celshader&quot; read http://q3map2.robotrenegade.com/docs/shader_manual/cel-shading.html
 Entity supports [terrain] properties. They&apos;re not so useful here, but you can refer to func_group for descriptions.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="START_OPEN" name="START_OPEN" bit="0">the door will spawn in the open state and operate in reverse.</flag>
 <flag key="CRUSHER" name="CRUSHER" bit="1">Door will not reverse direction when blocked and will keep damaging player or building until it dies or gets out of the way.</flag>
 <flag key="REVERSE" name="REVERSE" bit="3">the door will open the other way.</flag>
@@ -388,7 +388,7 @@ Rising platform the player can ride to reach higher places. Plats must always be
 The plat will stay in the raised position until the player steps off.
 For &quot;_celshader&quot; read http://q3map2.robotrenegade.com/docs/shader_manual/cel-shading.html
 Entity supports [terrain] properties. They&apos;re not so useful here, but you can refer to func_group for descriptions.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="DONT_WAIT" name="DONT_WAIT" bit="0">The platform will not wait for a client to leave before returning to its original position.</flag>
 <flag key="CRUSHER" name="CRUSHER" bit="2">Door will not reverse direction when blocked and will keep damaging player or building until it dies or gets out of the way.</flag>
 ------ PROPERTIES ------
@@ -418,7 +418,7 @@ Entity supports [terrain] properties. They&apos;re not so useful here, but you c
 Solid entity that rotates continuously. Rotates on the Z axis by default.
 For &quot;_celshader&quot; read http://q3map2.robotrenegade.com/docs/shader_manual/cel-shading.html
 Entity supports [terrain] properties. They&apos;re not so useful here, but you can refer to func_group for descriptions.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="X_AXIS" name="X_AXIS" bit="2">Entity will rotate around the X axis.</flag>
 <flag key="Y_AXIS" name="Y_AXIS" bit="3">Entity will rotate around the Y axis.</flag>
 ------ PROPERTIES ------
@@ -442,7 +442,7 @@ Entity supports [terrain] properties. They&apos;re not so useful here, but you c
 Toggleable wall.
 For &quot;_celshader&quot; read http://q3map2.robotrenegade.com/docs/shader_manual/cel-shading.html
 Entity supports [terrain] properties. They&apos;re not so useful here, but you can refer to func_group for descriptions.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="SPAWN_ENABLED" name="SPAWN_ENABLED" bit="0">By default brush is present in level.</flag>
 <flag key="DONT_KILL" name="DONT_KILL" bit="1">Disable killing on appearing.</flag>
 ------ PROPERTIES ------
@@ -485,7 +485,7 @@ When BLOCK_STOPS is set, trains cannot be stopped just by getting in their way, 
 You must set proper &quot;origin&quot; coordinates. It used as base point for train brush. That base point moves over path_corners, i.e. you can shift the train off the path.
 For &quot;_celshader&quot; read http://q3map2.robotrenegade.com/docs/shader_manual/cel-shading.html
 Entity supports [terrain] properties. They&apos;re not so useful here, but you can refer to func_group for descriptions.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="START_OFF" name="START_OFF" bit="0">The train will spawn in the off state</flag>
 <flag key="BLOCK_STOPS" name="BLOCK_STOPS" bit="1">Train simply stops if blocked, instead of killing.</flag>
 ------ PROPERTIES ------
@@ -708,7 +708,7 @@ DEPRECATED! DEPRECATED! DEPRECATED!
 ------ DESCRIPTION ------
 This will print a message on the center of the screen when triggered.
 By default, all the clients will see the message.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="HUMAN_TEAM" name="HUMAN_TEAM" bit="0">Only the human team players will see the message.</flag>
 <flag key="ALIEN_TEAM" name="ALIEN_TEAM" bit="1">Only the alien team players will see the message.</flag>
 <flag key="PRIVATE" name="PRIVATE" bit="2">Only the player that activates the target will see the message.</flag>
@@ -871,7 +871,7 @@ The alien leech.
 <point name="ctrl_limited" color="0 0.702 0.702" box="-8 -8 -8 8 8 8">
 ------ DESCRIPTION ------
 Can be triggered limited amount of times. Every activation fires targets.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="SPAWN_DISABLED" name="SPAWN_DISABLED" bit="0">Disabled by default.</flag>
 ------ PROPERTIES ------
 <target key="target" name="target">[required] Must have entity to fire at. (string (target))</target>
@@ -883,7 +883,7 @@ Can be triggered limited amount of times. Every activation fires targets.
 <point name="ctrl_relay" color="0 0.702 0.702" box="-8 -8 -8 8 8 8">
 ------ DESCRIPTION ------
 When activated waits amount of time then activates its own targets.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="SPAWN_DISABLED" name="SPAWN_DISABLED" bit="0">Disabled by default.</flag>
 ------ PROPERTIES ------
 <target key="onAct" name="onAct">[required] Name of the target to activate. (string (target))</target>
@@ -897,7 +897,7 @@ DEPRECATED! DEPRECATED! DEPRECATED!
 RECOMMENDED TO USE: ctrl_relay
 ------ DESCRIPTION ------
 When activated waits amount of time then activates its own targets.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="ONLY_HUMANS" name="ONLY_HUMANS" bit="0">Can be activated only by a human.</flag>
 <flag key="ONLY_ALIENS" name="ONLY_ALIENS" bit="1">Can be activated only by an alien.</flag>
 <flag key="RANDOM" name="RANDOM" bit="2">Ignore delay, activate random target.</flag>
@@ -913,7 +913,7 @@ DEPRECATED! DEPRECATED! DEPRECATED!
 RECOMMENDED TO USE: ctrl_relay
 ------ DESCRIPTION ------
 When activated waits amount of time then activates its own targets.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="ONLY_HUMANS" name="ONLY_HUMANS" bit="0">Can be activated only by a human.</flag>
 <flag key="ONLY_ALIENS" name="ONLY_ALIENS" bit="1">Can be activated only by an alien.</flag>
 <flag key="RANDOM" name="RANDOM" bit="2">Ignore delay, activate random target.</flag>
@@ -927,7 +927,7 @@ When activated waits amount of time then activates its own targets.
 <group name="env_afx_ammo" color="0.357 0.486 0.176">
 ------ DESCRIPTION ------
 Gives ammo to the player who activates it (e.g. via button).
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="EVERY_SECOND" name="EVERY_SECOND" bit="0">Act every second instead of every frame.</flag>
 <flag key="DISABLE_ENERGO" name="DISABLE_ENERGO" bit="1">Disable recharging energetic weapons.</flag>
 <flag key="DISABLE_NON_ENERGO" name="DISABLE_NON_ENERGO" bit="2">Disable recharging non-energetic weapons.</flag>
@@ -941,7 +941,7 @@ DEPRECATED! DEPRECATED! DEPRECATED!
 RECOMMENDED TO USE: env_afx_ammo
 ------ DESCRIPTION ------
 Gives ammo to the player who activates it (e.g. via button).
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="EVERY_SECOND" name="EVERY_SECOND" bit="0">Act every second instead of every frame.</flag>
 <flag key="DISABLE_ENERGO" name="DISABLE_ENERGO" bit="1">Disable recharging energetic weapons.</flag>
 <flag key="DISABLE_NON_ENERGO" name="DISABLE_NON_ENERGO" bit="2">Disable recharging non-energetic weapons.</flag>
@@ -971,7 +971,7 @@ Area with different gravity within.
 <group name="env_afx_heal" color="0.176 0.486 0.314">
 ------ DESCRIPTION ------
 Heals players touching entity.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="SPAWN_DISABLED" name="SPAWN_DISABLED" bit="0">Disabled by default.</flag>
 <flag key="EVERY_SECOND" name="EVERY_SECOND" bit="1">Heal every second instead of every frame.</flag>
 ------ PROPERTIES ------
@@ -984,7 +984,7 @@ DEPRECATED! DEPRECATED! DEPRECATED!
 RECOMMENDED TO USE: env_afx_heal
 ------ DESCRIPTION ------
 Heals players touching entity.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="SPAWN_DISABLED" name="SPAWN_DISABLED" bit="0">Disabled by default.</flag>
 <flag key="EVERY_SECOND" name="EVERY_SECOND" bit="1">Heal every second instead of every frame.</flag>
 ------ PROPERTIES ------
@@ -995,7 +995,7 @@ Heals players touching entity.
 <group name="env_afx_hurt" color="0.784 0.067 0.067">
 ------ DESCRIPTION ------
 Hurts players or buildings touching entity.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="SPAWN_DISABLED" name="SPAWN_DISABLED" bit="0">Disabled by default.</flag>
 <flag key="NO_SOUND" name="NO_SOUND" bit="2">No sound played.</flag>
 <flag key="NO_PROTECTION" name="NO_PROTECTION" bit="3">Player will be hurt regardless of protection (e.g. invulnerability power-up).</flag>
@@ -1010,7 +1010,7 @@ DEPRECATED! DEPRECATED! DEPRECATED!
 RECOMMENDED TO USE: env_afx_hurt
 ------ DESCRIPTION ------
 Hurts players or buildings touching entity.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="SPAWN_DISABLED" name="SPAWN_DISABLED" bit="0">Disabled by default.</flag>
 <flag key="NO_SOUND" name="NO_SOUND" bit="2">No sound played.</flag>
 <flag key="NO_PROTECTION" name="NO_PROTECTION" bit="3">Player will be hurt regardless of protection (e.g. invulnerability power-up).</flag>
@@ -1023,7 +1023,7 @@ Hurts players or buildings touching entity.
 <group name="env_afx_push" color="0.498 0.498 0.498">
 ------ DESCRIPTION ------
 This is used to create jump pads and launch ramps.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="SPAWN_DISABLED" name="SPAWN_DISABLED" bit="0">Disabled by default.</flag>
 ------ PROPERTIES ------
 <target key="target" name="target">Name of the aiming position entity to which the player will jump. This is the highest point of the jump. (string (target))</target>
@@ -1036,7 +1036,7 @@ DEPRECATED! DEPRECATED! DEPRECATED!
 RECOMMENDED TO USE: env_afx_push
 ------ DESCRIPTION ------
 This is used to create jump pads and launch ramps.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="SPAWN_DISABLED" name="SPAWN_DISABLED" bit="0">Disabled by default.</flag>
 ------ PROPERTIES ------
 <target key="target" name="target">Name of the aiming position entity to which the player will jump. This is the highest point of the jump. (string (target))</target>
@@ -1048,7 +1048,7 @@ This is used to create jump pads and launch ramps.
 ------ DESCRIPTION ------
 Teleports player touching entity.
 Set &quot;angles&quot; property of target to define player direction after teleportation.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="SPECTATORS_ONLY" name="SPECTATORS_ONLY" bit="0">Affect only spectators. Spectator teleporters are not normally placed in the editor, but are created automatically near doors to allow spectators to move through them.
 </flag>
 <flag key="SPAWN_DISABLED" name="SPAWN_DISABLED" bit="1">Teleport disabled by default.</flag>
@@ -1064,7 +1064,7 @@ RECOMMENDED TO USE: env_afx_teleport
 ------ DESCRIPTION ------
 Teleports player touching entity.
 Set &quot;angles&quot; property of target to define player direction after teleportation.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="SPECTATORS_ONLY" name="SPECTATORS_ONLY" bit="0">Affect only spectators. Spectator teleporters are not normally placed in the editor, but are created automatically near doors to allow spectators to move through them.
 </flag>
 <flag key="SPAWN_DISABLED" name="SPAWN_DISABLED" bit="1">Teleport disabled by default.</flag>
@@ -1175,7 +1175,7 @@ Gives score points to the player who activates it (e.g. via button).
 <point name="gfx_animated_model" color="1 0.498 0.247" box="-12 -12 -12 12 12 12">
 ------ DESCRIPTION ------
 Animated model entity. Not baked info level geometry. Can be walked through.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="TOGGLE_VISIBILITY" name="TOGGLE_VISIBILITY" bit="0">Toggle entity visibility instead of animation.</flag>
 <flag key="SPAWN_STOPPED" name="SPAWN_STOPPED" bit="1">Spawn with animation stopped.</flag>
 ------ PROPERTIES ------
@@ -1193,7 +1193,7 @@ DEPRECATED! DEPRECATED! DEPRECATED!
 RECOMMENDED TO USE: gfx_animated_model
 ------ DESCRIPTION ------
 Animated model entity. Not baked info level geometry. Can be walked through.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="TOGGLE_VISIBILITY" name="TOGGLE_VISIBILITY" bit="0">Toggle entity visibility instead of animation.</flag>
 <flag key="SPAWN_STOPPED" name="SPAWN_STOPPED" bit="1">Spawn with animation stopped.</flag>
 ------ PROPERTIES ------
@@ -1211,7 +1211,7 @@ DEPRECATED! DEPRECATED! DEPRECATED!
 ------ DESCRIPTION ------
 Static model baked into level geometry by q3map2. Can be walked through. Not animated, but you can choose one of the frames.
 For &quot;_celshader&quot; read http://q3map2.robotrenegade.com/docs/shader_manual/cel-shading.html
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="CLIPMODELS" name="CLIPMODELS" bit="1">Disallows walking through the model (makes it solid).</flag>
 <flag key="FORCEMETA" name="FORCEMETA" bit="2">Use lightmap lighting for the model.</flag>
 ------ PROPERTIES ------
@@ -1232,7 +1232,7 @@ For &quot;_celshader&quot; read http://q3map2.robotrenegade.com/docs/shader_manu
 <point name="gfx_light_flare" color="0.651 0.651 1" box="-8 -8 -8 8 8 8">
 ------ DESCRIPTION ------
 A light flare entity.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="SPAWN_DISABLED" name="SPAWN_DISABLED" bit="0">Disabled by default.</flag>
 ------ PROPERTIES ------
 <angle key="angle" name="angle">Short version of &quot;angles&quot;. (float (yaw))</angle>
@@ -1253,7 +1253,7 @@ DEPRECATED! DEPRECATED! DEPRECATED!
 RECOMMENDED TO USE: gfx_light_flare
 ------ DESCRIPTION ------
 A light flare entity.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="SPAWN_DISABLED" name="SPAWN_DISABLED" bit="0">Disabled by default.</flag>
 ------ PROPERTIES ------
 <angle key="angle" name="angle">Short version of &quot;angles&quot;. (float (yaw))</angle>
@@ -1272,7 +1272,7 @@ The third component is similar to the first except that it specifies the size of
 <point name="gfx_particle_system" color="1 0.498 0.247" box="-8 -8 -8 8 8 8">
 ------ DESCRIPTION ------
 Particle system entity.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="SPAWN_DISABLED" name="SPAWN_DISABLED" bit="0">Disabled by default.</flag>
 ------ PROPERTIES ------
 <angle key="angle" name="angle">Short version of &quot;angles&quot;. (float (yaw))</angle>
@@ -1288,7 +1288,7 @@ DEPRECATED! DEPRECATED! DEPRECATED!
 RECOMMENDED TO USE: gfx_particle_system
 ------ DESCRIPTION ------
 Particle system entity.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="SPAWN_DISABLED" name="SPAWN_DISABLED" bit="0">Disabled by default.</flag>
 ------ PROPERTIES ------
 <angle key="angle" name="angle">Short version of &quot;angles&quot;. (float (yaw))</angle>
@@ -1305,7 +1305,7 @@ Portal camera.
 This camera is used to project its view onto a portal surface in the level through the intermediary of a gfx_portal_surface entity. Use the &quot;angles&quot; key or target a pos_target entity to set the camera&apos;s pointing direction.
 Both the setting &quot;angles&quot; key or targeting a pos_target methods can be used to aim the camera. However, the pos_target method is simpler. In both cases, the &quot;roll&quot; key must be used to set the roll angle.
 By default camera is wiggling. Use spawnflags to make it rotate or stand still.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="FRAME25" name="FRAME25" bit="0">Slow rotation.</flag>
 <flag key="FRAME75" name="FRAME75" bit="1">Fast rotation.</flag>
 <flag key="NO_ROTATION" name="NO_ROTATION" bit="2">Disable camera wiggling.</flag>
@@ -1326,7 +1326,7 @@ Portal camera.
 This camera is used to project its view onto a portal surface in the level through the intermediary of a gfx_portal_surface entity. Use the &quot;angles&quot; key or target a pos_target entity to set the camera&apos;s pointing direction.
 Both the setting &quot;angles&quot; key or targeting a pos_target methods can be used to aim the camera. However, the pos_target method is simpler. In both cases, the &quot;roll&quot; key must be used to set the roll angle.
 By default camera is wiggling. Use spawnflags to make it rotate or stand still.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="FRAME25" name="FRAME25" bit="0">Slow rotation.</flag>
 <flag key="FRAME75" name="FRAME75" bit="1">Fast rotation.</flag>
 <flag key="NO_ROTATION" name="NO_ROTATION" bit="2">Disable camera wiggling.</flag>
@@ -1376,7 +1376,7 @@ Entity remaps shader when activated.
 Triggered by a buildable or subset of buildables.
 If condition is satisfied fires targets continuously with &quot;wait&quot; period.
 If NEGATE used, sensor still needs to be touched to activate.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="SPAWN_DISABLED" name="SPAWN_DISABLED" bit="0">Disabled by default.</flag>
 <flag key="NEGATE" name="NEGATE" bit="1">Negate sensor condition.</flag>
 ------ PROPERTIES ------
@@ -1393,7 +1393,7 @@ RECOMMENDED TO USE: sensor_buildable
 Triggered by a buildable or subset of buildables.
 If condition is satisfied fires targets continuously with &quot;wait&quot; period.
 If NEGATE used, sensor still needs to be touched to activate.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="SPAWN_DISABLED" name="SPAWN_DISABLED" bit="0">Disabled by default.</flag>
 <flag key="NEGATE" name="NEGATE" bit="1">Negate sensor condition.</flag>
 ------ PROPERTIES ------
@@ -1407,7 +1407,7 @@ If NEGATE used, sensor still needs to be touched to activate.
 ------ DESCRIPTION ------
 Detects creep, i.e. area where the building is allowed.
 If condition is satisfied fires targets continuously.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="SPAWN_DISABLED" name="SPAWN_DISABLED" bit="0">Disabled by default.</flag>
 ------ PROPERTIES ------
 <target key="target" name="target">[required] Must have entity to fire at. (string (target))</target>
@@ -1417,7 +1417,7 @@ If condition is satisfied fires targets continuously.
 <point name="sensor_end" color="0.263 0.667 0" box="-8 -8 -8 8 8 8">
 ------ DESCRIPTION ------
 Fires its targets when the team wins.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="SPAWN_DISABLED" name="SPAWN_DISABLED" bit="0">Disabled by default.</flag>
 <flag key="NEGATE" name="NEGATE" bit="1">Negate sensor condition.</flag>
 ------ PROPERTIES ------
@@ -1432,7 +1432,7 @@ DEPRECATED! DEPRECATED! DEPRECATED!
 RECOMMENDED TO USE: sensor_end
 ------ DESCRIPTION ------
 Fires its targets when the team wins.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="SPAWN_DISABLED" name="SPAWN_DISABLED" bit="0">Disabled by default.</flag>
 <flag key="NEGATE" name="NEGATE" bit="1">Negate sensor condition.</flag>
 ------ PROPERTIES ------
@@ -1446,7 +1446,7 @@ Fires its targets when the team wins.
 ------ DESCRIPTION ------
 Triggered by a specific class or subset of classes. If no classes key is supplied every class will trigger this entity.
 Triggered by a player carrying some item (weapon or upgrade) or subset of items. If no equipment key is supplied every human will trigger this entity.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="SPAWN_DISABLED" name="SPAWN_DISABLED" bit="0">Disabled by default.</flag>
 <flag key="NEGATE" name="NEGATE" bit="1">Negate sensor condition.</flag>
 ------ PROPERTIES ------
@@ -1464,7 +1464,7 @@ RECOMMENDED TO USE: sensor_player
 ------ DESCRIPTION ------
 Triggered by a specific class or subset of classes. If no classes key is supplied every class will trigger this entity.
 Triggered by a player carrying some item (weapon or upgrade) or subset of items. If no equipment key is supplied every human will trigger this entity.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="SPAWN_DISABLED" name="SPAWN_DISABLED" bit="0">Disabled by default.</flag>
 <flag key="NEGATE" name="NEGATE" bit="1">Negate sensor condition.</flag>
 ------ PROPERTIES ------
@@ -1482,7 +1482,7 @@ RECOMMENDED TO USE: sensor_player
 ------ DESCRIPTION ------
 Triggered by a specific class or subset of classes. If no classes key is supplied every class will trigger this entity.
 Triggered by a player carrying some item (weapon or upgrade) or subset of items. If no equipment key is supplied every human will trigger this entity.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="SPAWN_DISABLED" name="SPAWN_DISABLED" bit="0">Disabled by default.</flag>
 <flag key="NEGATE" name="NEGATE" bit="1">Negate sensor condition.</flag>
 ------ PROPERTIES ------
@@ -1499,7 +1499,7 @@ DEPRECATED! DEPRECATED! DEPRECATED!
 RECOMMENDED TO USE: sensor_player
 ------ DESCRIPTION ------
 Triggered by a player.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="HUMANS" name="HUMANS" bit="0">Activated by humans.</flag>
 <flag key="ALIENS" name="ALIENS" bit="1">Activated by aliens.</flag>
 ------ PROPERTIES ------
@@ -1509,7 +1509,7 @@ Triggered by a player.
 </group>
 
 <point name="sensor_power" color="0.263 0.667 0" box="-8 -8 -8 8 8 8">
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="SPAWN_DISABLED" name="SPAWN_DISABLED" bit="0">Disabled by default.</flag>
 ------ PROPERTIES ------
 <target key="target" name="target">[required] Must have entity to fire at. (string (target))</target>
@@ -1519,7 +1519,7 @@ Triggered by a player.
 <point name="sensor_stage" color="0.263 0.667 0" box="-8 -8 -8 8 8 8">
 ------ DESCRIPTION ------
 Triggers when the team reaches the stage. Stage down doesn&apos;t trigger.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="SPAWN_DISABLED" name="SPAWN_DISABLED" bit="0">Disabled by default.</flag>
 <flag key="NEGATE" name="NEGATE" bit="1">Negate sensor condition.</flag>
 ------ PROPERTIES ------
@@ -1535,7 +1535,7 @@ DEPRECATED! DEPRECATED! DEPRECATED!
 RECOMMENDED TO USE: sensor_stage
 ------ DESCRIPTION ------
 Triggers when the team reaches the stage. Stage down doesn&apos;t trigger.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="SPAWN_DISABLED" name="SPAWN_DISABLED" bit="0">Disabled by default.</flag>
 <flag key="NEGATE" name="NEGATE" bit="1">Negate sensor condition.</flag>
 ------ PROPERTIES ------
@@ -1568,7 +1568,7 @@ Fires the targets at game start.
 ------ DESCRIPTION ------
 Detects creep, i.e. area where the building is allowed.
 If condition is satisfied fires targets continuously.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="SPAWN_DISABLED" name="SPAWN_DISABLED" bit="0">Disabled by default.</flag>
 ------ PROPERTIES ------
 <target key="target" name="target">[required] Must have entity to fire at. (string (target))</target>
@@ -1579,7 +1579,7 @@ If condition is satisfied fires targets continuously.
 <point name="sensor_timer" color="0.263 0.667 0" box="-8 -8 -8 8 8 8">
 ------ DESCRIPTION ------
 Entity continuously fires its targets after a preset time delay.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="START_ON" name="START_ON" bit="0">Timer will start on in the game and continuously fire its targets.</flag>
 ------ PROPERTIES ------
 <target key="target" name="target">[required] Must have entity to fire at. (string (target))</target>
@@ -1591,7 +1591,7 @@ Entity continuously fires its targets after a preset time delay.
 <point name="func_timer" color="0.263 0.667 0" box="-8 -8 -8 8 8 8">
 ------ DESCRIPTION ------
 Entity continuously fires its targets after a preset time delay.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="START_ON" name="START_ON" bit="0">Timer will start on in the game and continuously fire its targets.</flag>
 ------ PROPERTIES ------
 <target key="target" name="target">[required] Must have entity to fire at. (string (target))</target>
@@ -1604,7 +1604,7 @@ Entity continuously fires its targets after a preset time delay.
 ------ DESCRIPTION ------
 Sound generating entity.
 The path portion value of the &quot;noise&quot; key can be replaced by the implicit folder character &quot;*&quot; for triggered sounds that belong to a particular player model. For example, if you want to create a &quot;bottomless pit&quot; in which the player screams and dies when he falls into, you would place a sensor_player over the floor of the pit and target a spx_speaker with it. Then, you would set the &quot;noise&quot; key to &quot;*falling1.wav&quot;. The * character means the current player model&apos;s sound folder. So if your current player model is Granger, * = sound/player/builder, if your current player model is Battlesuit Human, * = sound/player/human_bsuit, etc. This cool feature provides an excellent way to create &quot;player-specific&quot; triggered sounds in your levels. Implies ACTIVATOR_SPEAKER on.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="PRESTARTED_LOOP" name="PRESTARTED_LOOP" bit="0">Same as LOOP, but speaker is active by default.</flag>
 <flag key="LOOP" name="LOOP" bit="1">Makes infinite loop. Can be toggled via targetname.</flag>
 <flag key="BROADCAST" name="BROADCAST" bit="2">Makes sound global, sound volume is maximal everywhere on map. Doesn&apos;t work with LOOPs.</flag>
@@ -1622,7 +1622,7 @@ RECOMMENDED TO USE: sfx_speaker
 ------ DESCRIPTION ------
 Sound generating entity.
 The path portion value of the &quot;noise&quot; key can be replaced by the implicit folder character &quot;*&quot; for triggered sounds that belong to a particular player model. For example, if you want to create a &quot;bottomless pit&quot; in which the player screams and dies when he falls into, you would place a sensor_player over the floor of the pit and target a spx_speaker with it. Then, you would set the &quot;noise&quot; key to &quot;*falling1.wav&quot;. The * character means the current player model&apos;s sound folder. So if your current player model is Granger, * = sound/player/builder, if your current player model is Battlesuit Human, * = sound/player/human_bsuit, etc. This cool feature provides an excellent way to create &quot;player-specific&quot; triggered sounds in your levels. Implies ACTIVATOR_SPEAKER on.
------- FLAGS ------
+------ SPAWNFLAGS ------
 <flag key="PRESTARTED_LOOP" name="PRESTARTED_LOOP" bit="0">Same as LOOP, but speaker is active by default.</flag>
 <flag key="LOOP" name="LOOP" bit="1">Makes infinite loop. Can be toggled via targetname.</flag>
 <flag key="BROADCAST" name="BROADCAST" bit="2">Makes sound global, sound volume is maximal everywhere on map. Doesn&apos;t work with LOOPs.</flag>
