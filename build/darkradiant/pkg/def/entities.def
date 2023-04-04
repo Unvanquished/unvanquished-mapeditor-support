@@ -176,6 +176,7 @@ entityDef light
 	"editor_float scale" "[q3map] Scales intensity, from SOF2/JK2. Eg. light=300, scale=0.2 will result in light=60 (float, def: 1)"
 	"editor_var style" "[q3map] Used for blinking lights. Number used to choose proper worldspawn entity keys with formulas. Key names are _style*rgbgen and _style*alphagen where * is replaced by style number. Read more here http://q3map2.robotrenegade.com/docs/shader_manual/lightstyles.html (int, def: 0)"
 	"editor_var target" "[q3map] Lights pointed at a target will be spotlights. (string (target))"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: LINEAR: 1, ANGLE: 2, DARKLIGHT: 4, DARKLIGHT: 8, NOGRIDLIGHT: 16)"
 
 	// Property default value
 	"_color" "1 1 1"
@@ -200,6 +201,7 @@ entityDef light
 	"scale" "1"
 	"style" "0"
 	"target" ""
+	"spawnflags" "0"
 }
 
 entityDef lightJunior
@@ -229,6 +231,7 @@ entityDef lightJunior
 	"editor_float fade" "[q3map] Linear (only linear) light attenuation coefficient, less value - far the light goes. (float, def: 1)"
 	"editor_float scale" "[q3map] Scales intensity, from SOF2/JK2. Eg. light=300, scale=0.2 will result in light=60 (float, def: 1)"
 	"editor_var target" "[q3map] Lights pointed at a target will be spotlights. (string (target))"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: LINEAR: 1, ANGLE: 2)"
 
 	// Property default value
 	"_color" "1 1 1"
@@ -242,6 +245,7 @@ entityDef lightJunior
 	"fade" "1"
 	"scale" "1"
 	"target" ""
+	"spawnflags" "0"
 }
 
 entityDef func_bobbing
@@ -272,6 +276,7 @@ entityDef func_bobbing
 	"editor_var _cs" "[q3map] or \"_castShadows\". Group number entity cast shadow to. Negative value uses same group but disables world. 0 disables shadow casting. (int)"
 	"editor_float _lightmapscale" "[q3map] Value scaling the resolution of lightmaps. Lesser value gives bigger resolution. (float, def: 1)"
 	"editor_var _rs" "[q3map] or \"_receiveShadows\". Group number entity receive shadow from. Negative value uses same group but disables world. 0 disables shadow receiving. (int)"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: X_AXIS: 1, Y_AXIS: 2)"
 
 	// Property default value
 	"color" "1 1 1"
@@ -289,6 +294,7 @@ entityDef func_bobbing
 	"_cs" ""
 	"_lightmapscale" "1"
 	"_rs" ""
+	"spawnflags" "0"
 }
 
 entityDef func_button
@@ -320,6 +326,7 @@ entityDef func_button
 	"editor_var _cs" "[q3map] or \"_castShadows\". Group number entity cast shadow to. Negative value uses same group but disables world. 0 disables shadow casting. (int)"
 	"editor_float _lightmapscale" "[q3map] Value scaling the resolution of lightmaps. Lesser value gives bigger resolution. (float, def: 1)"
 	"editor_var _rs" "[q3map] or \"_receiveShadows\". Group number entity receive shadow from. Negative value uses same group but disables world. 0 disables shadow receiving. (int)"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: ACTIVATE: 128)"
 
 	// Property default value
 	"target" ""
@@ -337,6 +344,7 @@ entityDef func_button
 	"_cs" ""
 	"_lightmapscale" "1"
 	"_rs" ""
+	"spawnflags" "0"
 }
 
 entityDef func_destructable
@@ -361,6 +369,7 @@ entityDef func_destructable
 	"editor_var _cs" "[q3map] or \"_castShadows\". Group number entity cast shadow to. Negative value uses same group but disables world. 0 disables shadow casting. (int)"
 	"editor_float _lightmapscale" "[q3map] Value scaling the resolution of lightmaps. Lesser value gives bigger resolution. (float, def: 1)"
 	"editor_var _rs" "[q3map] or \"_receiveShadows\". Group number entity receive shadow from. Negative value uses same group but disables world. 0 disables shadow receiving. (int)"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: SPAWN_DISABLED: 1)"
 
 	// Property default value
 	"damage" "0"
@@ -372,6 +381,7 @@ entityDef func_destructable
 	"_cs" ""
 	"_lightmapscale" "1"
 	"_rs" ""
+	"spawnflags" "0"
 }
 
 entityDef func_door
@@ -408,6 +418,7 @@ entityDef func_door
 	"editor_var _cs" "[q3map] or \"_castShadows\". Group number entity cast shadow to. Negative value uses same group but disables world. 0 disables shadow casting. (int)"
 	"editor_float _lightmapscale" "[q3map] Value scaling the resolution of lightmaps. Lesser value gives bigger resolution. (float, def: 1)"
 	"editor_var _rs" "[q3map] or \"_receiveShadows\". Group number entity receive shadow from. Negative value uses same group but disables world. 0 disables shadow receiving. (int)"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: START_OPEN: 1, CRUSHER: 4, ACTIVATE: 128)"
 
 	// Property default value
 	"angle" ""
@@ -430,6 +441,7 @@ entityDef func_door
 	"_cs" ""
 	"_lightmapscale" "1"
 	"_rs" ""
+	"spawnflags" "0"
 }
 
 entityDef func_door_model
@@ -464,6 +476,7 @@ entityDef func_door_model
 	"editor_float speed" "The time taken for the door to change state in msec. (float, def: 200)"
 	"editor_var targetname" "If set, a func_button or trigger is required to activate the door. Overrides activation by damage. (string (targetname))"
 	"editor_float wait" "Number of seconds before door returns. (float, def: 2)"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: ACTIVATE: 128)"
 
 	// Property default value
 	"model2" ""
@@ -485,6 +498,7 @@ entityDef func_door_model
 	"speed" "200"
 	"targetname" ""
 	"wait" "2"
+	"spawnflags" "0"
 }
 
 entityDef func_door_rotating
@@ -519,6 +533,7 @@ entityDef func_door_rotating
 	"editor_var _cs" "[q3map] or \"_castShadows\". Group number entity cast shadow to. Negative value uses same group but disables world. 0 disables shadow casting. (int)"
 	"editor_float _lightmapscale" "[q3map] Value scaling the resolution of lightmaps. Lesser value gives bigger resolution. (float, def: 1)"
 	"editor_var _rs" "[q3map] or \"_receiveShadows\". Group number entity receive shadow from. Negative value uses same group but disables world. 0 disables shadow receiving. (int)"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: START_OPEN: 1, CRUSHER: 2, REVERSE: 8, X_AXIS: 32, Y_AXIS: 64, ACTIVATE: 128)"
 
 	// Property default value
 	"origin" ""
@@ -539,6 +554,7 @@ entityDef func_door_rotating
 	"_cs" ""
 	"_lightmapscale" "1"
 	"_rs" ""
+	"spawnflags" "0"
 }
 
 entityDef func_dynamic
@@ -692,6 +708,7 @@ entityDef func_plat
 	"editor_var _cs" "[q3map] or \"_castShadows\". Group number entity cast shadow to. Negative value uses same group but disables world. 0 disables shadow casting. (int)"
 	"editor_float _lightmapscale" "[q3map] Value scaling the resolution of lightmaps. Lesser value gives bigger resolution. (float, def: 1)"
 	"editor_var _rs" "[q3map] or \"_receiveShadows\". Group number entity receive shadow from. Negative value uses same group but disables world. 0 disables shadow receiving. (int)"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: DONT_WAIT: 1, CRUSHER: 4)"
 
 	// Property default value
 	"color" "1 1 1"
@@ -713,6 +730,7 @@ entityDef func_plat
 	"_cs" ""
 	"_lightmapscale" "1"
 	"_rs" ""
+	"spawnflags" "0"
 }
 
 entityDef func_rotating
@@ -741,6 +759,7 @@ entityDef func_rotating
 	"editor_var _cs" "[q3map] or \"_castShadows\". Group number entity cast shadow to. Negative value uses same group but disables world. 0 disables shadow casting. (int)"
 	"editor_float _lightmapscale" "[q3map] Value scaling the resolution of lightmaps. Lesser value gives bigger resolution. (float, def: 1)"
 	"editor_var _rs" "[q3map] or \"_receiveShadows\". Group number entity receive shadow from. Negative value uses same group but disables world. 0 disables shadow receiving. (int)"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: X_AXIS: 4, Y_AXIS: 8)"
 
 	// Property default value
 	"origin" ""
@@ -756,6 +775,7 @@ entityDef func_rotating
 	"_cs" ""
 	"_lightmapscale" "1"
 	"_rs" ""
+	"spawnflags" "0"
 }
 
 entityDef func_spawn
@@ -776,6 +796,7 @@ entityDef func_spawn
 	"editor_var _cs" "[q3map] or \"_castShadows\". Group number entity cast shadow to. Negative value uses same group but disables world. 0 disables shadow casting. (int)"
 	"editor_float _lightmapscale" "[q3map] Value scaling the resolution of lightmaps. Lesser value gives bigger resolution. (float, def: 1)"
 	"editor_var _rs" "[q3map] or \"_receiveShadows\". Group number entity receive shadow from. Negative value uses same group but disables world. 0 disables shadow receiving. (int)"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: SPAWN_ENABLED: 1, DONT_KILL: 2)"
 
 	// Property default value
 	"targetname" ""
@@ -783,6 +804,7 @@ entityDef func_spawn
 	"_cs" ""
 	"_lightmapscale" "1"
 	"_rs" ""
+	"spawnflags" "0"
 }
 
 entityDef func_static
@@ -858,6 +880,7 @@ entityDef func_train
 	"editor_var _cs" "[q3map] or \"_castShadows\". Group number entity cast shadow to. Negative value uses same group but disables world. 0 disables shadow casting. (int)"
 	"editor_float _lightmapscale" "[q3map] Value scaling the resolution of lightmaps. Lesser value gives bigger resolution. (float, def: 1)"
 	"editor_var _rs" "[q3map] or \"_receiveShadows\". Group number entity receive shadow from. Negative value uses same group but disables world. 0 disables shadow receiving. (int)"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: START_OFF: 1, BLOCK_STOPS: 2)"
 
 	// Property default value
 	"origin" ""
@@ -873,6 +896,7 @@ entityDef func_train
 	"_cs" ""
 	"_lightmapscale" "1"
 	"_rs" ""
+	"spawnflags" "0"
 }
 
 entityDef path_corner
@@ -1387,11 +1411,13 @@ entityDef target_print
 	"editor_var targetname" "[required] Must be someone's target for firing. (string (targetname))"
 	"editor_var message" "text string to print on screen. (string)"
 	"editor_var origin" "Position. (vec3_float)"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: HUMAN_TEAM: 1, ALIEN_TEAM: 2, PRIVATE: 4)"
 
 	// Property default value
 	"targetname" ""
 	"message" ""
 	"origin" ""
+	"spawnflags" "0"
 }
 
 entityDef target_push
@@ -1885,12 +1911,14 @@ entityDef ctrl_limited
 	"editor_var targetname" "[required] Must be someone's target for firing. (string (targetname))"
 	"editor_var amount" "Possible activation count. (int, def: 1)"
 	"editor_var origin" "Position. (vec3_float)"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: SPAWN_DISABLED: 1)"
 
 	// Property default value
 	"target" ""
 	"targetname" ""
 	"amount" "1"
 	"origin" ""
+	"spawnflags" "0"
 }
 
 entityDef ctrl_relay
@@ -1910,12 +1938,14 @@ entityDef ctrl_relay
 	"editor_var targetname" "[required] Must be someone's target for firing. (string (targetname))"
 	"editor_var origin" "Position. (vec3_float)"
 	"editor_var wait" "Delay before target activation. (time_2float (time [variance]), def: 0)"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: SPAWN_DISABLED: 1)"
 
 	// Property default value
 	"onAct" ""
 	"targetname" ""
 	"origin" ""
 	"wait" "0"
+	"spawnflags" "0"
 }
 
 entityDef target_relay
@@ -1940,12 +1970,14 @@ entityDef target_relay
 	"editor_var targetname" "[required] Must be someone's target for firing. (string (targetname))"
 	"editor_var origin" "Position. (vec3_float)"
 	"editor_var wait" "Delay before target activation. (time_2float (time [variance]), def: 0)"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: ONLY_HUMANS: 1, ONLY_ALIENS: 2, RANDOM: 4)"
 
 	// Property default value
 	"target" ""
 	"targetname" ""
 	"origin" ""
 	"wait" "0"
+	"spawnflags" "0"
 }
 
 entityDef target_delay
@@ -1970,12 +2002,14 @@ entityDef target_delay
 	"editor_var targetname" "[required] Must be someone's target for firing. (string (targetname))"
 	"editor_var origin" "Position. (vec3_float)"
 	"editor_var wait" "Delay before target activation. (time_2float (time [variance]), def: 1)"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: ONLY_HUMANS: 1, ONLY_ALIENS: 2, RANDOM: 4)"
 
 	// Property default value
 	"target" ""
 	"targetname" ""
 	"origin" ""
 	"wait" "1"
+	"spawnflags" "0"
 }
 
 entityDef env_afx_ammo
@@ -1993,10 +2027,12 @@ entityDef env_afx_ammo
 	// Property description
 	"editor_var ammo" "Amount of ammo. Values < 1 corrected to 1. (int, def: 1)"
 	"editor_var targetname" "Give it a name to be able to toggle its activity. (string (targetname))"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: EVERY_SECOND: 1, DISABLE_ENERGO: 2, DISABLE_NON_ENERGO: 4)"
 
 	// Property default value
 	"ammo" "1"
 	"targetname" ""
+	"spawnflags" "0"
 }
 
 entityDef trigger_ammo
@@ -2016,10 +2052,12 @@ entityDef trigger_ammo
 	// Property description
 	"editor_var ammo" "Amount of ammo. Values < 1 corrected to 1. (int, def: 1)"
 	"editor_var targetname" "Give it a name to be able to toggle its activity. (string (targetname))"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: EVERY_SECOND: 1, DISABLE_ENERGO: 2, DISABLE_NON_ENERGO: 4)"
 
 	// Property default value
 	"ammo" "1"
 	"targetname" ""
+	"spawnflags" "0"
 }
 
 entityDef env_afx_gravity
@@ -2081,10 +2119,12 @@ entityDef env_afx_heal
 	// Property description
 	"editor_var heal" "Amount of heal. Values < 1 corrected to 1. (int, def: 5)"
 	"editor_var targetname" "Give it a name to be able to toggle its activity. (string (targetname))"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: SPAWN_DISABLED: 1, EVERY_SECOND: 2)"
 
 	// Property default value
 	"heal" "5"
 	"targetname" ""
+	"spawnflags" "0"
 }
 
 entityDef trigger_heal
@@ -2104,10 +2144,12 @@ entityDef trigger_heal
 	// Property description
 	"editor_var heal" "Amount of heal. Values < 1 corrected to 1. (int, def: 5)"
 	"editor_var targetname" "Give it a name to be able to toggle its activity. (string (targetname))"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: SPAWN_DISABLED: 1, EVERY_SECOND: 2)"
 
 	// Property default value
 	"heal" "5"
 	"targetname" ""
+	"spawnflags" "0"
 }
 
 entityDef env_afx_hurt
@@ -2125,10 +2167,12 @@ entityDef env_afx_hurt
 	// Property description
 	"editor_var dmg" "Damage dealt. Values <= 0 corrected to default value. (int, def: 5)"
 	"editor_var targetname" "Give it a name to be able to toggle its activity. (string (targetname))"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: SPAWN_DISABLED: 1, NO_SOUND: 4, NO_PROTECTION: 8, EVERY_SECOND: 16)"
 
 	// Property default value
 	"dmg" "5"
 	"targetname" ""
+	"spawnflags" "0"
 }
 
 entityDef trigger_hurt
@@ -2148,10 +2192,12 @@ entityDef trigger_hurt
 	// Property description
 	"editor_var dmg" "Damage dealt. Values <= 0 corrected to default value. (int, def: 5)"
 	"editor_var targetname" "Give it a name to be able to toggle its activity. (string (targetname))"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: SPAWN_DISABLED: 1, NO_SOUND: 4, NO_PROTECTION: 8, EVERY_SECOND: 16)"
 
 	// Property default value
 	"dmg" "5"
 	"targetname" ""
+	"spawnflags" "0"
 }
 
 entityDef env_afx_push
@@ -2170,11 +2216,13 @@ entityDef env_afx_push
 	"editor_var target" "Name of the aiming position entity to which the player will jump. This is the highest point of the jump. (string (target))"
 	"editor_var targetname" "Give it a name to be able to toggle its activity. (string (targetname))"
 	"editor_var wait" "Delay between triggerings. (time_2float (time [variance]), def: 0.5 0)"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: SPAWN_DISABLED: 1)"
 
 	// Property default value
 	"target" ""
 	"targetname" ""
 	"wait" "0.5 0"
+	"spawnflags" "0"
 }
 
 entityDef trigger_push
@@ -2195,11 +2243,13 @@ entityDef trigger_push
 	"editor_var target" "Name of the aiming position entity to which the player will jump. This is the highest point of the jump. (string (target))"
 	"editor_var targetname" "Give it a name to be able to toggle its activity. (string (targetname))"
 	"editor_var wait" "Delay between triggerings. (time_2float (time [variance]), def: 0.5 0)"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: SPAWN_DISABLED: 1)"
 
 	// Property default value
 	"target" ""
 	"targetname" ""
 	"wait" "0.5 0"
+	"spawnflags" "0"
 }
 
 entityDef env_afx_teleport
@@ -2218,11 +2268,13 @@ entityDef env_afx_teleport
 	"editor_float speed" "Player speed after teleportation. (float, def: 400)"
 	"editor_var target" "Name of the target point. You can set same targetname to many positions, they will be chosen randomly. (string (target))"
 	"editor_var targetname" "Give it a name to be able to toggle its activity. (string (targetname))"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: SPECTATORS_ONLY: 1, SPAWN_DISABLED: 2)"
 
 	// Property default value
 	"speed" "400"
 	"target" ""
 	"targetname" ""
+	"spawnflags" "0"
 }
 
 entityDef trigger_teleport
@@ -2246,11 +2298,13 @@ entityDef trigger_teleport
 	"editor_float speed" "Player speed after teleportation. (float, def: 400)"
 	"editor_var target" "Name of the target point. You can set same targetname to many positions, they will be chosen randomly. (string (target))"
 	"editor_var targetname" "Give it a name to be able to toggle its activity. (string (targetname))"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: SPECTATORS_ONLY: 1, SPAWN_DISABLED: 2)"
 
 	// Property default value
 	"speed" "400"
 	"target" ""
 	"targetname" ""
+	"spawnflags" "0"
 }
 
 entityDef fx_rumble
@@ -2527,6 +2581,7 @@ entityDef gfx_animated_model
 	"editor_var origin" "Position. (vec3_float)"
 	"editor_float radius" "The scale of the model compared to its original size. (float, def: 1)"
 	"editor_var targetname" "Give it a name to be able to toggle its activity. (string (targetname))"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: TOGGLE_VISIBILITY: 1, SPAWN_STOPPED: 2)"
 
 	// Property default value
 	"angle" ""
@@ -2536,6 +2591,7 @@ entityDef gfx_animated_model
 	"origin" ""
 	"radius" "1"
 	"targetname" ""
+	"spawnflags" "0"
 }
 
 entityDef misc_anim_model
@@ -2560,6 +2616,7 @@ entityDef misc_anim_model
 	"editor_var origin" "Position. (vec3_float)"
 	"editor_float radius" "The scale of the model compared to its original size. (float, def: 1)"
 	"editor_var targetname" "Give it a name to be able to toggle its activity. (string (targetname))"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: TOGGLE_VISIBILITY: 1, SPAWN_STOPPED: 2)"
 
 	// Property default value
 	"angle" ""
@@ -2569,6 +2626,7 @@ entityDef misc_anim_model
 	"origin" ""
 	"radius" "1"
 	"targetname" ""
+	"spawnflags" "0"
 }
 
 entityDef misc_model
@@ -2598,6 +2656,7 @@ entityDef misc_model
 	"editor_var model" "[q3map] Path to a custom model. (string (model))"
 	"editor_float modelscale" "[q3map] Scale factor. (float, def: 1)"
 	"editor_var modelscale_vec" "[q3map] Separate scale factor per axis. (vec3_float, def: 1 1 1)"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: CLIPMODELS: 2, FORCEMETA: 4)"
 
 	// Property default value
 	"angle" ""
@@ -2612,6 +2671,7 @@ entityDef misc_model
 	"model" ""
 	"modelscale" "1"
 	"modelscale_vec" "1 1 1"
+	"spawnflags" "0"
 }
 
 entityDef gfx_light_flare
@@ -2635,6 +2695,7 @@ entityDef gfx_light_flare
 	"editor_var shader" "The name of the shader of the light flare. (string (texture))"
 	"editor_float speed" "Fading time, msec. Useful only for cg_lightFlare 2. (float, def: 200)"
 	"editor_var targetname" "Give it a name to be able to toggle its activity. (string (targetname))"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: SPAWN_DISABLED: 1)"
 
 	// Property default value
 	"angle" ""
@@ -2645,6 +2706,7 @@ entityDef gfx_light_flare
 	"shader" ""
 	"speed" "200"
 	"targetname" ""
+	"spawnflags" "0"
 }
 
 entityDef misc_light_flare
@@ -2670,6 +2732,7 @@ entityDef misc_light_flare
 	"editor_var shader" "The name of the shader of the light flare. (string (texture))"
 	"editor_float speed" "Fading time, msec. Useful only for cg_lightFlare 2. (float, def: 200)"
 	"editor_var targetname" "Give it a name to be able to toggle its activity. (string (targetname))"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: SPAWN_DISABLED: 1)"
 
 	// Property default value
 	"angle" ""
@@ -2680,6 +2743,7 @@ entityDef misc_light_flare
 	"shader" ""
 	"speed" "200"
 	"targetname" ""
+	"spawnflags" "0"
 }
 
 entityDef gfx_particle_system
@@ -2701,6 +2765,7 @@ entityDef gfx_particle_system
 	"editor_var psName" "Name of particle system. Look at scripts/*.particle, they contain particle system effects along with their names. (string, eg: firebomb_subPS, def: )"
 	"editor_var targetname" "Give it a name to be able to toggle its activity. (string (targetname))"
 	"editor_float wait" "Wait after toggle, then toggle again. Disabled if value <= 0. (float)"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: SPAWN_DISABLED: 1)"
 
 	// Property default value
 	"angle" ""
@@ -2709,6 +2774,7 @@ entityDef gfx_particle_system
 	"psName" ""
 	"targetname" ""
 	"wait" ""
+	"spawnflags" "0"
 }
 
 entityDef misc_particle_system
@@ -2732,6 +2798,7 @@ entityDef misc_particle_system
 	"editor_var psName" "Name of particle system. Look at scripts/*.particle, they contain particle system effects along with their names. (string, eg: firebomb_subPS, def: )"
 	"editor_var targetname" "Give it a name to be able to toggle its activity. (string (targetname))"
 	"editor_float wait" "Wait after toggle, then toggle again. Disabled if value <= 0. (float)"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: SPAWN_DISABLED: 1)"
 
 	// Property default value
 	"angle" ""
@@ -2740,6 +2807,7 @@ entityDef misc_particle_system
 	"psName" ""
 	"targetname" ""
 	"wait" ""
+	"spawnflags" "0"
 }
 
 entityDef gfx_portal_camera
@@ -2764,6 +2832,7 @@ entityDef gfx_portal_camera
 	"editor_var origin" "Position. (vec3_float)"
 	"editor_var roll" "Roll angle of camera."
 	"editor_var target" "Point this to a pos_target entity to set the camera's pointing direction. (string (target))"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: FRAME25: 1, FRAME75: 2, NO_ROTATION: 4)"
 
 	// Property default value
 	"targetname" ""
@@ -2772,6 +2841,7 @@ entityDef gfx_portal_camera
 	"origin" ""
 	"roll" ""
 	"target" ""
+	"spawnflags" "0"
 }
 
 entityDef misc_portal_camera
@@ -2798,6 +2868,7 @@ entityDef misc_portal_camera
 	"editor_var origin" "Position. (vec3_float)"
 	"editor_var roll" "Roll angle of camera."
 	"editor_var target" "Point this to a pos_target entity to set the camera's pointing direction. (string (target))"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: FRAME25: 1, FRAME75: 2, NO_ROTATION: 4)"
 
 	// Property default value
 	"targetname" ""
@@ -2806,6 +2877,7 @@ entityDef misc_portal_camera
 	"origin" ""
 	"roll" ""
 	"target" ""
+	"spawnflags" "0"
 }
 
 entityDef gfx_portal_surface
@@ -2901,12 +2973,14 @@ entityDef sensor_buildable
 	"editor_var buildables" "A comma delimited list of buildables which will trigger this entity. If omitted matches all buildables. (eggpod,overmind,barricade,acid_tube,trapper,booster,hive,leech,telenode,mgturret, tesla,arm,medistat,drill,reactor,repeater)"
 	"editor_var targetname" "Give it a name to be able to toggle its activity. (string (targetname))"
 	"editor_var wait" "Time in seconds until trigger becomes re-triggerable after it's been touched. (time_2float (time [variance]), def: 0.5 0)"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: SPAWN_DISABLED: 1, NEGATE: 2)"
 
 	// Property default value
 	"target" ""
 	"buildables" ""
 	"targetname" ""
 	"wait" "0.5 0"
+	"spawnflags" "0"
 }
 
 entityDef trigger_buildable
@@ -2931,12 +3005,14 @@ entityDef trigger_buildable
 	"editor_var buildables" "A comma delimited list of buildables which will trigger this entity. If omitted matches all buildables. (eggpod,overmind,barricade,acid_tube,trapper,booster,hive,leech,telenode,mgturret, tesla,arm,medistat,drill,reactor,repeater)"
 	"editor_var targetname" "Give it a name to be able to toggle its activity. (string (targetname))"
 	"editor_var wait" "Time in seconds until trigger becomes re-triggerable after it's been touched. (time_2float (time [variance]), def: 0.5 0)"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: SPAWN_DISABLED: 1, NEGATE: 2)"
 
 	// Property default value
 	"target" ""
 	"buildables" ""
 	"targetname" ""
 	"wait" "0.5 0"
+	"spawnflags" "0"
 }
 
 entityDef sensor_creep
@@ -2954,10 +3030,12 @@ entityDef sensor_creep
 	// Property description
 	"editor_var target" "[required] Must have entity to fire at. (string (target))"
 	"editor_var origin" "Position. (vec3_float)"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: SPAWN_DISABLED: 1)"
 
 	// Property default value
 	"target" ""
 	"origin" ""
+	"spawnflags" "0"
 }
 
 entityDef sensor_end
@@ -2977,12 +3055,14 @@ entityDef sensor_end
 	"editor_var origin" "Position. (vec3_float)"
 	"editor_var targetname" "Give it a name to be able to toggle its activity. (string (targetname))"
 	"editor_var team" "1 for aliens, 2 for humans. 0 or omit to detect draw. (int)"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: SPAWN_DISABLED: 1, NEGATE: 2)"
 
 	// Property default value
 	"target" ""
 	"origin" ""
 	"targetname" ""
 	"team" ""
+	"spawnflags" "0"
 }
 
 entityDef trigger_win
@@ -3007,12 +3087,14 @@ entityDef trigger_win
 	"editor_var origin" "Position. (vec3_float)"
 	"editor_var targetname" "Give it a name to be able to toggle its activity. (string (targetname))"
 	"editor_var team" "1 for aliens, 2 for humans. 0 or omit to detect draw. (int)"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: SPAWN_DISABLED: 1, NEGATE: 2)"
 
 	// Property default value
 	"target" ""
 	"origin" ""
 	"targetname" ""
 	"team" ""
+	"spawnflags" "0"
 }
 
 entityDef sensor_player
@@ -3034,6 +3116,7 @@ entityDef sensor_player
 	"editor_var targetname" "Give it a name to be able to toggle its activity. (string (targetname))"
 	"editor_var team" "1 for aliens, 2 for humans. Omit if you don't want to check the team. Not affected by NEGATE. (int)"
 	"editor_var wait" "Time in seconds until trigger becomes re-triggerable after it's been touched. (time_2float (time [variance]), def: 0.5 0)"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: SPAWN_DISABLED: 1, NEGATE: 2)"
 
 	// Property default value
 	"target" ""
@@ -3042,6 +3125,7 @@ entityDef sensor_player
 	"targetname" ""
 	"team" ""
 	"wait" "0.5 0"
+	"spawnflags" "0"
 }
 
 entityDef trigger_class
@@ -3068,6 +3152,7 @@ entityDef trigger_class
 	"editor_var targetname" "Give it a name to be able to toggle its activity. (string (targetname))"
 	"editor_var team" "1 for aliens, 2 for humans. Omit if you don't want to check the team. Not affected by NEGATE. (int)"
 	"editor_var wait" "Time in seconds until trigger becomes re-triggerable after it's been touched. (time_2float (time [variance]), def: 0.5 0)"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: SPAWN_DISABLED: 1, NEGATE: 2)"
 
 	// Property default value
 	"target" ""
@@ -3076,6 +3161,7 @@ entityDef trigger_class
 	"targetname" ""
 	"team" ""
 	"wait" "0.5 0"
+	"spawnflags" "0"
 }
 
 entityDef trigger_equipment
@@ -3102,6 +3188,7 @@ entityDef trigger_equipment
 	"editor_var targetname" "Give it a name to be able to toggle its activity. (string (targetname))"
 	"editor_var team" "1 for aliens, 2 for humans. Omit if you don't want to check the team. Not affected by NEGATE. (int)"
 	"editor_var wait" "Time in seconds until trigger becomes re-triggerable after it's been touched. (time_2float (time [variance]), def: 0.5 0)"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: SPAWN_DISABLED: 1, NEGATE: 2)"
 
 	// Property default value
 	"target" ""
@@ -3110,6 +3197,7 @@ entityDef trigger_equipment
 	"targetname" ""
 	"team" ""
 	"wait" "0.5 0"
+	"spawnflags" "0"
 }
 
 entityDef trigger_multiple
@@ -3133,11 +3221,13 @@ entityDef trigger_multiple
 	"editor_var target" "Name of the target to fire at. (string (target))"
 	"editor_var targetname" "Can also be triggered as target. (string (targetname))"
 	"editor_var wait" "Time in seconds until trigger becomes re-triggerable after it's been touched. (time_2float (time [variance]), def: 0.5 0)"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: HUMANS: 1, ALIENS: 2)"
 
 	// Property default value
 	"target" ""
 	"targetname" ""
 	"wait" "0.5 0"
+	"spawnflags" "0"
 }
 
 entityDef sensor_power
@@ -3158,10 +3248,12 @@ entityDef sensor_power
 	// Property description
 	"editor_var target" "[required] Must have entity to fire at. (string (target))"
 	"editor_var origin" "Position. (vec3_float)"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: SPAWN_DISABLED: 1)"
 
 	// Property default value
 	"target" ""
 	"origin" ""
+	"spawnflags" "0"
 }
 
 entityDef sensor_stage
@@ -3185,6 +3277,7 @@ entityDef sensor_stage
 	"editor_var stage" "The stage at which this entity is triggered. 2nd stage is 1, 3rd is 2. (int)"
 	"editor_var targetname" "Give it a name to be able to toggle its activity. (string (targetname))"
 	"editor_var team" "1 for aliens, 2 for humans. Omit if you don't want to check the team. (int)"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: SPAWN_DISABLED: 1, NEGATE: 2)"
 
 	// Property default value
 	"target" ""
@@ -3192,6 +3285,7 @@ entityDef sensor_stage
 	"stage" ""
 	"targetname" ""
 	"team" ""
+	"spawnflags" "0"
 }
 
 entityDef trigger_stage
@@ -3217,6 +3311,7 @@ entityDef trigger_stage
 	"editor_var stage" "The stage at which this entity is triggered. 2nd stage is 1, 3rd is 2. (int)"
 	"editor_var targetname" "Can also be triggered as target. (string (targetname))"
 	"editor_var team" "1 for aliens, 2 for humans. Omit if you don't want to check the team. (int)"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: SPAWN_DISABLED: 1, NEGATE: 2)"
 
 	// Property default value
 	"target" ""
@@ -3224,6 +3319,7 @@ entityDef trigger_stage
 	"stage" ""
 	"targetname" ""
 	"team" ""
+	"spawnflags" "0"
 }
 
 entityDef sensor_start
@@ -3292,11 +3388,13 @@ entityDef sensor_support
 	"editor_var target" "[required] Must have entity to fire at. (string (target))"
 	"editor_var origin" "Position. (vec3_float)"
 	"editor_var team" "The only valuable value is 1, i.e. aliens. Make sure you set this. (int)"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: SPAWN_DISABLED: 1)"
 
 	// Property default value
 	"target" ""
 	"origin" ""
 	"team" ""
+	"spawnflags" "0"
 }
 
 entityDef sensor_timer
@@ -3319,12 +3417,14 @@ entityDef sensor_timer
 	"editor_var origin" "Position. (vec3_float)"
 	"editor_var targetname" "Give it a name to be able to toggle its activity. (string (targetname))"
 	"editor_var wait" "Delay in seconds between each triggering of its targets. (time_2float (time [variance]))"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: START_ON: 1)"
 
 	// Property default value
 	"target" ""
 	"origin" ""
 	"targetname" ""
 	"wait" ""
+	"spawnflags" "0"
 }
 
 entityDef func_timer
@@ -3347,12 +3447,14 @@ entityDef func_timer
 	"editor_var origin" "Position. (vec3_float)"
 	"editor_var targetname" "Give it a name to be able to toggle its activity. (string (targetname))"
 	"editor_var wait" "Delay in seconds between each triggering of its targets. (time_2float (time [variance]))"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: START_ON: 1)"
 
 	// Property default value
 	"target" ""
 	"origin" ""
 	"targetname" ""
 	"wait" ""
+	"spawnflags" "0"
 }
 
 entityDef sfx_speaker
@@ -3375,12 +3477,14 @@ entityDef sfx_speaker
 	"editor_var origin" "Position. (vec3_float)"
 	"editor_var targetname" "Can possibly be fired. (string (targetname))"
 	"editor_var wait" "With nonzero variance part continuously starts sounds in parallel with delay defined by \"wait\". Otherwise makes no effect. Ignores LOOP flag. (time_2float (time [variance]))"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: PRESTARTED_LOOP: 1, LOOP: 2, BROADCAST: 4, ACTIVATOR_SPEAKER: 8)"
 
 	// Property default value
 	"noise" "NOSOUND"
 	"origin" ""
 	"targetname" ""
 	"wait" ""
+	"spawnflags" "0"
 }
 
 entityDef target_speaker
@@ -3405,12 +3509,14 @@ entityDef target_speaker
 	"editor_var origin" "Position. (vec3_float)"
 	"editor_var targetname" "Can possibly be fired. (string (targetname))"
 	"editor_var wait" "With nonzero variance part continuously starts sounds in parallel with delay defined by \"wait\". Otherwise makes no effect. Ignores LOOP flag. (time_2float (time [variance]))"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: PRESTARTED_LOOP: 1, LOOP: 2, BROADCAST: 4, ACTIVATOR_SPEAKER: 8)"
 
 	// Property default value
 	"noise" "NOSOUND"
 	"origin" ""
 	"targetname" ""
 	"wait" ""
+	"spawnflags" "0"
 }
 
 entityDef _decal

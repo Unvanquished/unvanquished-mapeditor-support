@@ -368,6 +368,19 @@ class D3DefPrinter:
 
                 default_list.append((k, default_value))
 
+        # There is no bitfield support, emulate it by providing
+        # the user the ability to compute and write  the number by hand.
+        flags = e.get('flags', [])
+        if len(flags):
+            values = ''
+            for bit, (k, v) in enumerate(flags):
+                if k != '-':
+                    values += '' if values == '' else ', '
+                    values += '{}: {}'.format(k, 2**bit)
+
+            self.print_key('editor_var spawnflags', 'Spawn flags. (bitfield as an integer: {})'.format(values))
+            default_list.append(('spawnflags', '0'))
+
         if default_list != []:
             print()
 
@@ -386,8 +399,8 @@ class D3DefPrinter:
     def print_entity(self, e, dt, pr_types=False, pr_defaults=False, pr_ranges=False, pr_eg=False):
         self.print_entity_head(e)
         self.print_prop_desc(e, dt, pr_types, pr_defaults, pr_ranges, pr_eg)
-        # FIXME: I don't know what is this and how can this be processed
-#        self.print_flag_desc(e)
+        # There is no bitfield support
+        # self.print_flag_desc(e)
         self.print_specials(e)
         self.print_entity_foot()
 
