@@ -483,23 +483,15 @@ class EntPrinter:
 
     def print_flag_desc(self, e):
         flags = []
-
-        # FIXME: missing bit attribute
-        bit = 0
-        for k, v in e.get('flags', []):
-            if k == '-' or not v:
-                continue
-
-            v = self.sanitize(v)
-
-            # FIXME: key can be different than name
-            # according to radiant/eclass_xml.cpp:
-            # key="[flag name]"
-            # name="[name shown in gui]"
-            # bit="[bit-index in spawnflags]"
-            flags.append('<flag key="{}" name="{}" bit="{}">{}</flag>'.format(k, k, bit, v))
-
-            bit += 1
+        for bit, (k, v) in enumerate(e.get('flags', [])):
+            if k != '-':
+                v = self.sanitize(v)
+                # FIXME: key can be different than name
+                # according to radiant/eclass_xml.cpp:
+                # key="[flag name]"
+                # name="[name shown in gui]"
+                # bit="[bit-index in spawnflags]"
+                flags.append('<flag key="{}" name="{}" bit="{}">{}</flag>'.format(k, k, bit, v))
 
         if flags:
             print(heading.format('FLAGS'))
