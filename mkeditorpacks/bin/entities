@@ -129,7 +129,12 @@ class Q3DefPrinter:
         print('// {}'.format(header_prefix))
         print('//')
 
-        for line in fp.readlines():
+        if isinstance(fp, str):
+            lines = fp.splitlines()
+        else:
+            lines = fp.readlines()
+
+        for line in lines:
             print("// {}".format(line).rstrip())
 
         print()
@@ -244,7 +249,12 @@ class D3DefPrinter:
         print('/* {}'.format(header_prefix))
         print()
 
-        for line in fp.readlines():
+        if isinstance(fp, str):
+            lines = fp.splitlines()
+        else:
+            lines = fp.readlines()
+
+        for line in lines:
             print(line.rstrip())
 
         print('*/')
@@ -442,7 +452,12 @@ class EntPrinter:
         print('<!-- {}'.format(header_prefix))
         print()
 
-        for line in fp.readlines():
+        if isinstance(fp, str):
+            lines = fp.splitlines()
+        else:
+            lines = fp.readlines()
+
+        for line in lines:
             print("{}".format(line).rstrip())
 
         print('-->')
@@ -609,7 +624,12 @@ class FgdPrinter:
         print('// {}'.format(header_prefix))
         print('//')
 
-        for line in fp.readlines():
+        if isinstance(fp, str):
+            lines = fp.splitlines()
+        else:
+            lines = fp.readlines()
+
+        for line in lines:
             print("// {}".format(line).rstrip())
 
         print('')
@@ -1065,7 +1085,7 @@ elif args.generate:
         with open(args.header, "r") as fp:
             out_printer.print_header(fp)
     else:
-        out_print.print_header("Game entity definitions file for level editor")
+        out_printer.print_header("Game entity definitions file for level editor")
 
     for e in elist:
         out_printer.print_entity(e, deftypes, **opts)
