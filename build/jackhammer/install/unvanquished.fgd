@@ -185,6 +185,10 @@
 	_cs(integer) : _cs :  : "[q3map] or '_castShadows'. Group number entity cast shadow to. Negative value uses same group but disables world. 0 disables shadow casting."
 	_lightmapscale(string) : _lightmapscale : 1 : "[q3map] Value scaling the resolution of lightmaps. Lesser value gives bigger resolution."
 	_rs(integer) : _rs :  : "[q3map] or '_receiveShadows'. Group number entity receive shadow from. Negative value uses same group but disables world. 0 disables shadow receiving."
+	spawnflags(flags) = 
+	[
+		128 : "Activate" : : "The button may be operated with the 'use' key (+activate)."
+	]
 ]
 
 @SolidClass = func_destructable : "Destructable object. You can destroy this object in game. When destructed deals splash damage to everyone near it. Does not cause splash damage to buildables.\n\nFor '_celshader' read http://q3map2.robotrenegade.com/docs/shader_manual/cel-shading.html\n\nEntity supports [terrain] properties. They're not so useful here, but you can refer to func_group for descriptions."
@@ -231,6 +235,7 @@
 	[
 		1 : "Start_open" : : "The door will spawn in the open state and operate in reverse."
 		4 : "Crusher" : : "Door will not reverse direction when blocked and will keep damaging player or building until it dies or gets out of the way."
+		128 : "Activate" : : "The door may be operated with the 'use' key (+activate)."
 	]
 ]
 
@@ -255,6 +260,10 @@
 	speed(string) : Speed : 200 : "The time taken for the door to change state in msec."
 	targetname(target_source) : Targetname :  : "If set, a func_button or trigger is required to activate the door. Overrides activation by damage."
 	wait(string) : Wait : 2 : "Number of seconds before door returns."
+	spawnflags(flags) = 
+	[
+		128 : "Activate" : : "The door may be operated with the 'use' key (+activate)."
+	]
 ]
 
 @SolidClass = func_door_rotating : "Rotating door entity. By default, the door will activate when player walks close to it.\n\nRotating door will not cause damage to player when blocked.\n\nWhen activated turns around the rotation axis ('origin') to angle ('rotatorAngle') with 'speed', then stops. After 'wait' time door starts turning back.\n\nFor '_celshader' read http://q3map2.robotrenegade.com/docs/shader_manual/cel-shading.html\n\nEntity supports [terrain] properties. They're not so useful here, but you can refer to func_group for descriptions."
@@ -281,10 +290,11 @@
 	spawnflags(flags) = 
 	[
 		1 : "Start_open" : : "the door will spawn in the open state and operate in reverse."
-		4 : "Crusher" : : "Door will not reverse direction when blocked and will keep damaging player or building until it dies or gets out of the way."
+		2 : "Crusher" : : "Door will not reverse direction when blocked and will keep damaging player or building until it dies or gets out of the way."
 		8 : "Reverse" : : "the door will open the other way."
 		32 : "X_axis" : : "rotate around the X axis instead of the Z."
 		64 : "Y_axis" : : "rotate around the Y axis instead of the Z."
+		128 : "Activate" : : "The door may be operated with the 'use' key (+activate)."
 	]
 ]
 

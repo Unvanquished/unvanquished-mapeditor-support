@@ -339,6 +339,15 @@
     Entity bobs on the Z axis (up-down) by default.
 - name: func_button
   extend: [chain_active,brush,indexmap2,mover]
+  flags:
+  - '-': ''
+  - '-': ''
+  - '-': ''
+  - '-': ''
+  - '-': ''
+  - '-': ''
+  - '-': ''
+  - ACTIVATE: The button may be operated with the "use" key (+activate).
   props:
     wait: &brush_wait Number of seconds before brush returns. -1 = return immediately.
     speed: &brush_speed Determines how fast the brush moves.
@@ -402,6 +411,11 @@
   - CRUSHER: &door_crusher Door will not reverse direction when blocked and will keep damaging player
       or building until it dies or gets out of the way.
     # bug: crusher door trembling when blocked
+  - '-': ''
+  - '-': ''
+  - '-': ''
+  - '-': ''
+  - ACTIVATE: &door_activate The door may be operated with the "use" key (+activate).
   props:
     sound1to2: The sound played on start moving from state 1 to state 2.
     sound2to1: The sound played on start moving from state 2 to state 1.
@@ -445,6 +459,15 @@
 # bug: with targetname activation you can stuck inside door when it "closes"
 # bug: impossible to activate via "health" (shooting at door)
   extend: [chain_autonom,clight]
+  flags:
+  - '-': ''
+  - '-': ''
+  - '-': ''
+  - '-': ''
+  - '-': ''
+  - '-': ''
+  - '-': ''
+  - ACTIVATE: *door_activate
   color: 007fcc
   props:
     animation: The first frame and number of frames in the door open animation.
@@ -497,13 +520,14 @@
   flags:
   - START_OPEN: the door will spawn in the open state and operate in reverse.
   # bug: closes at the start of map and cannot be opened then
-  - '-': ''
   - CRUSHER: *door_crusher
   # bug: crusher door trembling when blocked
+  - '-': ''
   - REVERSE: the door will open the other way.
   - '-': ''
   - X_AXIS: rotate around the X axis instead of the Z. # TODO: check axis again
   - Y_AXIS: rotate around the Y axis instead of the Z. # TODO: check axis again
+  - ACTIVATE: *door_activate
   props:
     wait: *brush_wait
       # bug: bad -1 value, it makes annoying sound cascade (opens/closes every frame)
