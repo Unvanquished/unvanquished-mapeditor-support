@@ -482,21 +482,18 @@ class EntPrinter:
         print('</{}>'.format(kind))
 
     def print_flag_desc(self, e):
-        flags = []
-        for bit, (k, v) in enumerate(e.get('flags', [])):
-            if k != '-':
-                v = self.sanitize(v)
-                # FIXME: key can be different than name
-                # according to radiant/eclass_xml.cpp:
-                # key="[flag name]"
-                # name="[name shown in gui]"
-                # bit="[bit-index in spawnflags]"
-                flags.append('<flag key="{}" name="{}" bit="{}">{}</flag>'.format(k, k, bit, v))
-
-        if flags:
+        flags = e.get('flags', [])
+        if (len(flags)):
             print(heading.format('SPAWNFLAGS'))
-            for v in flags:
-                print(v)
+            for bit, (k, v) in enumerate(flags):
+                if k != '-':
+                    v = self.sanitize(v)
+                    # FIXME: key can be different than name
+                    # according to radiant/eclass_xml.cpp:
+                    # key="[flag name]"
+                    # name="[name shown in gui]"
+                    # bit="[bit-index in spawnflags]"
+                    print('<flag key="{}" name="{}" bit="{}">{}</flag>'.format(k, k, bit, v))
 
     def print_prop_desc(self, e, dt, pr_types, pr_defaults, pr_ranges, pr_eg):
         if 'props' not in e or not e['props']:
