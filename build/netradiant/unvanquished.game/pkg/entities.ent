@@ -229,7 +229,7 @@ For &quot;_celshader&quot; read http://q3map2.robotrenegade.com/docs/shader_manu
 Entity supports [terrain] properties. They&apos;re not so useful here, but you can refer to func_group for descriptions.
 ------ FLAGS ------
 <flag key="START_OPEN" name="START_OPEN" bit="0">The door will spawn in the open state and operate in reverse.</flag>
-<flag key="CRUSHER" name="CRUSHER" bit="1">Door will not reverse direction when blocked and will keep damaging player or building until it dies or gets out of the way.</flag>
+<flag key="CRUSHER" name="CRUSHER" bit="2">Door will not reverse direction when blocked and will keep damaging player or building until it dies or gets out of the way.</flag>
 ------ PROPERTIES ------
 <angle key="angle" name="angle">Determines moving direction of door (around Z axis: 0=+x, 90=+y, 180=-x, 270=-y; special values: up = -1, down = -2). (float (yaw))</angle>
 <color key="color" name="color" value="1 1 1">Colour of emitted light. Emission activated by either color or light set. Don&apos;t forget to set origin. (vec3_float (color), def: 1 1 1)</color>
@@ -289,10 +289,10 @@ For &quot;_celshader&quot; read http://q3map2.robotrenegade.com/docs/shader_manu
 Entity supports [terrain] properties. They&apos;re not so useful here, but you can refer to func_group for descriptions.
 ------ FLAGS ------
 <flag key="START_OPEN" name="START_OPEN" bit="0">the door will spawn in the open state and operate in reverse.</flag>
-<flag key="CRUSHER" name="CRUSHER" bit="1">Door will not reverse direction when blocked and will keep damaging player or building until it dies or gets out of the way.</flag>
-<flag key="REVERSE" name="REVERSE" bit="2">the door will open the other way.</flag>
-<flag key="X_AXIS" name="X_AXIS" bit="3">rotate around the X axis instead of the Z.</flag>
-<flag key="Y_AXIS" name="Y_AXIS" bit="4">rotate around the Y axis instead of the Z.</flag>
+<flag key="CRUSHER" name="CRUSHER" bit="2">Door will not reverse direction when blocked and will keep damaging player or building until it dies or gets out of the way.</flag>
+<flag key="REVERSE" name="REVERSE" bit="3">the door will open the other way.</flag>
+<flag key="X_AXIS" name="X_AXIS" bit="5">rotate around the X axis instead of the Z.</flag>
+<flag key="Y_AXIS" name="Y_AXIS" bit="6">rotate around the Y axis instead of the Z.</flag>
 ------ PROPERTIES ------
 <real3 key="origin" name="origin">[required] Rotation axis position. (vec3_float)</real3>
 <color key="color" name="color" value="1 1 1">Colour of emitted light. Emission activated by either color or light set. Don&apos;t forget to set origin. (vec3_float (color), def: 1 1 1)</color>
@@ -384,7 +384,7 @@ For &quot;_celshader&quot; read http://q3map2.robotrenegade.com/docs/shader_manu
 Entity supports [terrain] properties. They&apos;re not so useful here, but you can refer to func_group for descriptions.
 ------ FLAGS ------
 <flag key="DONT_WAIT" name="DONT_WAIT" bit="0">The platform will not wait for a client to leave before returning to its original position.</flag>
-<flag key="CRUSHER" name="CRUSHER" bit="1">Door will not reverse direction when blocked and will keep damaging player or building until it dies or gets out of the way.</flag>
+<flag key="CRUSHER" name="CRUSHER" bit="2">Door will not reverse direction when blocked and will keep damaging player or building until it dies or gets out of the way.</flag>
 ------ PROPERTIES ------
 <color key="color" name="color" value="1 1 1">Colour of emitted light. Emission activated by either color or light set. Don&apos;t forget to set origin. (vec3_float (color), def: 1 1 1)</color>
 <integer key="dmg" name="dmg" value="2">Damage dealt when blocked. (int, def: 2)</integer>
@@ -413,8 +413,8 @@ Solid entity that rotates continuously. Rotates on the Z axis by default.
 For &quot;_celshader&quot; read http://q3map2.robotrenegade.com/docs/shader_manual/cel-shading.html
 Entity supports [terrain] properties. They&apos;re not so useful here, but you can refer to func_group for descriptions.
 ------ FLAGS ------
-<flag key="X_AXIS" name="X_AXIS" bit="0">Entity will rotate around the X axis.</flag>
-<flag key="Y_AXIS" name="Y_AXIS" bit="1">Entity will rotate around the Y axis.</flag>
+<flag key="X_AXIS" name="X_AXIS" bit="2">Entity will rotate around the X axis.</flag>
+<flag key="Y_AXIS" name="Y_AXIS" bit="3">Entity will rotate around the Y axis.</flag>
 ------ PROPERTIES ------
 <real3 key="origin" name="origin">[required] Rotation axis position. (vec3_float)</real3>
 <real key="speed" name="speed" value="400">[required] Determines how fast entity rotates. (float, def: 400)</real>
@@ -991,9 +991,9 @@ Heals players touching entity.
 Hurts players or buildings touching entity.
 ------ FLAGS ------
 <flag key="SPAWN_DISABLED" name="SPAWN_DISABLED" bit="0">Disabled by default.</flag>
-<flag key="NO_SOUND" name="NO_SOUND" bit="1">No sound played.</flag>
-<flag key="NO_PROTECTION" name="NO_PROTECTION" bit="2">Player will be hurt regardless of protection (e.g. invulnerability power-up).</flag>
-<flag key="EVERY_SECOND" name="EVERY_SECOND" bit="3">Damage every second instead of every frame.</flag>
+<flag key="NO_SOUND" name="NO_SOUND" bit="2">No sound played.</flag>
+<flag key="NO_PROTECTION" name="NO_PROTECTION" bit="3">Player will be hurt regardless of protection (e.g. invulnerability power-up).</flag>
+<flag key="EVERY_SECOND" name="EVERY_SECOND" bit="4">Damage every second instead of every frame.</flag>
 ------ PROPERTIES ------
 <integer key="dmg" name="dmg" value="5">Damage dealt. Values &gt;= 0 corrected to default value. (int, def: 5)</integer>
 <targetname key="targetname" name="targetname">Give it a name to be able to toggle its activity. (string (targetname))</targetname>
@@ -1006,9 +1006,9 @@ RECOMMENDED TO USE: env_afx_hurt
 Hurts players or buildings touching entity.
 ------ FLAGS ------
 <flag key="SPAWN_DISABLED" name="SPAWN_DISABLED" bit="0">Disabled by default.</flag>
-<flag key="NO_SOUND" name="NO_SOUND" bit="1">No sound played.</flag>
-<flag key="NO_PROTECTION" name="NO_PROTECTION" bit="2">Player will be hurt regardless of protection (e.g. invulnerability power-up).</flag>
-<flag key="EVERY_SECOND" name="EVERY_SECOND" bit="3">Damage every second instead of every frame.</flag>
+<flag key="NO_SOUND" name="NO_SOUND" bit="2">No sound played.</flag>
+<flag key="NO_PROTECTION" name="NO_PROTECTION" bit="3">Player will be hurt regardless of protection (e.g. invulnerability power-up).</flag>
+<flag key="EVERY_SECOND" name="EVERY_SECOND" bit="4">Damage every second instead of every frame.</flag>
 ------ PROPERTIES ------
 <integer key="dmg" name="dmg" value="5">Damage dealt. Values &gt;= 0 corrected to default value. (int, def: 5)</integer>
 <targetname key="targetname" name="targetname">Give it a name to be able to toggle its activity. (string (targetname))</targetname>
@@ -1206,8 +1206,8 @@ DEPRECATED! DEPRECATED! DEPRECATED!
 Static model baked into level geometry by q3map2. Can be walked through. Not animated, but you can choose one of the frames.
 For &quot;_celshader&quot; read http://q3map2.robotrenegade.com/docs/shader_manual/cel-shading.html
 ------ FLAGS ------
-<flag key="CLIPMODELS" name="CLIPMODELS" bit="0">Disallows walking through the model (makes it solid).</flag>
-<flag key="FORCEMETA" name="FORCEMETA" bit="1">Use lightmap lighting for the model.</flag>
+<flag key="CLIPMODELS" name="CLIPMODELS" bit="1">Disallows walking through the model (makes it solid).</flag>
+<flag key="FORCEMETA" name="FORCEMETA" bit="2">Use lightmap lighting for the model.</flag>
 ------ PROPERTIES ------
 <angle key="angle" name="angle">[q3map] Short version of &quot;angles&quot;. (float (yaw))</angle>
 <real3 key="origin" name="origin">Position. (vec3_float)</real3>
