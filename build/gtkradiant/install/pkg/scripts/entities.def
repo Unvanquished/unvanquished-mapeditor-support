@@ -281,7 +281,7 @@ A model based door entity. By default, the door will activate when player walks 
 Every func_door_model needs its model to be positioned, scaled and orientated using the modelOrigin, scale and angle/angles keys repsectively.
 */
 
-/*QUAKED func_door_rotating (0 0.498 0.8) START_OPEN CRUSHER - REVERSE - X_AXIS Y_AXIS ACTIVATE
+/*QUAKED func_door_rotating (0 0.498 0.8) START_OPEN - CRUSHER REVERSE - X_AXIS Y_AXIS ACTIVATE
 ------ FLAGS ------
 START_OPEN: the door will spawn in the open state and operate in reverse.
 CRUSHER: Door will not reverse direction when blocked and will keep damaging player or building until it dies or gets out of the way.

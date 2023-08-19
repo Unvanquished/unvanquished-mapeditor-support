@@ -290,7 +290,7 @@
 	spawnflags(flags) = 
 	[
 		1 : "Start_open" : : "the door will spawn in the open state and operate in reverse."
-		2 : "Crusher" : : "Door will not reverse direction when blocked and will keep damaging player or building until it dies or gets out of the way."
+		4 : "Crusher" : : "Door will not reverse direction when blocked and will keep damaging player or building until it dies or gets out of the way."
 		8 : "Reverse" : : "the door will open the other way."
 		32 : "X_axis" : : "rotate around the X axis instead of the Z."
 		64 : "Y_axis" : : "rotate around the Y axis instead of the Z."

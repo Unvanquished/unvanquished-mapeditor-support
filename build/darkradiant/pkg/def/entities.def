@@ -533,7 +533,7 @@ entityDef func_door_rotating
 	"editor_var _cs" "[q3map] or \"_castShadows\". Group number entity cast shadow to. Negative value uses same group but disables world. 0 disables shadow casting. (int)"
 	"editor_float _lightmapscale" "[q3map] Value scaling the resolution of lightmaps. Lesser value gives bigger resolution. (float, def: 1)"
 	"editor_var _rs" "[q3map] or \"_receiveShadows\". Group number entity receive shadow from. Negative value uses same group but disables world. 0 disables shadow receiving. (int)"
-	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: START_OPEN: 1, CRUSHER: 2, REVERSE: 8, X_AXIS: 32, Y_AXIS: 64, ACTIVATE: 128)"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: START_OPEN: 1, CRUSHER: 4, REVERSE: 8, X_AXIS: 32, Y_AXIS: 64, ACTIVATE: 128)"
 
 	// Property default value
 	"origin" ""
