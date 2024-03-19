@@ -233,6 +233,10 @@ Entity supports [terrain] properties. They&apos;re not so useful here, but you c
 <flag key="START_OPEN" name="START_OPEN" bit="0">The door will spawn in the open state and operate in reverse.</flag>
 <flag key="CRUSHER" name="CRUSHER" bit="2">Door will not reverse direction when blocked and will keep damaging player or building until it dies or gets out of the way.</flag>
 <flag key="ACTIVATE" name="ACTIVATE" bit="7">The door may be operated with the &quot;use&quot; key (+activate).</flag>
+<flag key="TOGGLE" name="TOGGLE" bit="8">This door will not close until triggered a second time.
+Requires one or both of the following:
+1. &quot;targetname&quot; to be set and to have a valid trigger.
+2. To have the ACTIVATE flag set.</flag>
 ------ PROPERTIES ------
 <angle key="angle" name="angle">Determines moving direction of door (around Z axis: 0=+x, 90=+y, 180=-x, 270=-y; special values: up = -1, down = -2). (float (yaw))</angle>
 <color key="color" name="color" value="1 1 1">Colour of emitted light. Emission activated by either color or light set. Don&apos;t forget to set origin. (vec3_float (color), def: 1 1 1)</color>
@@ -263,6 +267,10 @@ A model based door entity. By default, the door will activate when player walks 
 Every func_door_model needs its model to be positioned, scaled and orientated using the modelOrigin, scale and angle/angles keys repsectively.
 ------ SPAWNFLAGS ------
 <flag key="ACTIVATE" name="ACTIVATE" bit="7">The door may be operated with the &quot;use&quot; key (+activate).</flag>
+<flag key="TOGGLE" name="TOGGLE" bit="8">This door will not close until triggered a second time.
+Requires one or both of the following:
+1. &quot;targetname&quot; to be set and to have a valid trigger.
+2. To have the ACTIVATE flag set.</flag>
 ------ PROPERTIES ------
 <model key="model2" name="model2">[required] The door model. (string (model), eg: models/mapobjects/pipe/pipe02.md3)</model>
 <real3 key="modelOrigin" name="modelOrigin" value="0 0 0">[required] &quot;model2&quot; position. (vec3_float, def: 0 0 0)</real3>
@@ -299,6 +307,10 @@ Entity supports [terrain] properties. They&apos;re not so useful here, but you c
 <flag key="X_AXIS" name="X_AXIS" bit="5">rotate around the X axis instead of the Z.</flag>
 <flag key="Y_AXIS" name="Y_AXIS" bit="6">rotate around the Y axis instead of the Z.</flag>
 <flag key="ACTIVATE" name="ACTIVATE" bit="7">The door may be operated with the &quot;use&quot; key (+activate).</flag>
+<flag key="TOGGLE" name="TOGGLE" bit="8">This door will not close until triggered a second time.
+Requires one or both of the following:
+1. &quot;targetname&quot; to be set and to have a valid trigger.
+2. To have the ACTIVATE flag set.</flag>
 ------ PROPERTIES ------
 <real3 key="origin" name="origin">[required] Rotation axis position. (vec3_float)</real3>
 <color key="color" name="color" value="1 1 1">Colour of emitted light. Emission activated by either color or light set. Don&apos;t forget to set origin. (vec3_float (color), def: 1 1 1)</color>

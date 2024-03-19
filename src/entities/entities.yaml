@@ -416,6 +416,11 @@
   - '-': ''
   - '-': ''
   - ACTIVATE: &door_activate The door may be operated with the "use" key (+activate).
+  - TOGGLE: &door_toggle |-
+      This door will not close until triggered a second time.
+      Requires one or both of the following:
+      1. "targetname" to be set and to have a valid trigger.
+      2. To have the ACTIVATE flag set.
   props:
     sound1to2: The sound played on start moving from state 1 to state 2.
     sound2to1: The sound played on start moving from state 2 to state 1.
@@ -468,6 +473,7 @@
   - '-': ''
   - '-': ''
   - ACTIVATE: *door_activate
+  - TOGGLE: *door_toggle
   color: 007fcc
   props:
     animation: The first frame and number of frames in the door open animation.
@@ -528,6 +534,7 @@
   - X_AXIS: rotate around the X axis instead of the Z. # TODO: check axis again
   - Y_AXIS: rotate around the Y axis instead of the Z. # TODO: check axis again
   - ACTIVATE: *door_activate
+  - TOGGLE: *door_toggle
   props:
     wait: *brush_wait
       # bug: bad -1 value, it makes annoying sound cascade (opens/closes every frame)
