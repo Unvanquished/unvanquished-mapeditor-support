@@ -236,6 +236,7 @@
 		1 : "Start_open" : : "The door will spawn in the open state and operate in reverse."
 		4 : "Crusher" : : "Door will not reverse direction when blocked and will keep damaging player or building until it dies or gets out of the way."
 		128 : "Activate" : : "The door may be operated with the 'use' key (+activate)."
+		256 : "Toggle" : : "This door will not close until triggered a second time. &#10;Requires one or both of the following: &#10;1. 'targetname' to be set and to have a valid trigger. &#10;2. To have the ACTIVATE flag set."
 	]
 ]
 
@@ -263,6 +264,7 @@
 	spawnflags(flags) = 
 	[
 		128 : "Activate" : : "The door may be operated with the 'use' key (+activate)."
+		256 : "Toggle" : : "This door will not close until triggered a second time. &#10;Requires one or both of the following: &#10;1. 'targetname' to be set and to have a valid trigger. &#10;2. To have the ACTIVATE flag set."
 	]
 ]
 
@@ -295,6 +297,7 @@
 		32 : "X_axis" : : "rotate around the X axis instead of the Z."
 		64 : "Y_axis" : : "rotate around the Y axis instead of the Z."
 		128 : "Activate" : : "The door may be operated with the 'use' key (+activate)."
+		256 : "Toggle" : : "This door will not close until triggered a second time. &#10;Requires one or both of the following: &#10;1. 'targetname' to be set and to have a valid trigger. &#10;2. To have the ACTIVATE flag set."
 	]
 ]
 
