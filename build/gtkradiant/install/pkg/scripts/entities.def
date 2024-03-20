@@ -229,7 +229,6 @@ TOGGLE: This door will not close until triggered a second time.
 Requires one or both of the following:
 1. "targetname" to be set and to have a valid trigger.
 2. To have the ACTIVATE flag set.
-
 ------ PROPERTIES ------
 angle: Determines moving direction of door (around Z axis: 0=+x, 90=+y, 180=-x, 270=-y; special values: up = -1, down = -2). (float (yaw))
 color: Colour of emitted light. Emission activated by either color or light set. Don't forget to set origin. (vec3_float (color), def: 1 1 1)
@@ -265,7 +264,6 @@ TOGGLE: This door will not close until triggered a second time.
 Requires one or both of the following:
 1. "targetname" to be set and to have a valid trigger.
 2. To have the ACTIVATE flag set.
-
 ------ PROPERTIES ------
 model2: [required] The door model. (string (model), eg: models/mapobjects/pipe/pipe02.md3)
 modelOrigin: [required] "model2" position. (vec3_float, def: 0 0 0)
@@ -303,7 +301,6 @@ TOGGLE: This door will not close until triggered a second time.
 Requires one or both of the following:
 1. "targetname" to be set and to have a valid trigger.
 2. To have the ACTIVATE flag set.
-
 ------ PROPERTIES ------
 origin: [required] Rotation axis position. (vec3_float)
 color: Colour of emitted light. Emission activated by either color or light set. Don't forget to set origin. (vec3_float (color), def: 1 1 1)

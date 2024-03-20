@@ -416,7 +416,7 @@
   - '-': ''
   - '-': ''
   - ACTIVATE: &door_activate The door may be operated with the "use" key (+activate).
-  - TOGGLE: &door_toggle |
+  - TOGGLE: &door_toggle |-
       This door will not close until triggered a second time.
       Requires one or both of the following:
       1. "targetname" to be set and to have a valid trigger.
