@@ -1242,6 +1242,36 @@ entityDef info_player_start
 	"targetname" ""
 }
 
+entityDef pos_navcon
+{
+	// Class
+	"spawnclass" "iTarget"
+
+	// Description
+	"editor_usage" "Navmesh connection point.\nLink two points together and the navmesh generator will generate a navmesh connection."
+
+	// Editor color
+	"editor_color" "ffcc44"
+
+	// Editor sizes
+	"editor_mins" "-8 -8 -8"
+	"editor_maxs" "8 8 8"
+
+	// Property description
+	"editor_var origin" "Position. (vec3_float)"
+	"editor_var playerclasses" "Space-separated list of player classes that can go this route."
+	"editor_var target" "Point this to another pos_navcon entity to connect them together. (string (target))"
+	"editor_var targetname" "Another pos_navcon should points to this. (string (targetname))"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: BIDIR: 1)"
+
+	// Property default value
+	"origin" ""
+	"playerclasses" ""
+	"target" ""
+	"targetname" ""
+	"spawnflags" "0"
+}
+
 entityDef pos_target
 {
 	// Class

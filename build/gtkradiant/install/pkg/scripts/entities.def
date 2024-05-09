@@ -649,6 +649,19 @@ targetname: Can possibly be fired. (string (targetname))
 Use pos_player_intermission instead.
 */
 
+/*QUAKED pos_navcon (1 0.8 0.267) (-8 -8 -8) (8 8 8) BIDIR
+------ FLAGS ------
+BIDIR: Bidirectional.
+------ PROPERTIES ------
+origin: Position. (vec3_float)
+playerclasses: Space-separated list of player classes that can go this route.
+target: Point this to another pos_navcon entity to connect them together. (string (target))
+targetname: Another pos_navcon should points to this. (string (targetname))
+------ DESCRIPTION ------
+Navmesh connection point.
+Link two points together and the navmesh generator will generate a navmesh connection.
+*/
+
 /*QUAKED pos_target (0 0.498 0) (-8 -8 -8) (8 8 8)
 ------ PROPERTIES ------
 targetname: [required] Must be someone's target for aiming. (string (targetname))

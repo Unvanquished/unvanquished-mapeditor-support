@@ -553,6 +553,18 @@
 	targetname(target_source) : Targetname :  : "Can possibly be fired."
 ]
 
+@PointClass size(-8 -8 -8, 8 8 8) color(255 204 68) = pos_navcon : "Navmesh connection point.\n\nLink two points together and the navmesh generator will generate a navmesh connection."
+[
+	origin(string) : Origin :  : "Position."
+	playerclasses(string) : Playerclasses :  : "Space-separated list of player classes that can go this route."
+	target(target_destination) : Target :  : "Point this to another pos_navcon entity to connect them together."
+	targetname(target_source) : Targetname :  : "Another pos_navcon should points to this."
+	spawnflags(flags) = 
+	[
+		1 : "Bidir" : : "Bidirectional."
+	]
+]
+
 @PointClass flags(Angle) size(-8 -8 -8, 8 8 8) color(0 127 0) = pos_target : "Aiming target for entities like light, gfx_portal_camera and env_afx_push.\n\nUsed as a positional target for entities that can use directional pointing."
 [
 	targetname(target_source) : Targetname :  : "[required] Must be someone's target for aiming."

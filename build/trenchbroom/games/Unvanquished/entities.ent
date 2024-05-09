@@ -653,6 +653,19 @@ Use pos_player_intermission instead.
 <targetname key="targetname" name="targetname">Can possibly be fired. (string (targetname))</targetname>
 </point>
 
+<point name="pos_navcon" color="1 0.8 0.267" box="-8 -8 -8 8 8 8">
+------ DESCRIPTION ------
+Navmesh connection point.
+Link two points together and the navmesh generator will generate a navmesh connection.
+------ SPAWNFLAGS ------
+<flag key="BIDIR" name="BIDIR" bit="0">Bidirectional.</flag>
+------ PROPERTIES ------
+<real3 key="origin" name="origin">Position. (vec3_float)</real3>
+<string key="playerclasses" name="playerclasses">Space-separated list of player classes that can go this route.</string>
+<target key="target" name="target">Point this to another pos_navcon entity to connect them together. (string (target))</target>
+<targetname key="targetname" name="targetname">Another pos_navcon should points to this. (string (targetname))</targetname>
+</point>
+
 <point name="pos_target" color="0 0.498 0" box="-8 -8 -8 8 8 8">
 ------ DESCRIPTION ------
 Aiming target for entities like light, gfx_portal_camera and env_afx_push.

@@ -852,6 +852,23 @@
   aliasof: pos_player_spawn
   deprecated: y
   d3Class: idPlayerStart
+- name: pos_navcon
+  extend: [point]
+  d3Class: iTarget
+  color: ffcc44
+  flags:
+  - BIDIR: Bidirectional.
+  props:
+    targetname: >
+      Another pos_navcon should points to this.
+    target: >
+      Point this to another pos_navcon entity to connect them together.
+    playerclasses: >
+      Space-separated list of player classes that can go this route.
+  desc: >
+    Navmesh connection point.
+
+    Link two points together and the navmesh generator will generate a navmesh connection.
 - name: pos_target
   extend: [chain_target,point]
   d3Class: idTarget
