@@ -649,6 +649,30 @@ targetname: Can possibly be fired. (string (targetname))
 Use pos_player_intermission instead.
 */
 
+/*QUAKED pos_navcon_next (1 0.8 0.267) (-8 -8 -8) (8 8 8)
+------ PROPERTIES ------
+targetname: [required] Name to use as target in a pos_navcon_start entity (or another pos_navcon_next in a chain). (string (targetname))
+origin: Position. (vec3_float)
+target: Set the name of another pos_navcon_next entity to connect them together in a chain. (string (target))
+------ DESCRIPTION ------
+Navmesh connection point (start point).
+Link it from a pos_navcon_start and the navmesh generator will generate a navmesh connection.
+*/
+
+/*QUAKED pos_navcon_start (1 0.8 0.267) (-8 -8 -8) (8 8 8) BIDIR
+------ FLAGS ------
+BIDIR: Bidirectional.
+------ PROPERTIES ------
+target: [required] Set the name of a pos_navcon_next entity to connect them together. (string (target))
+origin: Position. (vec3_float)
+playerclasses: Space-separated list of player classes that can go this route.
+playerteams: Space-separated list of player teams that can go this route.
+size: Radius. (float, def: 50)
+------ DESCRIPTION ------
+Navmesh connection point (next point).
+Link it to a pos_navcon_next and the navmesh generator will generate a navmesh connection.
+*/
+
 /*QUAKED pos_target (0 0.498 0) (-8 -8 -8) (8 8 8)
 ------ PROPERTIES ------
 targetname: [required] Must be someone's target for aiming. (string (targetname))

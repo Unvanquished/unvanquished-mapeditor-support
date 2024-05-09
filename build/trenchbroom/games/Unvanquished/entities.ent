@@ -653,6 +653,30 @@ Use pos_player_intermission instead.
 <targetname key="targetname" name="targetname">Can possibly be fired. (string (targetname))</targetname>
 </point>
 
+<point name="pos_navcon_next" color="1 0.8 0.267" box="-8 -8 -8 8 8 8">
+------ DESCRIPTION ------
+Navmesh connection point (start point).
+Link it from a pos_navcon_start and the navmesh generator will generate a navmesh connection.
+------ PROPERTIES ------
+<targetname key="targetname" name="targetname">[required] Name to use as target in a pos_navcon_start entity (or another pos_navcon_next in a chain). (string (targetname))</targetname>
+<real3 key="origin" name="origin">Position. (vec3_float)</real3>
+<target key="target" name="target">Set the name of another pos_navcon_next entity to connect them together in a chain. (string (target))</target>
+</point>
+
+<point name="pos_navcon_start" color="1 0.8 0.267" box="-8 -8 -8 8 8 8">
+------ DESCRIPTION ------
+Navmesh connection point (next point).
+Link it to a pos_navcon_next and the navmesh generator will generate a navmesh connection.
+------ SPAWNFLAGS ------
+<flag key="BIDIR" name="BIDIR" bit="0">Bidirectional.</flag>
+------ PROPERTIES ------
+<target key="target" name="target">[required] Set the name of a pos_navcon_next entity to connect them together. (string (target))</target>
+<real3 key="origin" name="origin">Position. (vec3_float)</real3>
+<string key="playerclasses" name="playerclasses">Space-separated list of player classes that can go this route.</string>
+<string key="playerteams" name="playerteams">Space-separated list of player teams that can go this route.</string>
+<real key="size" name="size" value="50">Radius. (float, def: 50)</real>
+</point>
+
 <point name="pos_target" color="0 0.498 0" box="-8 -8 -8 8 8 8">
 ------ DESCRIPTION ------
 Aiming target for entities like light, gfx_portal_camera and env_afx_push.
