@@ -874,8 +874,11 @@
   props:
     target: >
       [required] Set the name of a pos_navcon_next entity to connect them together.
+    size: Radius.
     playerclasses: >
       Space-separated list of player classes that can go this route.
+  propdefaults:
+    size: 50
   desc: >
     Navmesh connection point (next point).
 

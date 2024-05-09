@@ -673,6 +673,7 @@ Link it to a pos_navcon_next and the navmesh generator will generate a navmesh c
 <target key="target" name="target">[required] Set the name of a pos_navcon_next entity to connect them together. (string (target))</target>
 <real3 key="origin" name="origin">Position. (vec3_float)</real3>
 <string key="playerclasses" name="playerclasses">Space-separated list of player classes that can go this route.</string>
+<real key="size" name="size" value="50">Radius. (float, def: 50)</real>
 </point>
 
 <point name="pos_target" color="0 0.498 0" box="-8 -8 -8 8 8 8">

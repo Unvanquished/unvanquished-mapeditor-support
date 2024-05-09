@@ -666,6 +666,7 @@ BIDIR: Bidirectional.
 target: [required] Set the name of a pos_navcon_next entity to connect them together. (string (target))
 origin: Position. (vec3_float)
 playerclasses: Space-separated list of player classes that can go this route.
+size: Radius. (float, def: 50)
 ------ DESCRIPTION ------
 Navmesh connection point (next point).
 Link it to a pos_navcon_next and the navmesh generator will generate a navmesh connection.

@@ -565,6 +565,7 @@
 	target(target_destination) : Target :  : "[required] Set the name of a pos_navcon_next entity to connect them together."
 	origin(string) : Origin :  : "Position."
 	playerclasses(string) : Playerclasses :  : "Space-separated list of player classes that can go this route."
+	size(string) : Size : 50 : "Radius."
 	spawnflags(flags) = 
 	[
 		1 : "Bidir" : : "Bidirectional."

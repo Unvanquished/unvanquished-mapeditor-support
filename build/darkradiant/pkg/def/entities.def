@@ -1287,12 +1287,14 @@ entityDef pos_navcon_start
 	"editor_var target" "[required] Set the name of a pos_navcon_next entity to connect them together. (string (target))"
 	"editor_var origin" "Position. (vec3_float)"
 	"editor_var playerclasses" "Space-separated list of player classes that can go this route."
+	"editor_float size" "Radius. (float, def: 50)"
 	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: BIDIR: 1)"
 
 	// Property default value
 	"target" ""
 	"origin" ""
 	"playerclasses" ""
+	"size" "50"
 	"spawnflags" "0"
 }
 
