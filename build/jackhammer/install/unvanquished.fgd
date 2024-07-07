@@ -603,6 +603,7 @@
 		1 : "Human_team" : : "Only the human team players will see the message."
 		2 : "Alien_team" : : "Only the alien team players will see the message."
 		4 : "Private" : : "Only the player that activates the target will see the message."
+		8 : "Chat" : : "Also print this message in the chat."
 	]
 ]
 

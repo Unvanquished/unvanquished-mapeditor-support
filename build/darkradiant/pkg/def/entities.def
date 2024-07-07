@@ -1411,7 +1411,7 @@ entityDef target_print
 	"editor_var targetname" "[required] Must be someone's target for firing. (string (targetname))"
 	"editor_var message" "text string to print on screen. (string)"
 	"editor_var origin" "Position. (vec3_float)"
-	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: HUMAN_TEAM: 1, ALIEN_TEAM: 2, PRIVATE: 4)"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: HUMAN_TEAM: 1, ALIEN_TEAM: 2, PRIVATE: 4, CHAT: 8)"
 
 	// Property default value
 	"targetname" ""

@@ -724,6 +724,7 @@ By default, all the clients will see the message.
 <flag key="HUMAN_TEAM" name="HUMAN_TEAM" bit="0">Only the human team players will see the message.</flag>
 <flag key="ALIEN_TEAM" name="ALIEN_TEAM" bit="1">Only the alien team players will see the message.</flag>
 <flag key="PRIVATE" name="PRIVATE" bit="2">Only the player that activates the target will see the message.</flag>
+<flag key="CHAT" name="CHAT" bit="3">Also print this message in the chat.</flag>
 ------ PROPERTIES ------
 <targetname key="targetname" name="targetname">[required] Must be someone&apos;s target for firing. (string (targetname))</targetname>
 <string key="message" name="message">text string to print on screen. (string)</string>

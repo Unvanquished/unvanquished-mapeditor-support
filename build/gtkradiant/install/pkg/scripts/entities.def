@@ -711,12 +711,13 @@ origin: Position. (vec3_float)
 Same as pos_target, but used only at q3map2 stage. I.e. you can use it only for lights.
 */
 
-/*QUAKED target_print (0 0.498 0) (-8 -8 -8) (8 8 8) HUMAN_TEAM ALIEN_TEAM PRIVATE
+/*QUAKED target_print (0 0.498 0) (-8 -8 -8) (8 8 8) HUMAN_TEAM ALIEN_TEAM PRIVATE CHAT
 DEPRECATED! DEPRECATED! DEPRECATED!
 ------ FLAGS ------
 HUMAN_TEAM: Only the human team players will see the message.
 ALIEN_TEAM: Only the alien team players will see the message.
 PRIVATE: Only the player that activates the target will see the message.
+CHAT: Also print this message in the chat.
 ------ PROPERTIES ------
 targetname: [required] Must be someone's target for firing. (string (targetname))
 message: text string to print on screen. (string)
