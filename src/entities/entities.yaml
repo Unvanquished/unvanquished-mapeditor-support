@@ -893,6 +893,7 @@
   - HUMAN_TEAM: Only the human team players will see the message. # OK, but TODO check net game
   - ALIEN_TEAM: Only the alien team players will see the message. # OK, but TODO check net game
   - PRIVATE: Only the player that activates the target will see the message. # OK, but TODO check net game
+  - CHAT: Also print this message in the chat.
   props:
     message: text string to print on screen.
   desc: >
