@@ -1242,6 +1242,64 @@ entityDef info_player_start
 	"targetname" ""
 }
 
+entityDef pos_navcon_next
+{
+	// Class
+	"spawnclass" "iTarget"
+
+	// Description
+	"editor_usage" "Navmesh connection point (start point).\nLink it from a pos_navcon_start and the navmesh generator will generate a navmesh connection."
+
+	// Editor color
+	"editor_color" "ffcc44"
+
+	// Editor sizes
+	"editor_mins" "-8 -8 -8"
+	"editor_maxs" "8 8 8"
+
+	// Property description
+	"editor_var targetname" "[required] Name to use as target in a pos_navcon_start entity (or another pos_navcon_next in a chain). (string (targetname))"
+	"editor_var origin" "Position. (vec3_float)"
+	"editor_var target" "Set the name of another pos_navcon_next entity to connect them together in a chain. (string (target))"
+
+	// Property default value
+	"targetname" ""
+	"origin" ""
+	"target" ""
+}
+
+entityDef pos_navcon_start
+{
+	// Class
+	"spawnclass" "iTarget"
+
+	// Description
+	"editor_usage" "Navmesh connection point (next point).\nLink it to a pos_navcon_next and the navmesh generator will generate a navmesh connection."
+
+	// Editor color
+	"editor_color" "ffcc44"
+
+	// Editor sizes
+	"editor_mins" "-8 -8 -8"
+	"editor_maxs" "8 8 8"
+
+	// Property description
+	"editor_var target" "[required] Set the name of a pos_navcon_next entity to connect them together. (string (target))"
+	"editor_var origin" "Position. (vec3_float)"
+	"editor_var playerclasses" "Space-separated list of player classes that can go this route."
+	"editor_var playerteams" "Space-separated list of player teams that can go this route."
+	"editor_float size" "Radius. (float, def: 50)"
+	"editor_var spawnflags" "Spawn flags. (bitfield as an integer: BIDIR: 1)"
+
+	// Property default value
+	"target" ""
+	"origin" ""
+	"playerclasses" ""
+	"playerteams" ""
+	"size" "50"
+	"spawnflags" "0"
+}
+
 entityDef pos_target
 {
 	// Class

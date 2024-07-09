@@ -31,6 +31,7 @@ period: *time
 radius: vec3_float
 random: float
 replacement: string
+size: float
 shader: string (texture)
 sound1to2: *sound
 sound2to1: *sound

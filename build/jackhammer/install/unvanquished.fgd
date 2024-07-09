@@ -553,6 +553,26 @@
 	targetname(target_source) : Targetname :  : "Can possibly be fired."
 ]
 
+@PointClass size(-8 -8 -8, 8 8 8) color(255 204 68) = pos_navcon_next : "Navmesh connection point (start point).\n\nLink it from a pos_navcon_start and the navmesh generator will generate a navmesh connection."
+[
+	targetname(target_source) : Targetname :  : "[required] Name to use as target in a pos_navcon_start entity (or another pos_navcon_next in a chain)."
+	origin(string) : Origin :  : "Position."
+	target(target_destination) : Target :  : "Set the name of another pos_navcon_next entity to connect them together in a chain."
+]
+
+@PointClass size(-8 -8 -8, 8 8 8) color(255 204 68) = pos_navcon_start : "Navmesh connection point (next point).\n\nLink it to a pos_navcon_next and the navmesh generator will generate a navmesh connection."
+[
+	target(target_destination) : Target :  : "[required] Set the name of a pos_navcon_next entity to connect them together."
+	origin(string) : Origin :  : "Position."
+	playerclasses(string) : Playerclasses :  : "Space-separated list of player classes that can go this route."
+	playerteams(string) : Playerteams :  : "Space-separated list of player teams that can go this route."
+	size(string) : Size : 50 : "Radius."
+	spawnflags(flags) = 
+	[
+		1 : "Bidir" : : "Bidirectional."
+	]
+]
+
 @PointClass flags(Angle) size(-8 -8 -8, 8 8 8) color(0 127 0) = pos_target : "Aiming target for entities like light, gfx_portal_camera and env_afx_push.\n\nUsed as a positional target for entities that can use directional pointing."
 [
 	targetname(target_source) : Targetname :  : "[required] Must be someone's target for aiming."
