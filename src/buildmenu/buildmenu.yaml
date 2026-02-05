@@ -31,6 +31,92 @@
         fastallocate: null
         nobouncestore: null
         nobouncestore: null
+        sRGB: null
+        backsplasharea: null
+        shade: null
+        dirty: null
+        dirtscale: 0.8
+        dirtdepth: 32
+        patchshadows: null
+        samples: 3
+        samplesize: 8
+        randomsamples: null
+        bouncegrid: null
+        bounce: 16
+        deluxe: null
+        lightmapsize: 1024
+        external: null
+    - cmd: q3map2
+      opts:
+        minimap: null
+
+- name: "-"
+
+
+- name: "Build everything for release before 0.56 (non-linear)"
+  stages:
+    - cmd: q3map2
+      opts:
+        bsp: null
+        leaktest: null
+        custinfoparms: null
+        keeplights: null
+        meta: null
+        maxarea: null
+        samplesize: 8
+    - cmd: q3map2
+      opts:
+        vis: null
+        saveprt: null
+    - cmd: q3map2
+      opts:
+        light: null
+        nocollapse: null
+        fastbounce: null
+        fastallocate: null
+        nobouncestore: null
+        nobouncestore: null
+        shade: null
+        dirty: null
+        dirtscale: 0.8
+        dirtdepth: 32
+        patchshadows: null
+        samples: 3
+        samplesize: 8
+        randomsamples: null
+        bouncegrid: null
+        bounce: 16
+        deluxe: null
+        lightmapsize: 1024
+        external: null
+    - cmd: q3map2
+      opts:
+        minimap: null
+
+- name: "Build everything for release before 0.52 (non-linear, short falloff)"
+  stages:
+    - cmd: q3map2
+      opts:
+        bsp: null
+        leaktest: null
+        custinfoparms: null
+        keeplights: null
+        meta: null
+        maxarea: null
+        samplesize: 8
+    - cmd: q3map2
+      opts:
+        vis: null
+        saveprt: null
+    - cmd: q3map2
+      opts:
+        light: null
+        nocollapse: null
+        fast: null
+        fastbounce: null
+        fastallocate: null
+        nobouncestore: null
+        nobouncestore: null
         shade: null
         dirty: null
         dirtscale: 0.8
@@ -98,6 +184,8 @@
         nocollapse: null
         faster: null
         fastallocate: null
+        sRGB: null
+        backsplasharea: null
         patchshadows: null
         lightmapsize: 1024
         external: null
@@ -123,6 +211,8 @@
         nocollapse: null
         faster: null
         fastallocate: null
+        sRGB: null
+        backsplasharea: null
         patchshadows: null
         deluxe: null
         lightmapsize: 1024
@@ -149,6 +239,8 @@
         nocollapse: null
         faster: null
         fastallocate: null
+        sRGB: null
+        backsplasharea: null
         dirty: null
         dirtscale: 0.8
         dirtdepth: 32
@@ -183,6 +275,8 @@
         fastbounce: null
         fastallocate: null
         nobouncestore: null
+        sRGB: null
+        backsplasharea: null
         shade: null
         dirty: null
         dirtscale: 0.8
