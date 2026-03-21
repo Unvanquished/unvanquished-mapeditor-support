@@ -15,6 +15,8 @@
         bsp: null
         leaktest: null
         custinfoparms: null
+        sRGBcolor: null
+        sRGBtex: null
         keeplights: null
         meta: null
         maxarea: null
@@ -26,12 +28,14 @@
     - cmd: q3map2
       opts:
         light: null
+        sRGBcolor: null
+        sRGBtex: null
+        sRGBlight: null
         nocollapse: null
         fastbounce: null
         fastallocate: null
         nobouncestore: null
         nobouncestore: null
-        sRGB: null
         backsplasharea: null
         shade: null
         patchshadows: null
@@ -161,6 +165,8 @@
         bsp: null
         leaktest: null
         custinfoparms: null
+        sRGBcolor: null
+        sRGBtex: null
         keeplights: null
         meta: null
         fastmeta: null
@@ -172,10 +178,12 @@
     - cmd: q3map2
       opts:
         light: null
+        sRGBcolor: null
+        sRGBtex: null
+        sRGBlight: null
         nocollapse: null
         faster: null
         fastallocate: null
-        sRGB: null
         backsplasharea: null
         patchshadows: null
         lightmapsize: 1024
@@ -188,6 +196,8 @@
         bsp: null
         leaktest: null
         custinfoparms: null
+        sRGBcolor: null
+        sRGBtex: null
         keeplights: null
         meta: null
         fastmeta: null
@@ -199,10 +209,12 @@
     - cmd: q3map2
       opts:
         light: null
+        sRGBcolor: null
+        sRGBtex: null
+        sRGBlight: null
         nocollapse: null
         faster: null
         fastallocate: null
-        sRGB: null
         backsplasharea: null
         patchshadows: null
         deluxe: null
@@ -216,6 +228,8 @@
         bsp: null
         leaktest: null
         custinfoparms: null
+        sRGBcolor: null
+        sRGBtex: null
         keeplights: null
         meta: null
         maxarea: null
@@ -227,10 +241,12 @@
     - cmd: q3map2
       opts:
         light: null
+        sRGBcolor: null
+        sRGBtex: null
+        sRGBlight: null
         nocollapse: null
         faster: null
         fastallocate: null
-        sRGB: null
         backsplasharea: null
         patchshadows: null
         samples: 2
@@ -249,6 +265,8 @@
         bsp: null
         leaktest: null
         custinfoparms: null
+        sRGBcolor: null
+        sRGBtex: null
         meta: null
         maxarea: null
         samplesize: 8
@@ -259,11 +277,13 @@
     - cmd: q3map2
       opts:
         light: null
+        sRGBcolor: null
+        sRGBtex: null
+        sRGBlight: null
         nocollapse: null
         fastbounce: null
         fastallocate: null
         nobouncestore: null
-        sRGB: null
         backsplasharea: null
         shade: null
         patchshadows: null
