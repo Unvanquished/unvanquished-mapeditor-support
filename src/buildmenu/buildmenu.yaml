@@ -79,6 +79,9 @@
         nobouncestore: null
         shade: null
         patchshadows: null
+        dirty: null
+        dirtscale: 0.8
+        dirtdepth: 32
         samples: 3
         samplesize: 8
         randomsamples: null
@@ -117,6 +120,9 @@
         nobouncestore: null
         shade: null
         patchshadows: null
+        dirty: null
+        dirtscale: 0.8
+        dirtdepth: 32
         samples: 3
         samplesize: 8
         randomsamples: null

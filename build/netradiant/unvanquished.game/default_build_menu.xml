@@ -16,13 +16,13 @@
 <build name="Build everything for release before 0.56 (non-linear)">
 <command>[q3map2] -bsp -leaktest -custinfoparms -keeplights -meta -maxarea -samplesize 8 "[MapFile]"</command>
 <command>[q3map2] -vis -saveprt "[MapFile]"</command>
-<command>[q3map2] -light -nocollapse -fastbounce -fastallocate -nobouncestore -shade -patchshadows -samples 3 -samplesize 8 -randomsamples -bouncegrid -bounce 16 -deluxe -lightmapsize 1024 -external "[MapFile]"</command>
+<command>[q3map2] -light -nocollapse -fastbounce -fastallocate -nobouncestore -shade -patchshadows -dirty -dirtscale 0.8 -dirtdepth 32 -samples 3 -samplesize 8 -randomsamples -bouncegrid -bounce 16 -deluxe -lightmapsize 1024 -external "[MapFile]"</command>
 <command>[q3map2] -minimap "[MapFile]"</command>
 </build>
 <build name="Build everything for release before 0.52 (non-linear, short falloff)">
 <command>[q3map2] -bsp -leaktest -custinfoparms -keeplights -meta -maxarea -samplesize 8 "[MapFile]"</command>
 <command>[q3map2] -vis -saveprt "[MapFile]"</command>
-<command>[q3map2] -light -nocollapse -fast -fastbounce -fastallocate -nobouncestore -shade -patchshadows -samples 3 -samplesize 8 -randomsamples -bouncegrid -bounce 16 -deluxe -lightmapsize 1024 -external "[MapFile]"</command>
+<command>[q3map2] -light -nocollapse -fast -fastbounce -fastallocate -nobouncestore -shade -patchshadows -dirty -dirtscale 0.8 -dirtdepth 32 -samples 3 -samplesize 8 -randomsamples -bouncegrid -bounce 16 -deluxe -lightmapsize 1024 -external "[MapFile]"</command>
 <command>[q3map2] -minimap "[MapFile]"</command>
 </build>
 <separator />
